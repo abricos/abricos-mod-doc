@@ -1,0 +1,62 @@
+<!--{widget}-->
+<div class="docList panel panel-default">
+    <div class="panel-heading text-center">
+
+        <h3 class="panel-title pull-left">Список документов</h3>
+
+        <div class="btn-group pull-right hide">
+            <button data-click="reloadDocList"
+                    data-wait="disable"
+                    class="btn btn-default btn-xs" type="button">
+                Обновить
+            </button>
+        </div>
+
+        <span data-wait="show">
+            <img src="/images/loading.gif"/> Загрузка...
+        </span>
+
+        <div class="clearfix"></div>
+
+    </div>
+    <div class="panel-body">
+        <div id="{i#list}"></div>
+    </div>
+</div>
+
+<!--{list}-->
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Название</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {v#rows}
+    </tbody>
+</table>
+
+<!--{row}-->
+<tr>
+    <td>{v#id}</td>
+    <td>{v#title}</td>
+    <td>
+        <a data-url="doc.edit({v#id})"
+           data-wait="disable"
+           class="btn btn-default btn-xs"
+           type="button">
+            Править
+        </a>
+    </td>
+    <td>
+        <a data-url="doc.remove({v#id})"
+           data-wait="disable"
+           class="btn btn-default btn-xs"
+           type="button">
+            Удалить
+        </a>
+    </td>
+</tr>

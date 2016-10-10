@@ -1,0 +1,26 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "docid": {
+      "type": "int"
+    },
+    "title": {
+      "type": "string",
+      "parse": "full"
+    },
+    "descript": {
+      "type": "string",
+      "parse": "standard"
+    }
+  },
+  "codes": {
+    "OK": 1,
+    "EMPTY_TITLE": 2
+  },
+  "fields": {
+    "docid": {
+      "type": "int"
+    }
+  }
+}

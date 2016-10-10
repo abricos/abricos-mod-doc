@@ -1,0 +1,24 @@
+<!--{widget}-->
+<div class="app-workspace aw-doc">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a data-url="ws" class="navbar-brand">Документы</a>
+        </div>
+
+        <ul class="nav navbar-nav pull-right">
+            <li data-trigger="doc:roles"
+                data-code="isWrite"
+                class="hide">
+                <a data-url="doc.create">+ Добавить</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div data-wait="show" class="text-center">
+        <img src="/images/loading.gif"/>
+        <p>Идет загрузка данных</p>
+        <p>Пожалуйста, подождите...</p>
+    </div>
+
+    <div class="app-workspace-page" data-wait="hide"></div>
+</div>
