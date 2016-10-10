@@ -15,5 +15,31 @@ Component.entryPoint = function(NS){
             }
         },
         doc: {value: null},
+        body: {value: null},
+        isEditMode: {value: false},
+        isViewMode: {value: false},
     };
+
+    var BodyEditorWidgetExt = function(){
+    };
+    BodyEditorWidgetExt.ATTRS = {
+        doc: NS.ATTRIBUTE.doc,
+    };
+    BodyEditorWidgetExt.prototype = {
+        _setMode: function(isEdit){
+            this.set('isEditMode', isEdit);
+            this.set('isViewMode', !isEdit);
+            this.appTriggerUpdate();
+            this.onChangeMode(isEdit);
+        },
+        onChangeMode: function(isEdit){
+        },
+        setEditMode: function(){
+            this._setMode(true);
+        },
+        setViewMode: function(){
+            this._setMode(false);
+        }
+    };
+    NS.BodyEditorWidgetExt = BodyEditorWidgetExt;
 };

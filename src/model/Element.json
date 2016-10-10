@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "int",
+      "dbField": "elementid"
+    },
+    "parentid": {
+      "type": "int"
+    },
+    "docid": {
+      "type": "int"
+    },
+    "type": {
+      "type": "string",
+      "dbField": "elementType"
+    },
+    "ord": {
+      "type": "int"
+    }
+  }
+}

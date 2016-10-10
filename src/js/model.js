@@ -22,4 +22,36 @@ Component.entryPoint = function(NS){
         structureName: 'DocSave',
     });
 
+    NS.Element = Y.Base.create('element', SYS.AppModel, [], {
+        structureName: 'Element',
+    });
+
+    NS.ElementList = Y.Base.create('elementList', SYS.AppModelList, [], {
+        appItem: NS.Element,
+    });
+    
+    NS.ElementType = Y.Base.create('elementType', SYS.AppModel, [], {
+        structureName: 'ElementType',
+    });
+
+    NS.ElementTypeList = Y.Base.create('elementTypeList', SYS.AppModelList, [], {
+        appItem: NS.ElementType,
+    });
+
+    NS.ElementText = Y.Base.create('elementText', SYS.AppModel, [], {
+        structureName: 'ElementText',
+    });
+
+    NS.ElementTextList = Y.Base.create('elementTextList', SYS.AppModelList, [], {
+        appItem: NS.ElementText,
+    });
+
+    NS.ElementArticle = Y.Base.create('elementArticle', SYS.AppModel, [], {
+        structureName: 'ElementArticle',
+    });
+
+    NS.ElementArticleList = Y.Base.create('elementArticleList', SYS.AppModelList, [], {
+        appItem: NS.ElementArticle,
+    });
+
 };

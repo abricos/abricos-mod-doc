@@ -2,11 +2,9 @@
 <div class="docEditor panel panel-default">
     <div class="panel-heading text-center">
         <h3 class="panel-title pull-left">
-            <span data-isedit="hide">Создание документа</span>
-            <span data-isedit="show">Редактирование документа</span>
+            Редактор документа
         </h3>
 
-        <img data-wait="show" src="/images/loading.gif"/>
         <div class="clearfix"></div>
     </div>
     <div class="panel-body">
@@ -16,22 +14,19 @@
                    data-wait="disable"/>
         </div>
         <hr/>
-        <div class="form-group">
-            <div id="{i#descriptEditor}" data-rows="7"></div>
-        </div>
+        <div id="{i#container}"></div>
+        <div id="{i#elementAppend}"></div>
+
     </div>
-    <div class="panel-footer text-right">
+    <div class="panel-footer text-center">
+        <img data-wait="show" src="/images/loading.gif"/>
+
         <div class="btn-toolbar pull-right">
             <button data-click="this:save" class="btn btn-default">
-                <span data-isedit="hide">Создать</span>
-                <span data-isedit="show">Сохранить</span>
+                Сохранить
             </button>
-            <a data-url="doc.list" class="btn btn-default">
-                Отмена
-            </a>
         </div>
 
-        <img data-wait="show" src="/images/loading.gif"/>
         <div class="clearfix"></div>
     </div>
 </div>

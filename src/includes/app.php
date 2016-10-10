@@ -19,11 +19,19 @@ class DocApp extends AbricosApplication {
             "Doc" => "Doc",
             "DocList" => "DocList",
             "DocSave" => "DocSave",
+            "Element" => "DocElement",
+            "ElementList" => "DocElementList",
+            "ElementType" => "DocElementType",
+            "ElementTypeList" => "DocElementTypeList",
+            "ElementText" => "DocElementText",
+            "ElementTextList" => "DocElementTextList",
+            "ElementArticle" => "DocElementArticle",
+            "ElementArticleList" => "DocElementArticleList",
         );
     }
 
     protected function GetStructures(){
-        return 'Doc,DocSave';
+        return 'Doc,DocSave,Element,ElementType,ElementText,ElementArticle';
     }
 
     public function ResponseToJSON($d){
@@ -34,6 +42,8 @@ class DocApp extends AbricosApplication {
                 return $this->DocSaveToJSON($d->data);
             case 'doc':
                 return $this->DocToJSON($d->docid);
+            case 'elementTypeList':
+                return $this->ElementTypeListToJSON();
         }
         return null;
     }
@@ -48,6 +58,43 @@ class DocApp extends AbricosApplication {
 
     public function IsViewRole(){
         return $this->manager->IsViewRole();
+    }
+
+    private function ElementTypeInstance($name, $template, $model){
+        $brick = Brick::$builder->LoadBrickS('doc', $template);
+
+        return $this->InstanceClass('ElementType', array(
+            'id' => $name,
+            'template' => $brick->content,
+            'model' => $model
+        ));
+    }
+
+    public function ElementTypeListToJSON(){
+        $ret = $this->ElementTypeList();
+        return $this->ResultToJSON('elementTypeList', $ret);
+    }
+
+    /**
+     * @return DocElementTypeList|int
+     */
+    public function ElementTypeList(){
+        if (!$this->IsViewRole()){
+            return AbricosResponse::ERR_FORBIDDEN;
+        }
+
+        if ($this->CacheExists('ElementTypeList')){
+            return $this->Cache('ElementTypeList');
+        }
+
+        /** @var DocElementTypeList $list */
+        $list = $this->InstanceClass('ElementTypeList');
+        $list->Add($this->ElementTypeInstance('text', 'elementText', 'ElementText'));
+        $list->Add($this->ElementTypeInstance('article', 'elementArticle', 'ElementArticle'));
+
+        $this->SetCache('ElementTypeList', $list);
+
+        return $list;
     }
 
     public function DocListToJSON(){

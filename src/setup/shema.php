@@ -16,43 +16,62 @@ if ($updateManager->isInstall()){
     Abricos::GetModule('doc')->permission->Install();
 
     $db->query_write("
-		CREATE TABLE IF NOT EXISTS ".$pfx."doc (
-			docid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
-			
-			userid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-			
-			title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
-  		    descript TEXT NOT NULL COMMENT '',
-			
-			dateline INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата создания',
-			upddate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата обновления',
-			deldate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
-
-			PRIMARY KEY (docid),
-			KEY deldate (deldate)
-		)".$charset
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc (
+            docid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
+            
+            userid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+            
+            result TEXT NOT NULL COMMENT '',
+            
+            dateline INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+            upddate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата обновления',
+            deldate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
+            
+            PRIMARY KEY (docid),
+            KEY deldate (deldate)
+        )".$charset
     );
 
     $db->query_write("
-		CREATE TABLE IF NOT EXISTS ".$pfx."doc_body (
-			bodyid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
-			docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-			parentid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-			
-			prefix VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
-			num INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-			suffix VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_element (
+            elementid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
+            parentid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            elementType VARCHAR(25) NOT NULL DEFAULT '' COMMENT '',
+            
+            ord INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            PRIMARY KEY (elementid),
+            KEY docid (docid)
+        )".$charset
+    );
 
-			title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
-  		    body TEXT NOT NULL  COMMENT '',
-			
-			dateline INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата создания',
-			upddate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата обновления',
-			deldate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_element_text (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            body TEXT NOT NULL COMMENT '',
+            
+            UNIQUE KEY (elementid),
+            KEY docid (docid)
+        )".$charset
+    );
 
-			PRIMARY KEY (bodyid),
-			KEY body (docid, deldate)
-		)".$charset
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_element_article (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+            
+            UNIQUE KEY (elementid),
+            KEY docid (docid)
+        )".$charset
     );
 
 }

@@ -2,7 +2,7 @@ var Component = new Brick.Component();
 Component.requires = {
     mod: [
         {name: 'sys', files: ['editor.js']},
-        {name: '{C#MODNAME}', files: ['toolbar.js']}
+        {name: '{C#MODNAME}', files: ['lib.js']}
     ]
 };
 Component.entryPoint = function(NS){
@@ -11,44 +11,10 @@ Component.entryPoint = function(NS){
         COMPONENT = this,
         SYS = Brick.mod.sys;
 
-    NS.DocEditorWidget = Y.Base.create('DocEditorWidget', SYS.AppWidget, [
-        SYS.ContainerWidgetExt,
+    NS.BodyTextEditorWidget = Y.Base.create('BodyTextEditorWidget', SYS.AppWidget, [
+        NS.BodyEditorWidgetExt
     ], {
         onInitAppWidget: function(err, appInstance){
-            var docid = this.get('docid');
-
-            this.set('waiting', true);
-
-            if (docid === 0){
-                var doc = new (appInstance.get('Doc'))({
-                    appInstance: appInstance
-                });
-                this.onLoadDoc(doc);
-            } else {
-                appInstance.doc(docid, function(err, result){
-                    if (err){
-                        this.set('waiting', false);
-                        return;
-                    }
-                    this.onLoadDoc(result.doc);
-                }, this);
-            }
-        },
-        onLoadDoc: function(doc){
-            this.set('waiting', false);
-            var tp = this.template;
-
-            tp.setValue({
-                title: doc.get('title')
-            });
-
-            this.addWidget('buttonElementAppend', new NS.ButtonElementAppendWidget({
-                srcNode: tp.one('elementAppend'),
-                context: this,
-                callback: function(elementType){
-                    console.log(elementType);
-                }
-            }));
 
             /*
              this.addWidget('descriptEditor', new SYS.Editor({

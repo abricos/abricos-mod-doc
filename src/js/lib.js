@@ -17,20 +17,24 @@ Component.entryPoint = function(NS){
     SYS.Application.build(COMPONENT, {}, {
         initializer: function(){
             NS.roles.load(function(){
-                this.appStructure(function(){
+                this.elementTypeList(function(){
                     this.initCallbackFire();
                 }, this);
             }, this);
         },
     }, [], {
-        APPS: {
-            uprofile: {}
-        },
+        APPS: {},
         ATTRS: {
-            isLoadAppStructure: {value: false},
+            isLoadAppStructure: {value: true},
             Doc: {value: NS.Doc},
             DocList: {value: NS.DocList},
             DocSave: {value: NS.DocSave},
+            ElementType: {value: NS.ElementType},
+            ElementTypeList: {value: NS.ElementTypeList},
+            ElementText: {value: NS.ElementText},
+            ElementTextList: {value: NS.ElementTextList},
+            ElementArticle: {value: NS.ElementArticle},
+            ElementArticleList: {value: NS.ElementArticleList},
         },
         REQS: {
             docList: {
@@ -44,6 +48,10 @@ Component.entryPoint = function(NS){
             doc: {
                 args: ['docid'],
                 type: "model:Doc"
+            },
+            elementTypeList: {
+                attribute: true,
+                type: "modelList:ElementTypeList"
             },
         },
         URLS: {
