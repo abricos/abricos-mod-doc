@@ -31,10 +31,10 @@ Component.entryPoint = function(NS){
             DocSave: {value: NS.DocSave},
             ElementType: {value: NS.ElementType},
             ElementTypeList: {value: NS.ElementTypeList},
-            ElementText: {value: NS.ElementText},
-            ElementTextList: {value: NS.ElementTextList},
-            ElementArticle: {value: NS.ElementArticle},
-            ElementArticleList: {value: NS.ElementArticleList},
+            ElText: {value: NS.ElText},
+            ElTextList: {value: NS.ElTextList},
+            ElArticle: {value: NS.ElArticle},
+            ElArticleList: {value: NS.ElArticleList},
         },
         REQS: {
             docList: {

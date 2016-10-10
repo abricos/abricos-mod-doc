@@ -13,12 +13,14 @@ Component.entryPoint = function(NS){
 
     NS.DocEditorWidget = Y.Base.create('DocEditorWidget', SYS.AppWidget, [
         SYS.ContainerWidgetExt,
+        NS.ElementContainerWidgetExt
     ], {
         onInitAppWidget: function(err, appInstance){
+            this.initElementContainer();
+
             var docid = this.get('docid');
 
             this.set('waiting', true);
-
             if (docid === 0){
                 var doc = new (appInstance.get('Doc'))({
                     appInstance: appInstance
@@ -41,23 +43,6 @@ Component.entryPoint = function(NS){
             tp.setValue({
                 title: doc.get('title')
             });
-
-            this.addWidget('buttonElementAppend', new NS.ButtonElementAppendWidget({
-                srcNode: tp.one('elementAppend'),
-                context: this,
-                callback: function(elementType){
-                    console.log(elementType);
-                }
-            }));
-
-            /*
-             this.addWidget('descriptEditor', new SYS.Editor({
-             appInstance: this.get('appInstance'),
-             srcNode: tp.one('descriptEditor'),
-             content: doc.get('descript'),
-             toolbar: SYS.Editor.TOOLBAR_MINIMAL
-             }));
-             /**/
         },
         save: function(){
             this.set('waiting', true);

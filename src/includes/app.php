@@ -23,15 +23,15 @@ class DocApp extends AbricosApplication {
             "ElementList" => "DocElementList",
             "ElementType" => "DocElementType",
             "ElementTypeList" => "DocElementTypeList",
-            "ElementText" => "DocElementText",
-            "ElementTextList" => "DocElementTextList",
-            "ElementArticle" => "DocElementArticle",
-            "ElementArticleList" => "DocElementArticleList",
+            "ElText" => "DocElText",
+            "ElTextList" => "DocElTextList",
+            "ElArticle" => "DocElArticle",
+            "ElArticleList" => "DocElArticleList",
         );
     }
 
     protected function GetStructures(){
-        return 'Doc,DocSave,Element,ElementType,ElementText,ElementArticle';
+        return 'Doc,DocSave,Element,ElementType,ElText,ElArticle';
     }
 
     public function ResponseToJSON($d){
@@ -89,8 +89,8 @@ class DocApp extends AbricosApplication {
 
         /** @var DocElementTypeList $list */
         $list = $this->InstanceClass('ElementTypeList');
-        $list->Add($this->ElementTypeInstance('text', 'elementText', 'ElementText'));
-        $list->Add($this->ElementTypeInstance('article', 'elementArticle', 'ElementArticle'));
+        $list->Add($this->ElementTypeInstance('text', 'elText', 'ElText'));
+        $list->Add($this->ElementTypeInstance('article', 'elArticle', 'ElArticle'));
 
         $this->SetCache('ElementTypeList', $list);
 

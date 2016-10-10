@@ -96,43 +96,43 @@ class DocElementList extends AbricosModelList {
 
 
 /**
- * Class DocElementText
+ * Class DocElText
  *
  * @property int $id Element ID
  * @property int $docid
  * @property string $body
  */
-class DocElementText extends AbricosModel {
+class DocElText extends AbricosModel {
     protected $_structModule = 'doc';
-    protected $_structName = 'ElementText';
+    protected $_structName = 'ElText';
 }
 
 /**
- * Class DocElementTextList
+ * Class DocElTextList
  *
- * @method DocElementText Get(string $name)
- * @method DocElementText GetByIndex(int $i)
+ * @method DocElText Get(string $name)
+ * @method DocElText GetByIndex(int $i)
  */
-class DocElementTextList extends AbricosModelList {
+class DocElTextList extends AbricosModelList {
 }
 
 /**
- * Class DocElementArticle
+ * Class DocElArticle
  *
  * @property int $id Element ID
  * @property int $docid
  * @property string $title
  */
-class DocElementArticle extends AbricosModel {
+class DocElArticle extends AbricosModel {
     protected $_structModule = 'doc';
-    protected $_structName = 'ElementArticle';
+    protected $_structName = 'ElArticle';
 }
 
 /**
- * Class DocElementArticleList
+ * Class DocElArticleList
  *
- * @method DocElementArticle Get(string $name)
- * @method DocElementArticle GetByIndex(int $i)
+ * @method DocElArticle Get(string $name)
+ * @method DocElArticle GetByIndex(int $i)
  */
-class DocElementArticleList extends AbricosModelList {
+class DocElArticleList extends AbricosModelList {
 }

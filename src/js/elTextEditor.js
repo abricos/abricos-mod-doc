@@ -11,19 +11,16 @@ Component.entryPoint = function(NS){
         COMPONENT = this,
         SYS = Brick.mod.sys;
 
-    NS.BodyTextEditorWidget = Y.Base.create('BodyTextEditorWidget', SYS.AppWidget, [
-        NS.BodyEditorWidgetExt
+    NS.ElTextEditorWidget = Y.Base.create('ElTextEditorWidget', SYS.AppWidget, [
+        NS.ElementEditorWidgetExt
     ], {
         onInitAppWidget: function(err, appInstance){
-
-            /*
-             this.addWidget('descriptEditor', new SYS.Editor({
-             appInstance: this.get('appInstance'),
-             srcNode: tp.one('descriptEditor'),
-             content: doc.get('descript'),
-             toolbar: SYS.Editor.TOOLBAR_MINIMAL
-             }));
-             /**/
+            var tp = this.template;
+            this._editorWidget = new SYS.Editor({
+                appInstance: this.get('appInstance'),
+                srcNode: tp.one('editor'),
+                toolbar: SYS.Editor.TOOLBAR_MINIMAL
+            });
         },
         save: function(){
             this.set('waiting', true);

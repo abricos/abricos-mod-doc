@@ -38,20 +38,20 @@ Component.entryPoint = function(NS){
         appItem: NS.ElementType,
     });
 
-    NS.ElementText = Y.Base.create('elementText', SYS.AppModel, [], {
-        structureName: 'ElementText',
+    NS.ElText = Y.Base.create('elText', SYS.AppModel, [], {
+        structureName: 'ElText',
     });
 
-    NS.ElementTextList = Y.Base.create('elementTextList', SYS.AppModelList, [], {
-        appItem: NS.ElementText,
+    NS.ElTextList = Y.Base.create('elTextList', SYS.AppModelList, [], {
+        appItem: NS.ElText,
     });
 
-    NS.ElementArticle = Y.Base.create('elementArticle', SYS.AppModel, [], {
-        structureName: 'ElementArticle',
+    NS.ElArticle = Y.Base.create('elArticle', SYS.AppModel, [], {
+        structureName: 'ElArticle',
     });
 
-    NS.ElementArticleList = Y.Base.create('elementArticleList', SYS.AppModelList, [], {
-        appItem: NS.ElementArticle,
+    NS.ElArticleList = Y.Base.create('elArticleList', SYS.AppModelList, [], {
+        appItem: NS.ElArticle,
     });
 
 };
