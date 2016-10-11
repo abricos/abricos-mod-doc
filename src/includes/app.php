@@ -126,6 +126,17 @@ class DocApp extends AbricosApplication {
         return $this->ResultToJSON('docSave', $ret);
     }
 
+    /*
+    "childs": [{"type": "text", "clientid": 2, "childs": [], "body": "<p>asdfawefe f</p>"}, {
+        "type": "text",
+        "clientid": 3,
+        "childs": [],
+        "body": "<p>w323423423423</p>"
+    }],
+    "docid": 1,
+    "title": "asdfasdfa wefawefef"
+     /**/
+
     public function DocSave($d){
         /** @var DocSave $ret */
         $ret = $this->InstanceClass('DocSave', $d);
@@ -152,7 +163,17 @@ class DocApp extends AbricosApplication {
 
         $ret->AddCode(DocSave::CODE_OK);
 
+        $doc = $this->Doc($ret->docid);
+
+        if (isset($vars->childs) && is_array($vars->childs)){
+            $this->DocChildsSave($doc, $vars->childs);
+        }
+
         return $ret;
+    }
+
+    private function DocChildsSave(Doc $doc, $childs){
+
     }
 
     public function DocToJSON($docid){
@@ -164,6 +185,10 @@ class DocApp extends AbricosApplication {
         if (!$this->IsViewRole()){
             return AbricosResponse::ERR_FORBIDDEN;
         }
+        if ($this->CacheExists('Doc', $docid)){
+            return $this->Cache('Doc', $docid);
+        }
+
         $docid = intval($docid);
 
         $d = DocQuery::Doc($this->db, $docid);
@@ -174,6 +199,38 @@ class DocApp extends AbricosApplication {
         /** @var Doc $doc */
         $doc = $this->InstanceClass('Doc', $d);
 
+        $rows = DocQuery::ElementList($this->db, $doc->id);
+        while (($d = $this->db->fetch_array($rows))){
+            /** @var DocElement $element */
+            $element = $this->InstanceClass('Element', $d);
+            $doc->elementList->Add($element);
+
+            if (!isset($doc->extends[$element->type])){
+                $doc->extends[$element->type] = $this->ElList($doc->id, $element->type);
+            }
+        }
+
+        $this->SetCache('Doc', $docid);
+
         return $doc;
+    }
+
+    /**
+     * @param $docid
+     * @param $type
+     * @return DocElList
+     */
+    private function ElList($docid, $type){
+        $listClassName = DocElement::ListClassName($type);
+        $itemClassName = DocElement::ItemClassName($type);
+
+        /** @var DocElList $list */
+        $list = $this->InstanceClass($listClassName);
+
+        $rows = DocQuery::ElList($this->db, $docid, $type);
+        while (($d = $this->db->fetch_array($rows))){
+            $list->Add($this->InstanceClass($itemClassName, $d));
+        }
+        return $list;
     }
 }

@@ -9,9 +9,8 @@
       "type": "string",
       "parse": "full"
     },
-    "descript": {
-      "type": "string",
-      "parse": "standard"
+    "childs": {
+      "type": "array"
     }
   },
   "codes": {

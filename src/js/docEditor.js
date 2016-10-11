@@ -13,11 +13,9 @@ Component.entryPoint = function(NS){
 
     NS.DocEditorWidget = Y.Base.create('DocEditorWidget', SYS.AppWidget, [
         SYS.ContainerWidgetExt,
-        NS.ElementContainerWidgetExt
+        NS.ElementEditorWidgetExt
     ], {
         onInitAppWidget: function(err, appInstance){
-            this.initElementContainer();
-
             var docid = this.get('docid');
 
             this.set('waiting', true);
@@ -38,22 +36,27 @@ Component.entryPoint = function(NS){
         },
         onLoadDoc: function(doc){
             this.set('waiting', false);
+            this.set('doc', doc);
+
             var tp = this.template;
 
             tp.setValue({
                 title: doc.get('title')
             });
+
+            this.initElementEditor();
+        },
+        toJSON: function(){
+            var tp = this.template;
+            return {
+                docid: this.get('docid'),
+                title: tp.getValue('title'),
+            };
         },
         save: function(){
             this.set('waiting', true);
 
-            var tp = this.template;
-
-            var sd = {
-                docid: this.get('docid'),
-                title: tp.getValue('title'),
-                // descript: this.getWidget('descriptEditor').get('content')
-            };
+            var sd = this._toJSON();
 
             this.get('appInstance').docSave(sd, function(err, result){
                 this.set('waiting', false);

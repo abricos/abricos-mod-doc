@@ -22,6 +22,27 @@ Component.entryPoint = function(NS){
                 }, this);
             }, this);
         },
+        instanceElItem: function(type, d){
+            var ElItem = this.get('El' + NS.upperFirstChar(type));
+
+            if (!ElItem){
+                return;
+            }
+            return new ElItem(Y.merge(d || {}, {
+                appInstance: this
+            }));
+        },
+        instanceElList: function(type, d){
+            var ElList = this.get('El' + NS.upperFirstChar(type) + 'List');
+
+            if (!ElList){
+                return;
+            }
+            return new ElList({
+                appInstance: this,
+                items: d.list || []
+            });
+        }
     }, [], {
         APPS: {},
         ATTRS: {
@@ -47,7 +68,13 @@ Component.entryPoint = function(NS){
             },
             doc: {
                 args: ['docid'],
-                type: "model:Doc"
+                type: "model:Doc",
+                onResponse: function(doc, data){
+                    var docExtends = doc.get('extends');
+                    for (var n in data.extends){
+                        docExtends[n] = this.instanceElList(n, data.extends[n]);
+                    }
+                }
             },
             elementTypeList: {
                 attribute: true,

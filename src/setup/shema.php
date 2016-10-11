@@ -51,26 +51,22 @@ if ($updateManager->isInstall()){
     );
 
     $db->query_write("
-        CREATE TABLE IF NOT EXISTS ".$pfx."doc_element_text (
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_text (
             elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-            docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             body TEXT NOT NULL COMMENT '',
             
-            UNIQUE KEY (elementid),
-            KEY docid (docid)
+            UNIQUE KEY (elementid)
         )".$charset
     );
 
     $db->query_write("
-        CREATE TABLE IF NOT EXISTS ".$pfx."doc_element_article (
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_article (
             elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
-            docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
             
-            UNIQUE KEY (elementid),
-            KEY docid (docid)
+            UNIQUE KEY (elementid)
         )".$charset
     );
 

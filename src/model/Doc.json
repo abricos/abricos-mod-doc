@@ -9,8 +9,9 @@
     "title": {
       "type": "string"
     },
-    "descript": {
-      "type": "string"
+    "elementList": {
+      "type": "modelList:ElementList",
+      "notNULL": true
     }
   }
 }

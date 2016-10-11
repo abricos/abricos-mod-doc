@@ -12,7 +12,7 @@
  *
  * @property int $docid
  * @property string $title
- * @property string $descript
+ * @property array $childs
  */
 interface DocSaveVars {
 }
@@ -35,11 +35,25 @@ class DocSave extends AbricosResponse {
  * Class Doc
  *
  * @property string $title
- * @property string $descript
+ * @property DocElementList $elementList
+ * @property array $extends
  */
 class Doc extends AbricosModel {
     protected $_structModule = 'doc';
     protected $_structName = 'Doc';
+
+    public $extends = array();
+
+    public function ToJSON(){
+        $ret = parent::ToJSON();
+
+        $ret->extends = new stdClass();
+        foreach ($this->extends as $key => $value){
+            $ret->extends->$key = $value->ToJSON();
+        }
+
+        return $ret;
+    }
 }
 
 /**
@@ -71,6 +85,7 @@ class DocElementType extends AbricosModel {
 class DocElementTypeList extends AbricosModelList {
 }
 
+
 /**
  * Class DocElement
  *
@@ -83,27 +98,50 @@ class DocElementTypeList extends AbricosModelList {
 class DocElement extends AbricosModel {
     protected $_structModule = 'doc';
     protected $_structName = 'Element';
+
+    public static function ItemClassName($type){
+        return 'El'.ucfirst($type);
+    }
+
+    public static function ListClassName($type){
+        return 'El'.ucfirst($type).'List';
+    }
 }
 
 /**
  * Class DocElementList
  *
- * @method DocElement Get(string $name)
+ * @method DocElement Get(int $elementid)
  * @method DocElement GetByIndex(int $i)
  */
 class DocElementList extends AbricosModelList {
 }
 
+/**
+ * Class DocEl
+ *
+ * @property int $id Element ID
+ */
+abstract class DocEl extends AbricosModel {
+    protected $_structModule = 'doc';
+}
+
+/**
+ * Class DocElList
+ *
+ * @method DocEl Get(string $elementid)
+ * @method DocEl GetByIndex(int $i)
+ */
+abstract class DocElList extends AbricosModelList {
+}
 
 /**
  * Class DocElText
  *
- * @property int $id Element ID
  * @property int $docid
  * @property string $body
  */
-class DocElText extends AbricosModel {
-    protected $_structModule = 'doc';
+class DocElText extends DocEl {
     protected $_structName = 'ElText';
 }
 
@@ -113,7 +151,7 @@ class DocElText extends AbricosModel {
  * @method DocElText Get(string $name)
  * @method DocElText GetByIndex(int $i)
  */
-class DocElTextList extends AbricosModelList {
+class DocElTextList extends DocElList {
 }
 
 /**
@@ -123,8 +161,7 @@ class DocElTextList extends AbricosModelList {
  * @property int $docid
  * @property string $title
  */
-class DocElArticle extends AbricosModel {
-    protected $_structModule = 'doc';
+class DocElArticle extends DocEl {
     protected $_structName = 'ElArticle';
 }
 
@@ -134,5 +171,5 @@ class DocElArticle extends AbricosModel {
  * @method DocElArticle Get(string $name)
  * @method DocElArticle GetByIndex(int $i)
  */
-class DocElArticleList extends AbricosModelList {
+class DocElArticleList extends DocElList {
 }

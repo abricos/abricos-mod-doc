@@ -10,8 +10,28 @@ Component.entryPoint = function(NS){
 
     NS.Doc = Y.Base.create('doc', SYS.AppModel, [], {
         structureName: 'Doc',
+        elEach: function(parentid, fn, contenxt){
+            parentid = parentid | 0;
+            var exts = this.get('extends');
+            this.get('elementList').each(function(element){
+                if (parentid !== element.get('parentid')){
+                    return;
+                }
+                var elList = exts[element.get('type')];
+                if (!elList){
+                    return;
+                }
+                var el = elList.getById(element.get('id'));
+
+                fn.call(contenxt || this, el, element);
+            }, this)
+        }
     }, {
-        ATTRS: {}
+        ATTRS: {
+            extends: {
+                value: {}
+            }
+        }
     });
 
     NS.DocList = Y.Base.create('docList', SYS.AppModelList, [], {
@@ -29,7 +49,7 @@ Component.entryPoint = function(NS){
     NS.ElementList = Y.Base.create('elementList', SYS.AppModelList, [], {
         appItem: NS.Element,
     });
-    
+
     NS.ElementType = Y.Base.create('elementType', SYS.AppModel, [], {
         structureName: 'ElementType',
     });

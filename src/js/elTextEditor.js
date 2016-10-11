@@ -14,6 +14,11 @@ Component.entryPoint = function(NS){
     NS.ElTextEditorWidget = Y.Base.create('ElTextEditorWidget', SYS.AppWidget, [
         NS.ElementEditorWidgetExt
     ], {
+        destructor: function(){
+            if (this._editorWidget ){
+                this._editorWidget.destroy();
+            }
+        },
         onInitAppWidget: function(err, appInstance){
             var tp = this.template;
             this._editorWidget = new SYS.Editor({
@@ -21,31 +26,20 @@ Component.entryPoint = function(NS){
                 srcNode: tp.one('editor'),
                 toolbar: SYS.Editor.TOOLBAR_MINIMAL
             });
+            this.initElementEditor();
         },
-        save: function(){
-            this.set('waiting', true);
-
-            var tp = this.template;
-
-            var sd = {
-                docid: this.get('docid'),
-                title: tp.getValue('title'),
-                // descript: this.getWidget('descriptEditor').get('content')
+        toJSON: function(){
+            var ret = {
+                body: this._editorWidget.get('content')
             };
 
-            this.get('appInstance').docSave(sd, function(err, result){
-                this.set('waiting', false);
-                if (err){
-                    return;
-                }
-                this.set('docid', result.docSave.docid);
-            }, this);
+            return ret;
         },
     }, {
         ATTRS: {
             component: {value: COMPONENT},
             templateBlockName: {value: 'widget'},
-            docid: NS.ATTRIBUTE.docid,
+            elementType: {value: 'text'}
         },
         parseURLParam: function(args){
             return {
