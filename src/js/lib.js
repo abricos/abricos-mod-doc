@@ -50,6 +50,8 @@ Component.entryPoint = function(NS){
             Doc: {value: NS.Doc},
             DocList: {value: NS.DocList},
             DocSave: {value: NS.DocSave},
+            Element: {value: NS.Element},
+            ElementList: {value: NS.ElementList},
             ElementType: {value: NS.ElementType},
             ElementTypeList: {value: NS.ElementTypeList},
             ElText: {value: NS.ElText},
@@ -74,6 +76,15 @@ Component.entryPoint = function(NS){
                     for (var n in data.extends){
                         docExtends[n] = this.instanceElList(n, data.extends[n]);
                     }
+                    var type, el;
+                    doc.get('elementList').each(function(element){
+                        type = element.get('type');
+                        if (!docExtends[type]){
+                            return;
+                        }
+                        el = docExtends[type].getById(element.get('id'));
+                        element.set('el', el);
+                    }, this);
                 }
             },
             elementTypeList: {

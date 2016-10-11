@@ -28,6 +28,13 @@ Component.entryPoint = function(NS){
         docid: number,
         doc: {value: null},
         element: {value: null},
+        el: {
+            readOnly: true,
+            getter: function(){
+                var element = this.get('element');
+                return element ? element.get('el') : null;
+            }
+        },
         clientid: {
             readOnly: true,
             getter: function(){
@@ -43,10 +50,21 @@ Component.entryPoint = function(NS){
     };
     ElementEditorWidgetExt.ATTRS = {
         doc: NS.ATTRIBUTE.doc,
-        isEditMode: {value: false},
-        isViewMode: {value: false},
-        elementType: {value: ''},
+        element: NS.ATTRIBUTE.element,
+        el: NS.ATTRIBUTE.el,
         clientid: NS.ATTRIBUTE.clientid,
+        mode: {
+            value: 'preview',
+            setter: function(val){
+                switch(val){
+                    case 'edit':
+                    case 'preview':
+                    case 'view':
+                        return val;
+                }
+                return 'preview';
+            },
+        }
     };
     ElementEditorWidgetExt.prototype = {
         initializer: function(){
@@ -73,11 +91,12 @@ Component.entryPoint = function(NS){
                 callback: this.elementAppendByType
             });
 
-            this.get('doc').elEach(0, function(el, element){
-                // this.elementAppend(el);
-                console.log(el.toJSON(true));
-            }, this);
+            var element = this.get('element'),
+                parentid = element ? element.get('parentid') : 0;
 
+            this.get('doc').elEach(parentid, function(element){
+                this.elementAppend(element);
+            }, this);
         },
         cleanChilds: function(){
             var wList = this._wChilds;
@@ -86,31 +105,38 @@ Component.entryPoint = function(NS){
             }
             this._wChilds = [];
         },
-        elementAppendByType: function(name){
+        elementAppendByType: function(type){
             var appInstance = this.get('appInstance'),
-                tp = this.template,
-                upName = NS.upperFirstChar(name),
-                component = 'el' + upName + 'Editor',
-                elClassName = 'El' + upName,
-                el = new (appInstance.get(elClassName))({
+                element = this.get('element'),
+                Element = appInstance.get('Element'),
+                childElement = new Element({
                     appInstance: appInstance,
-                }),
-                widgetName = modelClassName + 'EditorWidget',
+                    type: type,
+                    parentid: element ? element.get('parentid') : 0,
+                    el: appInstance.instanceElItem(type)
+                });
+
+            this.elementAppend(childElement);
+        },
+        elementAppend: function(element){
+            var tp = this.template,
+                type = element.get('type'),
+                upName = NS.upperFirstChar(type),
+                component = 'el' + upName + 'Editor',
+                widgetName = 'El' + upName + 'EditorWidget',
                 wList = this._wChilds;
 
-            this.set('waiting', true)
+            this.set('waiting', true);
             Brick.use('{C#MODNAME}', component, function(){
-                this.set('waiting', false)
+                this.set('waiting', false);
 
                 var Widget = NS[widgetName];
                 wList[wList.length] = new Widget({
                     srcNode: tp.append('container', '<div></div>'),
-                    doc: this.get('doc')
+                    doc: this.get('doc'),
+                    element: element
                 });
             }, this);
-        },
-        elementAppend: function(el){
-
         },
         _setMode: function(isEdit){
             this.set('isEditMode', isEdit);

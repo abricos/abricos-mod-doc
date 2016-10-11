@@ -20,10 +20,13 @@ Component.entryPoint = function(NS){
             }
         },
         onInitAppWidget: function(err, appInstance){
-            var tp = this.template;
+            var tp = this.template,
+                el = this.get('el');
+
             this._editorWidget = new SYS.Editor({
                 appInstance: this.get('appInstance'),
                 srcNode: tp.one('editor'),
+                content: el.get('body'),
                 toolbar: SYS.Editor.TOOLBAR_MINIMAL
             });
             this.initElementEditor();

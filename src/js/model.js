@@ -12,18 +12,12 @@ Component.entryPoint = function(NS){
         structureName: 'Doc',
         elEach: function(parentid, fn, contenxt){
             parentid = parentid | 0;
-            var exts = this.get('extends');
             this.get('elementList').each(function(element){
                 if (parentid !== element.get('parentid')){
                     return;
                 }
-                var elList = exts[element.get('type')];
-                if (!elList){
-                    return;
-                }
-                var el = elList.getById(element.get('id'));
 
-                fn.call(contenxt || this, el, element);
+                fn.call(contenxt || this, element);
             }, this)
         }
     }, {
@@ -44,6 +38,10 @@ Component.entryPoint = function(NS){
 
     NS.Element = Y.Base.create('element', SYS.AppModel, [], {
         structureName: 'Element',
+    }, {
+        ATTRS: {
+            el: {}
+        }
     });
 
     NS.ElementList = Y.Base.create('elementList', SYS.AppModelList, [], {
