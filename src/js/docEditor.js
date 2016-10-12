@@ -63,7 +63,10 @@ Component.entryPoint = function(NS){
                 if (err){
                     return;
                 }
-                this.set('docid', result.docSave.docid);
+                var ds = result.docSave;
+                this.set('docid', ds.get('docid'));
+
+                this._onSave(ds);
             }, this);
         },
     }, {

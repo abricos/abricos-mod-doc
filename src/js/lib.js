@@ -52,6 +52,7 @@ Component.entryPoint = function(NS){
             DocSave: {value: NS.DocSave},
             Element: {value: NS.Element},
             ElementList: {value: NS.ElementList},
+            ElementSave: {value: NS.ElementSave},
             ElementType: {value: NS.ElementType},
             ElementTypeList: {value: NS.ElementTypeList},
             ElText: {value: NS.ElText},
@@ -66,7 +67,19 @@ Component.entryPoint = function(NS){
             },
             docSave: {
                 args: ['data'],
-                type: 'response:DocSave'
+                type: 'response:DocSave',
+                onResponse: function(r){
+                    var ElementSave = this.get('ElementSave'),
+                        dEls = r.get('elements'),
+                        els = [];
+
+                    for (var i = 0; i < dEls.length; i++){
+                        els[els.length] = new ElementSave(Y.merge({
+                            appInstance: this
+                        }, dEls[i]));
+                    }
+                    r.set('elements', els)
+                }
             },
             doc: {
                 args: ['docid'],

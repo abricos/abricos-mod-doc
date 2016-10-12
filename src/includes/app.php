@@ -32,7 +32,13 @@ class DocApp extends AbricosApplication {
     }
 
     protected function GetStructures(){
-        return 'Doc,DocSave,Element,ElementType,ElText,ElArticle';
+        $ret = 'Doc,Element,ElementType,ElText,ElArticle';
+
+        if ($this->IsWriteRole()){
+            $ret .= ',DocSave,ElementSave';
+        }
+
+        return $ret;
     }
 
     public function ResponseToJSON($d){

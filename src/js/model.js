@@ -34,6 +34,24 @@ Component.entryPoint = function(NS){
 
     NS.DocSave = Y.Base.create('docSave', SYS.AppResponse, [], {
         structureName: 'DocSave',
+        getByClientId: function(clientid){
+            clientid = clientid | 0;
+            var elements = this.get('elements');
+            for (var i = 0; i < elements.length; i++){
+                if (elements[i].get('clientid') === clientid){
+                    return elements[i];
+                }
+            }
+            return null;
+        }
+    }, {
+        ATTRS: {
+            elements: {value: []}
+        }
+    });
+
+    NS.ElementSave = Y.Base.create('elementSave', SYS.AppResponse, [], {
+        structureName: 'ElementSave',
     });
 
     NS.Element = Y.Base.create('element', SYS.AppModel, [], {

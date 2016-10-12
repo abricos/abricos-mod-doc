@@ -65,6 +65,12 @@ Component.entryPoint = function(NS){
             }
             this._wChilds = [];
         },
+        childEach: function(fn, context){
+            var wList = this._wChilds;
+            for (var i = 0; i < wList.length; i++){
+                fn.call(context || this, wList[i]);
+            }
+        },
         elementAppendByType: function(type){
             var appInstance = this.get('appInstance'),
                 element = this.get('element'),
@@ -117,26 +123,42 @@ Component.entryPoint = function(NS){
                 ret = Y.merge({
                     clientid: this.get('clientid'),
                     childs: []
-                }, this.toJSON() || {}),
-                wList = this._wChilds;
+                }, this.toJSON() || {});
 
             if (element){
-                ret= Y.merge({
-                    elementid: element.get('id') ,
+                ret = Y.merge({
+                    elementid: element.get('id'),
                     parentid: element.get('parentid'),
                     type: element.get('type'),
                 }, ret || {});
             }
-
-            for (var i = 0; i < wList.length; i++){
-                ret.childs[ret.childs.length] = wList[i]._toJSON();
-            }
+            this.childEach(function(child){
+                ret.childs[ret.childs.length] = child._toJSON();
+            }, this);
 
             return ret;
         },
         toJSON: function(){
             return {};
         },
+        _onSave: function(docSave){
+            this.childEach(function(child){
+                child._onSave(docSave);
+            }, this);
+
+            var element = this.get('element');
+
+            if (!element || element.get('id') > 0){
+                return;
+            }
+
+            var clientid = this.get('clientid'),
+                eSave = docSave.getByClientId(clientid);
+
+            if (eSave){
+                element.set('id', eSave.get('elementid'));
+            }
+        }
     };
     NS.ElementEditorWidgetExt = ElementEditorWidgetExt;
 
