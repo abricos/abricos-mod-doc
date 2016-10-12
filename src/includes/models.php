@@ -229,3 +229,23 @@ class DocElPage extends DocEl {
  */
 class DocElPageList extends DocElList {
 }
+
+/**
+ * Class DocElSection
+ *
+ * @property int $id Element ID
+ * @property int $docid
+ * @property string $title
+ */
+class DocElSection extends DocEl {
+    protected $_structName = 'ElSection';
+}
+
+/**
+ * Class DocElSectionList
+ *
+ * @method DocElSection Get(string $name)
+ * @method DocElSection GetByIndex(int $i)
+ */
+class DocElSectionList extends DocElList {
+}

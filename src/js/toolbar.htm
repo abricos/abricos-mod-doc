@@ -18,7 +18,10 @@
 <option value="{v#id}">{v#title}</option>
 
 <!--{mode}-->
-<div class="toolModelButtons">
+<div class="elToolbar">
+    <div id="{i#typeTitle}" class="pull-left typeTitle">
+        {v#typeTitle}
+    </div>
     <div id="{i#removePanel}"></div>
     <div id="{i#buttons}" class="form-group text-right">
         <button data-click="this:setEditMode"

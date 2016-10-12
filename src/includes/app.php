@@ -28,11 +28,13 @@ class DocApp extends AbricosApplication {
             "ElTextList" => "DocElTextList",
             "ElPage" => "DocElPage",
             "ElPageList" => "DocElPageList",
+            "ElSection" => "DocElSection",
+            "ElSectionList" => "DocElSectionList",
         );
     }
 
     protected function GetStructures(){
-        $ret = 'Doc,Element,ElementType,ElText,ElPage';
+        $ret = 'Doc,Element,ElementType,ElText,ElPage,ElSection';
 
         if ($this->IsWriteRole()){
             $ret .= ',DocSave,ElementSave';
@@ -303,6 +305,7 @@ class DocApp extends AbricosApplication {
         $list = $this->InstanceClass('ElementTypeList');
         $list->Add($this->ElementTypeInstance('text', 'elText', 'ElText'));
         $list->Add($this->ElementTypeInstance('page', 'elPage', 'ElPage'));
+        $list->Add($this->ElementTypeInstance('section', 'elSection', 'ElSection'));
 
         $this->SetCache('ElementTypeList', $list);
 
@@ -322,6 +325,13 @@ class DocApp extends AbricosApplication {
         $d->title = $utmf->Parser($d->title);
 
         DocQuery::ElPageUpdate($this->db, $es, $d);
+    }
+
+    private function ElSectionSave(DocElementSave $es, $d){
+        $utmf = Abricos::TextParser(true);
+        $d->title = $utmf->Parser($d->title);
+
+        DocQuery::ElSectionUpdate($this->db, $es, $d);
     }
 
 }

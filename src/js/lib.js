@@ -59,6 +59,8 @@ Component.entryPoint = function(NS){
             ElTextList: {value: NS.ElTextList},
             ElPage: {value: NS.ElPage},
             ElPageList: {value: NS.ElPageList},
+            ElSection: {value: NS.ElSection},
+            ElSectionList: {value: NS.ElSectionList},
         },
         REQS: {
             docList: {

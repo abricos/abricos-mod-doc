@@ -90,4 +90,12 @@ Component.entryPoint = function(NS){
         appItem: NS.ElPage,
     });
 
+    NS.ElSection = Y.Base.create('elSection', SYS.AppModel, [], {
+        structureName: 'ElSection',
+    });
+
+    NS.ElSectionList = Y.Base.create('elSectionList', SYS.AppModelList, [], {
+        appItem: NS.ElSection,
+    });
+
 };

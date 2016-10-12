@@ -70,4 +70,14 @@ if ($updateManager->isInstall()){
         )".$charset
     );
 
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_section (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+            
+            UNIQUE KEY (elementid)
+        )".$charset
+    );
+
 }

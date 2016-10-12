@@ -63,7 +63,10 @@ Component.entryPoint = function(NS){
             if (mode !== 'edit'){
                 return;
             }
-            this.syncElData();
+            var tp = this.template,
+                el = this.get('el');
+
+            this.syncElData(tp, el);
         },
         syncElData: function(){
         },
@@ -88,9 +91,10 @@ Component.entryPoint = function(NS){
             this._syncElData(this.get('mode'));
 
             var element = this.get('element'),
+                el = this.get('el'),
                 ret = Y.merge({
                     clientid: this.get('clientid'),
-                }, this.toJSON() || {});
+                }, this.toJSON(el) || {});
 
             if (element){
                 ret = Y.merge({
@@ -111,7 +115,7 @@ Component.entryPoint = function(NS){
 
             return ret;
         },
-        toJSON: function(){
+        toJSON: function(el){
             return {};
         },
         _onSave: function(docSave){

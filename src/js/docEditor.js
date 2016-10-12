@@ -47,7 +47,6 @@ Component.entryPoint = function(NS){
             this.set('doc', doc);
 
             var tp = this.template;
-
             tp.setValue({
                 title: doc.get('title')
             });

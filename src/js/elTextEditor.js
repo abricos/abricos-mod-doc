@@ -24,11 +24,8 @@ Component.entryPoint = function(NS){
             this._editorWidget.destroy();
             this._editorWidget = null;
         },
-        syncElData: function(){
-            var el = this.get('el');
-            if (this._editorWidget){
-                el.set('body', this._editorWidget.get('content'));
-            }
+        syncElData: function(tp, el){
+            el.set('body', this._editorWidget.get('content'));
         },
         onModeChange: function(mode){
             var tp = this.template,
@@ -51,25 +48,15 @@ Component.entryPoint = function(NS){
                 });
             }
         },
-        toJSON: function(){
-            var el = this.get('el');
-
-            var ret = {
+        toJSON: function(el){
+            return {
                 body: el.get('body')
             };
-
-            return ret;
         },
     }, {
         ATTRS: {
             component: {value: COMPONENT},
             templateBlockName: {value: 'widget'},
-            elementType: {value: 'text'}
         },
-        parseURLParam: function(args){
-            return {
-                docid: args[0] | 0
-            }
-        }
     });
 };

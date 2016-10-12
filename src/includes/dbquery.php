@@ -150,5 +150,18 @@ class DocQuery {
         ";
         $db->query_write($sql);
     }
+    
+    public static function ElSectionUpdate(Ab_Database $db, DocElementSave $r, $d){
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_el_section
+            (elementid, title) VALUES (
+                ".intval($r->elementid).",
+                '".bkstr($d->title)."'
+            ) 
+            ON DUPLICATE KEY UPDATE
+                title='".bkstr($d->title)."'
+        ";
+        $db->query_write($sql);
+    }
 
 }
