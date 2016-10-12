@@ -26,13 +26,13 @@ class DocApp extends AbricosApplication {
             "ElementTypeList" => "DocElementTypeList",
             "ElText" => "DocElText",
             "ElTextList" => "DocElTextList",
-            "ElArticle" => "DocElArticle",
-            "ElArticleList" => "DocElArticleList",
+            "ElPage" => "DocElPage",
+            "ElPageList" => "DocElPageList",
         );
     }
 
     protected function GetStructures(){
-        $ret = 'Doc,Element,ElementType,ElText,ElArticle';
+        $ret = 'Doc,Element,ElementType,ElText,ElPage';
 
         if ($this->IsWriteRole()){
             $ret .= ',DocSave,ElementSave';
@@ -67,43 +67,6 @@ class DocApp extends AbricosApplication {
 
     public function IsViewRole(){
         return $this->manager->IsViewRole();
-    }
-
-    private function ElementTypeInstance($name, $template, $model){
-        $brick = Brick::$builder->LoadBrickS('doc', $template);
-
-        return $this->InstanceClass('ElementType', array(
-            'id' => $name,
-            'template' => $brick->content,
-            'model' => $model
-        ));
-    }
-
-    public function ElementTypeListToJSON(){
-        $ret = $this->ElementTypeList();
-        return $this->ResultToJSON('elementTypeList', $ret);
-    }
-
-    /**
-     * @return DocElementTypeList|int
-     */
-    public function ElementTypeList(){
-        if (!$this->IsViewRole()){
-            return AbricosResponse::ERR_FORBIDDEN;
-        }
-
-        if ($this->CacheExists('ElementTypeList')){
-            return $this->Cache('ElementTypeList');
-        }
-
-        /** @var DocElementTypeList $list */
-        $list = $this->InstanceClass('ElementTypeList');
-        $list->Add($this->ElementTypeInstance('text', 'elText', 'ElText'));
-        $list->Add($this->ElementTypeInstance('article', 'elArticle', 'ElArticle'));
-
-        $this->SetCache('ElementTypeList', $list);
-
-        return $list;
     }
 
     public function DocListToJSON(){
@@ -180,20 +143,6 @@ class DocApp extends AbricosApplication {
         return $ret;
     }
 
-    private function ElementRemove(Doc $doc, $elementid){
-        $count = $doc->elementList->Count();
-        for ($i = 0; $i < $count; $i++){
-            $element = $doc->elementList->GetByIndex($i);
-            if ($element->parentid === $elementid){
-                $this->ElementRemove($doc, $element->id);
-            }
-        }
-
-        $element = $doc->elementList->Get($elementid);
-        DocQuery::ElementRemove($this->db, $doc->id, $element->id);
-        DocQuery::ElRemove($this->db, $element->id, $element->type);
-    }
-
     private function ElementListSave(DocSave $dSave, $parentid, $childs){
         for ($i = 0; $i < count($childs); $i++){
             $d = $childs[$i];
@@ -225,14 +174,25 @@ class DocApp extends AbricosApplication {
 
         $this->$elSaveMethod($ret, $d);
 
+        if (isset($vars->childs) && is_array($vars->childs)){
+            $this->ElementListSave($dSave, $ret->elementid, $vars->childs);
+        }
+
         return $ret;
     }
 
-    private function ElTextSave(DocElementSave $es, $d){
-        $utmf = Abricos::TextParser(true);
-        $d->body = $utmf->Parser($d->body);
+    private function ElementRemove(Doc $doc, $elementid){
+        $count = $doc->elementList->Count();
+        for ($i = 0; $i < $count; $i++){
+            $element = $doc->elementList->GetByIndex($i);
+            if ($element->parentid === $elementid){
+                $this->ElementRemove($doc, $element->id);
+            }
+        }
 
-        DocQuery::ElTextUpdate($this->db, $es, $d);
+        $element = $doc->elementList->Get($elementid);
+        DocQuery::ElementRemove($this->db, $doc->id, $element->id);
+        DocQuery::ElRemove($this->db, $element->id, $element->type);
     }
 
     public function DocToJSON($docid){
@@ -310,6 +270,58 @@ class DocApp extends AbricosApplication {
         $ret = new stdClass();
         $ret->docid = $docid;
         return $ret;
+    }
+
+    private function ElementTypeInstance($name, $template, $model){
+        $brick = Brick::$builder->LoadBrickS('doc', $template);
+
+        return $this->InstanceClass('ElementType', array(
+            'id' => $name,
+            'template' => $brick->content,
+            'model' => $model
+        ));
+    }
+
+    public function ElementTypeListToJSON(){
+        $ret = $this->ElementTypeList();
+        return $this->ResultToJSON('elementTypeList', $ret);
+    }
+
+    /**
+     * @return DocElementTypeList|int
+     */
+    public function ElementTypeList(){
+        if (!$this->IsViewRole()){
+            return AbricosResponse::ERR_FORBIDDEN;
+        }
+
+        if ($this->CacheExists('ElementTypeList')){
+            return $this->Cache('ElementTypeList');
+        }
+
+        /** @var DocElementTypeList $list */
+        $list = $this->InstanceClass('ElementTypeList');
+        $list->Add($this->ElementTypeInstance('text', 'elText', 'ElText'));
+        $list->Add($this->ElementTypeInstance('page', 'elPage', 'ElPage'));
+
+        $this->SetCache('ElementTypeList', $list);
+
+        return $list;
+    }
+
+
+    private function ElTextSave(DocElementSave $es, $d){
+        $utm = Abricos::TextParser();
+        $d->body = $utm->Parser($d->body);
+
+        DocQuery::ElTextUpdate($this->db, $es, $d);
+    }
+
+    private function ElPageSave(DocElementSave $es, $d){
+        $utmf = Abricos::TextParser(true);
+        $d->title = $utmf->Parser($d->title);
+
+        DocQuery::ElPageUpdate($this->db, $es, $d);
     }
 
 }

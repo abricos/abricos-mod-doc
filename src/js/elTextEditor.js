@@ -2,7 +2,7 @@ var Component = new Brick.Component();
 Component.requires = {
     mod: [
         {name: 'sys', files: ['editor.js']},
-        {name: '{C#MODNAME}', files: ['lib.js']}
+        {name: '{C#MODNAME}', files: ['elEditor.js']}
     ]
 };
 Component.entryPoint = function(NS){
@@ -12,7 +12,7 @@ Component.entryPoint = function(NS){
         SYS = Brick.mod.sys;
 
     NS.ElTextEditorWidget = Y.Base.create('ElTextEditorWidget', SYS.AppWidget, [
-        NS.ElementEditorWidgetExt
+        NS.ElEditorWidgetExt
     ], {
         destructor: function(){
             this._destroyEditorWidget();

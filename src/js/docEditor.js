@@ -2,7 +2,14 @@ var Component = new Brick.Component();
 Component.requires = {
     mod: [
         {name: 'sys', files: ['editor.js']},
-        {name: '{C#MODNAME}', files: ['elEditor.js', 'toolbar.js']}
+        {
+            name: '{C#MODNAME}',
+            files: [
+                'elPageEditor.js',
+                'elTextEditor.js',
+                'toolbar.js'
+            ]
+        }
     ]
 };
 Component.entryPoint = function(NS){
@@ -13,7 +20,8 @@ Component.entryPoint = function(NS){
 
     NS.DocEditorWidget = Y.Base.create('DocEditorWidget', SYS.AppWidget, [
         SYS.ContainerWidgetExt,
-        NS.ElementEditorWidgetExt
+        NS.ElEditorWidgetExt,
+        NS.ElContainerEditorWidgetExt
     ], {
         onInitAppWidget: function(err, appInstance){
             var docid = this.get('docid');
@@ -45,6 +53,16 @@ Component.entryPoint = function(NS){
             });
 
             this.initElementEditor();
+
+            this._initDocElementEditor(0, this);
+        },
+        _initDocElementEditor: function(parentid, widget){
+            this.get('doc').elEach(parentid, function(element){
+                var childWidget = widget.elementAppend(element);
+                if (childWidget.get('isElContainer')){
+                    this._initDocElementEditor(element.get('id'), childWidget);
+                }
+            }, this);
         },
         toJSON: function(){
             var tp = this.template;

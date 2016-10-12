@@ -9,7 +9,7 @@
     "docid": {
       "type": "int"
     },
-    "body": {
+    "title": {
       "type": "string"
     }
   }

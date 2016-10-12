@@ -211,21 +211,21 @@ class DocElTextList extends DocElList {
 }
 
 /**
- * Class DocElArticle
+ * Class DocElPage
  *
  * @property int $id Element ID
  * @property int $docid
  * @property string $title
  */
-class DocElArticle extends DocEl {
-    protected $_structName = 'ElArticle';
+class DocElPage extends DocEl {
+    protected $_structName = 'ElPage';
 }
 
 /**
- * Class DocElArticleList
+ * Class DocElPageList
  *
- * @method DocElArticle Get(string $name)
- * @method DocElArticle GetByIndex(int $i)
+ * @method DocElPage Get(string $name)
+ * @method DocElPage GetByIndex(int $i)
  */
-class DocElArticleList extends DocElList {
+class DocElPageList extends DocElList {
 }

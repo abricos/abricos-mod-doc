@@ -82,12 +82,12 @@ Component.entryPoint = function(NS){
         appItem: NS.ElText,
     });
 
-    NS.ElArticle = Y.Base.create('elArticle', SYS.AppModel, [], {
-        structureName: 'ElArticle',
+    NS.ElPage = Y.Base.create('elPage', SYS.AppModel, [], {
+        structureName: 'ElPage',
     });
 
-    NS.ElArticleList = Y.Base.create('elArticleList', SYS.AppModelList, [], {
-        appItem: NS.ElArticle,
+    NS.ElPageList = Y.Base.create('elPageList', SYS.AppModelList, [], {
+        appItem: NS.ElPage,
     });
 
 };

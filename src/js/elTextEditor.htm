@@ -1,13 +1,16 @@
 <!--{widget}-->
-<div class="bodyText panel panel-default">
+<div class="elEditor elTextEditor panel panel-default">
     <div class="panel-body">
         <div id="{i#toolModeWidget}"></div>
-        <div data-trigger="mode" data-code="edit">
+
+        <div id="{i#editorPanel}">
             <div id="{i#bodyEditor}" data-rows="7"></div>
         </div>
-        <div id="{i#bodyPreview}"
-             class="alert alert-info"
-             data-trigger="mode" data-code="preview">
+
+        <div id="{i#previewPanel}">
+            <div id="{i#bodyPreview}"
+                 class="alert alert-info">
+            </div>
         </div>
     </div>
 </div>

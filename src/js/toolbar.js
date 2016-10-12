@@ -46,6 +46,10 @@ Component.entryPoint = function(NS){
     });
 
     NS.ElementToobarWidget = Y.Base.create('ElementToobarWidget', SYS.AppWidget, [], {
+        updateMode: function(mode){
+            this.triggerHide('mode');
+            this.triggerShow('mode', mode);
+        },
         setEditMode: function(){
             this.get('owner').set('mode', 'edit');
         },

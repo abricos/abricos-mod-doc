@@ -61,7 +61,7 @@ if ($updateManager->isInstall()){
     );
 
     $db->query_write("
-        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_article (
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_page (
             elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
