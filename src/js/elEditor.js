@@ -24,7 +24,8 @@ Component.entryPoint = function(NS){
                 }
                 return false;
             }
-        }
+        },
+        owner: {}
     };
     ElementEditorWidgetExt.prototype = {
         initializer: function(){
@@ -101,6 +102,19 @@ Component.entryPoint = function(NS){
                 fn.call(context || this, wList[i]);
             }
         },
+        removeChild: function(w){
+            var wList = this._wChilds,
+                nList = [];
+
+            for (var i = 0; i < wList.length; i++){
+                if (wList[i] === w){
+                    wList[i].destroy();
+                } else {
+                    nList[nList.length] = wList[i];
+                }
+            }
+            this._wChilds = nList;
+        },
         elementAppendByType: function(type){
             var appInstance = this.get('appInstance'),
                 element = this.get('element'),
@@ -129,6 +143,7 @@ Component.entryPoint = function(NS){
                 var widget = new (NS[widgetName])({
                     srcNode: tp.append('container', '<div></div>'),
                     doc: this.get('doc'),
+                    owner: this,
                     element: element
                 });
                 wList[wList.length] = widget;
@@ -137,6 +152,9 @@ Component.entryPoint = function(NS){
                 }
 
             }, this);
+        },
+        remove: function(){
+            this.get('owner').removeChild(this);
         },
         _toJSON: function(){
             this.syncElData();

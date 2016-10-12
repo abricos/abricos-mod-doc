@@ -30,15 +30,27 @@ class DocSave extends AbricosResponse {
     protected $_structModule = 'doc';
     protected $_structName = 'DocSave';
 
-    public $elements = array();
+    private $elResults = array();
+    private $elMapResults = array();
+
+    public function AddElementResult(DocElementSave $r){
+        $this->elResults[] = $r;
+        if ($r->elementid > 0){
+            $this->elMapResults[$r->elementid] = $r;
+        }
+    }
+
+    public function IsElementResult($elementid){
+        return isset($this->elMapResults[$elementid]);
+    }
 
     public function ToJSON(){
         $ret = parent::ToJSON();
         $ret->elements = array();
 
-        for ($i = 0; $i < count($this->elements); $i++){
+        for ($i = 0; $i < count($this->elResults); $i++){
             /** @var DocElementSave $es */
-            $es = $this->elements[$i];
+            $es = $this->elResults[$i];
 
             $ret->elements[] = $es->ToJSON();
         }

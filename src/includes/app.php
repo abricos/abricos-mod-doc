@@ -159,18 +159,42 @@ class DocApp extends AbricosApplication {
 
         $ret->AddCode(DocSave::CODE_OK);
 
-        $doc = $this->Doc($ret->docid);
-
         if (isset($vars->childs) && is_array($vars->childs)){
             $this->ElementListSave($ret, 0, $vars->childs);
+        }
+
+        $doc = $this->Doc($ret->docid);
+
+        $count = $doc->elementList->Count();
+        for ($i = 0; $i < $count; $i++){
+            $element = $doc->elementList->GetByIndex($i);
+            if (!$ret->IsElementResult($element->id)){ // элемент был удален
+                $this->ElementRemove($doc, $element->id);
+            }
         }
 
         return $ret;
     }
 
+    private function ElementRemove(Doc $doc, $elementid){
+        $count = $doc->elementList->Count();
+        for ($i = 0; $i < $count; $i++){
+            $element = $doc->elementList->GetByIndex($i);
+            if ($element->parentid === $elementid){
+                $this->ElementRemove($doc, $element->id);
+            }
+        }
+
+        $element = $doc->elementList->Get($elementid);
+        DocQuery::ElementRemove($this->db, $doc->id, $element->id);
+        DocQuery::ElRemove($this->db, $element->id, $element->type);
+    }
+
     private function ElementListSave(DocSave $dSave, $parentid, $childs){
         for ($i = 0; $i < count($childs); $i++){
-            $dSave->elements[] = $this->ElementSave($dSave, $parentid, $i, $childs[$i]);
+            $d = $childs[$i];
+            $elSave = $this->ElementSave($dSave, $parentid, $i, $d);
+            $dSave->AddElementResult($elSave);
         }
     }
 
@@ -241,7 +265,7 @@ class DocApp extends AbricosApplication {
             }
         }
 
-        $this->SetCache('Doc', $docid);
+        $this->SetCache('Doc', $docid, $doc);
 
         return $doc;
     }

@@ -46,29 +46,31 @@ Component.entryPoint = function(NS){
     });
 
     NS.ElementToobarWidget = Y.Base.create('ElementToobarWidget', SYS.AppWidget, [], {
-        onInitAppWidget: function(err, appInstance){
-
+        setEditMode: function(){
+            this.get('owner').set('mode', 'edit');
         },
+        setPreviewMode: function(){
+            this.get('owner').set('mode', 'preview');
+        },
+        showRemove: function(){
+            var tp = this.template;
+            tp.setHTML('removePanel', tp.replace('remove'));
+            tp.toggleView(true, 'removePanel', 'buttons');
+        },
+        closeRemove: function(){
+            var tp = this.template;
+            tp.toggleView(false, 'removePanel', 'buttons');
+        },
+        remove: function(){
+            this.get('owner').remove();
+        }
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'mode'},
+            templateBlockName: {value: 'mode,remove'},
             element: NS.ATTRIBUTE.element,
             owner: {}
         },
-        CLICKS: {
-            setEditMode: {
-                event: function(){
-                    this.get('owner').set('mode', 'edit');
-                }
-            },
-            setPreviewMode: {
-                event: function(){
-                    this.get('owner').set('mode', 'preview');
-                }
-            },
-
-        }
     });
 
 };

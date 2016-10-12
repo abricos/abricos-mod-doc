@@ -83,6 +83,24 @@ class DocQuery {
         return $db->insert_id();
     }
 
+    public static function ElementRemove(Ab_Database $db, $docid, $elementid){
+        $sql = "
+            DELETE FROM ".$db->prefix."doc_element
+            WHERE docid=".intval($docid)." AND elementid=".intval($elementid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
+    public static function ElRemove(Ab_Database $db, $elementid, $type){
+        $sql = "
+            DELETE FROM ".$db->prefix."doc_el_".bkstr($type)."
+            WHERE elementid=".intval($elementid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
     public static function ElList(Ab_Database $db, $docid, $type){
         $sql = "
             SELECT 
