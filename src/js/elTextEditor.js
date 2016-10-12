@@ -15,25 +15,47 @@ Component.entryPoint = function(NS){
         NS.ElementEditorWidgetExt
     ], {
         destructor: function(){
-            if (this._editorWidget ){
-                this._editorWidget.destroy();
+            this._destroyEditorWidget();
+        },
+        _destroyEditorWidget: function(){
+            if (!this._editorWidget){
+                return;
+            }
+            this._editorWidget.destroy();
+            this._editorWidget = null;
+        },
+        syncElData: function(){
+            var el = this.get('el');
+            if (this._editorWidget){
+                el.set('body', this._editorWidget.get('content'));
             }
         },
-        onInitAppWidget: function(err, appInstance){
+        onModeChange: function(mode){
             var tp = this.template,
                 el = this.get('el');
 
-            this._editorWidget = new SYS.Editor({
-                appInstance: this.get('appInstance'),
-                srcNode: tp.one('editor'),
-                content: el.get('body'),
-                toolbar: SYS.Editor.TOOLBAR_MINIMAL
-            });
-            this.initElementEditor();
+            if (mode === 'preview'){
+                this._destroyEditorWidget();
+                tp.setHTML({
+                    bodyPreview: el.get('body')
+                });
+            } else if (mode === 'edit'){
+                if (this._editorWidget){
+                    return;
+                }
+                this._editorWidget = new SYS.Editor({
+                    appInstance: this.get('appInstance'),
+                    srcNode: tp.append('bodyEditor', '<div></div>'),
+                    content: el.get('body'),
+                    toolbar: SYS.Editor.TOOLBAR_MINIMAL
+                });
+            }
         },
         toJSON: function(){
+            var el = this.get('el');
+
             var ret = {
-                body: this._editorWidget.get('content')
+                body: el.get('body')
             };
 
             return ret;

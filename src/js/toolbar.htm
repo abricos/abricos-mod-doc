@@ -1,6 +1,5 @@
 <!--{widget}-->
 <div class="buttonElementAppend row">
-
     <div class="col-sm-4 col-sm-offset-4">
         <div class="input-group">
             <select id="{i#typeList}" class="form-control input-sm"></select>
@@ -17,3 +16,29 @@
 
 <!--{option}-->
 <option value="{v#id}">{v#title}</option>
+
+<!--{mode}-->
+<div class="toolModelButtons">
+    <div class="form-group text-right">
+        <button data-click="setEditMode"
+                data-wait="disable"
+                class="btn btn-default btn-xs" type="button"
+                data-trigger="mode" data-code="preview"
+                title="Редактировать элемент">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </button>
+        <button data-click="setPreviewMode"
+                data-wait="disable"
+                class="btn btn-default btn-xs hide" type="button"
+                data-trigger="mode" data-code="edit"
+                title="Предварительный просмотр">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+        </button>
+        <button data-click="this:remove"
+                data-wait="disable"
+                class="btn btn-default btn-xs" type="button"
+                title="Удалить элемент">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>

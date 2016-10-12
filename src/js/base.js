@@ -43,7 +43,7 @@ Component.entryPoint = function(NS){
                 }
                 return this._elClientId;
             },
-        }
+        },
     };
 
 };

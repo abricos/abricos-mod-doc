@@ -44,4 +44,31 @@ Component.entryPoint = function(NS){
             callback: {value: null}
         },
     });
+
+    NS.ElementToobarWidget = Y.Base.create('ElementToobarWidget', SYS.AppWidget, [], {
+        onInitAppWidget: function(err, appInstance){
+
+        },
+    }, {
+        ATTRS: {
+            component: {value: COMPONENT},
+            templateBlockName: {value: 'mode'},
+            element: NS.ATTRIBUTE.element,
+            owner: {}
+        },
+        CLICKS: {
+            setEditMode: {
+                event: function(){
+                    this.get('owner').set('mode', 'edit');
+                }
+            },
+            setPreviewMode: {
+                event: function(){
+                    this.get('owner').set('mode', 'preview');
+                }
+            },
+
+        }
+    });
+
 };

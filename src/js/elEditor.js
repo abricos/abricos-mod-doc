@@ -15,48 +15,78 @@ Component.entryPoint = function(NS){
         clientid: NS.ATTRIBUTE.clientid,
         mode: {
             value: 'preview',
-            setter: function(val){
+            validator: function(val){
                 switch (val) {
                     case 'edit':
                     case 'preview':
                     case 'view':
-                        return val;
+                        return true;
                 }
-                return 'preview';
-            },
+                return false;
+            }
         }
     };
     ElementEditorWidgetExt.prototype = {
         initializer: function(){
             this._wChilds = [];
         },
+        onInitAppWidget: function(err, appInstance){
+            this.initElementEditor();
+        },
         destructor: function(){
             if (this._elAppendWidget){
                 this._elAppendWidget.destroy();
                 this._elAppendWidget = null;
             }
+            if (this._toolModeWidget){
+                this._toolModeWidget.destroy();
+                this._toolModeWidget = null;
+            }
             this.cleanChilds();
         },
         initElementEditor: function(){
-            var tp = this.template;
+            var tp = this.template,
+                element = this.get('element');
 
-            if (!tp.one('container') || !tp.one('elementAppend')){
-                return;
+            if (tp.one('toolModeWidget')){
+                this._toolModeWidget = new NS.ElementToobarWidget({
+                    srcNode: tp.one('toolModeWidget'),
+                    element: element,
+                    owner: this
+                });
             }
 
-            this._elAppendWidget = new NS.ButtonElementAppendWidget({
-                srcNode: tp.one('elementAppend'),
-                doc: this.get('doc'),
-                context: this,
-                callback: this.elementAppendByType
-            });
+            if (tp.one('container') && tp.one('elementAppend')){
+                this._elAppendWidget = new NS.ButtonElementAppendWidget({
+                    srcNode: tp.one('elementAppend'),
+                    doc: this.get('doc'),
+                    context: this,
+                    callback: this.elementAppendByType
+                });
 
-            var element = this.get('element'),
-                parentid = element ? element.get('parentid') : 0;
+                var parentid = element ? element.get('parentid') : 0;
+                this.get('doc').elEach(parentid, function(element){
+                    this.elementAppend(element);
+                }, this);
+            }
 
-            this.get('doc').elEach(parentid, function(element){
-                this.elementAppend(element);
+            this.after('modeChange', function(e){
+                this._onModeChange(e.newVal);
             }, this);
+
+            this._onModeChange(this.get('mode'));
+        },
+        syncElData: function(){
+        },
+        _onModeChange: function(mode){
+            this.syncElData();
+
+            this.triggerHide('mode');
+            this.triggerShow('mode', mode);
+
+            this.onModeChange(mode)
+        },
+        onModeChange: function(mode){
         },
         cleanChilds: function(){
             var wList = this._wChilds;
@@ -82,9 +112,9 @@ Component.entryPoint = function(NS){
                     el: appInstance.instanceElItem(type)
                 });
 
-            this.elementAppend(childElement);
+            this.elementAppend(childElement, true);
         },
-        elementAppend: function(element){
+        elementAppend: function(element, isEditMode){
             var tp = this.template,
                 type = element.get('type'),
                 upName = NS.upperFirstChar(type),
@@ -96,29 +126,21 @@ Component.entryPoint = function(NS){
             Brick.use('{C#MODNAME}', component, function(){
                 this.set('waiting', false);
 
-                var Widget = NS[widgetName];
-                wList[wList.length] = new Widget({
+                var widget = new (NS[widgetName])({
                     srcNode: tp.append('container', '<div></div>'),
                     doc: this.get('doc'),
                     element: element
                 });
+                wList[wList.length] = widget;
+                if (isEditMode){
+                    widget.set('mode', 'edit');
+                }
+
             }, this);
         },
-        _setMode: function(isEdit){
-            this.set('isEditMode', isEdit);
-            this.set('isViewMode', !isEdit);
-            this.appTriggerUpdate();
-            this.onChangeMode(isEdit);
-        },
-        onChangeMode: function(isEdit){
-        },
-        setEditMode: function(){
-            this._setMode(true);
-        },
-        setViewMode: function(){
-            this._setMode(false);
-        },
         _toJSON: function(){
+            this.syncElData();
+
             var element = this.get('element'),
                 ret = Y.merge({
                     clientid: this.get('clientid'),
