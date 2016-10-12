@@ -100,6 +100,9 @@ Component.entryPoint = function(NS){
                     }, this);
                 }
             },
+            docRemove: {
+                args: ['docid']
+            },
             elementTypeList: {
                 attribute: true,
                 type: "modelList:ElementTypeList"
@@ -116,6 +119,12 @@ Component.entryPoint = function(NS){
                 },
                 edit: function(docid){
                     return this.getURL('ws') + 'docEditor/DocEditorWidget/' + (docid | 0) + '/';
+                },
+                view: function(docid){
+                    return this.getURL('ws') + 'docViewer/DocViewerWidget/' + (docid | 0) + '/';
+                },
+                remove: function(docid){
+                    return this.getURL('ws') + 'docRemove/DocRemoveWidget/' + (docid | 0) + '/';
                 },
             }
         }

@@ -1,0 +1,33 @@
+<!--{widget}-->
+<div class="docEditor panel panel-danger">
+    <div class="panel-heading text-center">
+        <h3 class="panel-title pull-left">
+            Удаление документа
+        </h3>
+
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+        <p>
+            <b>Внимание!</b>
+        </p>
+        <p>
+            Вы действительно хотите удалить
+            документ <b id="{i#title}"></b>?
+        </p>
+    </div>
+    <div class="panel-footer text-center">
+        <img data-wait="show" src="/images/loading.gif"/>
+
+        <div class="btn-toolbar pull-right">
+            <button data-click="this:remove" class="btn btn-danger">
+                Удалить
+            </button>
+            <a data-url="doc.list" class="btn btn-default">
+                Отмена
+            </a>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>

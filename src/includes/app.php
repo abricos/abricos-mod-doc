@@ -49,6 +49,8 @@ class DocApp extends AbricosApplication {
                 return $this->DocSaveToJSON($d->data);
             case 'doc':
                 return $this->DocToJSON($d->docid);
+            case 'docRemove':
+                return $this->DocRemoveToJSON($d->docid);
             case 'elementTypeList':
                 return $this->ElementTypeListToJSON();
         }
@@ -173,6 +175,8 @@ class DocApp extends AbricosApplication {
             }
         }
 
+        $this->CacheClear();
+
         return $ret;
     }
 
@@ -288,4 +292,24 @@ class DocApp extends AbricosApplication {
         }
         return $list;
     }
+
+    public function DocRemoveToJSON($docid){
+        $ret = $this->DocRemove($docid);
+        return $this->ResultToJSON('docRemove', $ret);
+    }
+
+    public function DocRemove($docid){
+        if (!$this->IsAdminRole()){
+            return AbricosResponse::ERR_FORBIDDEN;
+        }
+
+        DocQuery::DocRemove($this->db, $docid);
+
+        $this->CacheClear();
+
+        $ret = new stdClass();
+        $ret->docid = $docid;
+        return $ret;
+    }
+
 }

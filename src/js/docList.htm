@@ -31,7 +31,6 @@
         <th>#</th>
         <th>Название</th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -42,21 +41,29 @@
 <!--{row}-->
 <tr>
     <td>{v#id}</td>
-    <td>{v#title}</td>
     <td>
-        <a data-url="doc.edit({v#id})"
-           data-wait="disable"
-           class="btn btn-default btn-xs"
-           type="button">
-            Править
+        <a data-url="doc.view({v#id})">
+            {v#title}
         </a>
     </td>
     <td>
-        <a data-url="doc.remove({v#id})"
-           data-wait="disable"
-           class="btn btn-default btn-xs"
-           type="button">
-            Удалить
-        </a>
+        <div class="text-right">
+            <a data-url="doc.view({v#id})"
+               class="btn btn-default btn-xs"
+               title="Открыть документ">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </a>
+            <a data-url="doc.edit({v#id})"
+               class="btn btn-default btn-xs"
+               title="Редактировать документ">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </a>
+            <a data-url="doc.remove({v#id})"
+               data-wait="disable"
+               class="btn btn-default btn-xs"
+               title="Удалить документ">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </a>
+        </div>
     </td>
 </tr>

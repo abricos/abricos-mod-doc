@@ -59,6 +59,16 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    public static function DocRemove(Ab_Database $db, $docid){
+        $sql = "
+            UPDATE ".$db->prefix."doc
+            SET deldate=".TIMENOW."
+            WHERE docid=".intval($docid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
     public static function ElementList(Ab_Database $db, $docid){
         $sql = "
             SELECT e.*
@@ -127,6 +137,5 @@ class DocQuery {
         ";
         $db->query_write($sql);
     }
-
 
 }
