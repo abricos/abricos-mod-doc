@@ -21,6 +21,7 @@ class DocApp extends AbricosApplication {
             "DocSave" => "DocSave",
             "Element" => "DocElement",
             "ElementList" => "DocElementList",
+            "ElementSave" => "DocElementSave",
             "ElementType" => "DocElementType",
             "ElementTypeList" => "DocElementTypeList",
             "ElText" => "DocElText",
@@ -126,17 +127,6 @@ class DocApp extends AbricosApplication {
         return $this->ResultToJSON('docSave', $ret);
     }
 
-    /*
-    "childs": [{"type": "text", "clientid": 2, "childs": [], "body": "<p>asdfawefe f</p>"}, {
-        "type": "text",
-        "clientid": 3,
-        "childs": [],
-        "body": "<p>w323423423423</p>"
-    }],
-    "docid": 1,
-    "title": "asdfasdfa wefawefef"
-     /**/
-
     public function DocSave($d){
         /** @var DocSave $ret */
         $ret = $this->InstanceClass('DocSave', $d);
@@ -166,14 +156,49 @@ class DocApp extends AbricosApplication {
         $doc = $this->Doc($ret->docid);
 
         if (isset($vars->childs) && is_array($vars->childs)){
-            $this->DocChildsSave($doc, $vars->childs);
+            $this->ElementListSave($ret, 0, $vars->childs);
         }
 
         return $ret;
     }
 
-    private function DocChildsSave(Doc $doc, $childs){
+    private function ElementListSave(DocSave $dSave, $parentid, $childs){
+        for ($i = 0; $i < count($childs); $i++){
+            $dSave->elements[] = $this->ElementSave($dSave, $parentid, $i, $childs[$i]);
+        }
+    }
 
+    private function ElementSave(DocSave $dSave, $parentid, $ord, $d){
+        /** @var DocElementSave $ret */
+        $ret = $this->InstanceClass('ElementSave', $d);
+
+        $vars = $ret->vars;
+
+        $elSaveMethod = 'El'.ucfirst($vars->type).'Save';
+        if (!method_exists($this, $elSaveMethod)){
+            return $ret->SetError(AbricosResponse::ERR_BAD_REQUEST);
+        }
+
+        $ret->clientid = $vars->clientid;
+        $ret->parentid = $parentid;
+        $ret->ord = $ord;
+
+        if ($vars->elementid === 0){
+            $ret->elementid = DocQuery::ElementAppend($this->db, $dSave, $parentid, $ord, $ret);
+        } else {
+            $ret->elementid = $vars->elementid;
+        }
+
+        $this->$elSaveMethod($ret, $d);
+
+        return $ret;
+    }
+
+    private function ElTextSave(DocElementSave $es, $d){
+        $utmf = Abricos::TextParser(true);
+        $d->body = $utmf->Parser($d->body);
+
+        DocQuery::ElTextUpdate($this->db, $es, $d);
     }
 
     public function DocToJSON($docid){

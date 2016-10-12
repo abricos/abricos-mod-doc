@@ -1,0 +1,35 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "elementid": {
+      "type": "int"
+    },
+    "clientid": {
+      "type": "int"
+    },
+    "type": {
+      "type": "string"
+    },
+    "childs": {
+      "type": "array"
+    }
+  },
+  "codes": {
+    "OK": 1
+  },
+  "fields": {
+    "elementid": {
+      "type": "int"
+    },
+    "parentid": {
+      "type": "int"
+    },
+    "clientid": {
+      "type": "int"
+    },
+    "ord": {
+      "type": "int"
+    }
+  }
+}

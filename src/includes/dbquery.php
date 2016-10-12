@@ -69,6 +69,19 @@ class DocQuery {
         return $db->query_read($sql);
     }
 
+    public static function ElementAppend(Ab_Database $db, DocSave $docSave, $parentid, $ord, DocElementSave $r){
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_element
+            (docid, parentid, elementType, ord) VALUES (
+                ".intval($docSave->docid).",
+                ".intval($parentid).",
+                '".bkstr($r->vars->type)."',
+                ".intval($ord)."
+            )
+        ";
+        $db->query_write($sql);
+        return $db->insert_id();
+    }
 
     public static function ElList(Ab_Database $db, $docid, $type){
         $sql = "
@@ -83,5 +96,19 @@ class DocQuery {
         ";
         return $db->query_read($sql);
     }
+
+    public static function ElTextUpdate(Ab_Database $db, DocElementSave $r, $d){
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_el_text
+            (elementid, body) VALUES (
+                ".intval($r->elementid).",
+                '".bkstr($d->body)."'
+            ) 
+            ON DUPLICATE KEY UPDATE
+                body='".bkstr($d->body)."'
+        ";
+        $db->query_write($sql);
+    }
+
 
 }

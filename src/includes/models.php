@@ -29,6 +29,23 @@ class DocSave extends AbricosResponse {
 
     protected $_structModule = 'doc';
     protected $_structName = 'DocSave';
+
+    public $elements = array();
+
+    public function ToJSON(){
+        $ret = parent::ToJSON();
+        $ret->elements = array();
+
+        for ($i = 0; $i < count($this->elements); $i++){
+            /** @var DocElementSave $es */
+            $es = $this->elements[$i];
+
+            $ret->elements[] = $es->ToJSON();
+        }
+
+        return $ret;
+    }
+
 }
 
 /**
@@ -106,6 +123,33 @@ class DocElement extends AbricosModel {
     public static function ListClassName($type){
         return 'El'.ucfirst($type).'List';
     }
+}
+
+/**
+ * Interface DocElementSaveVars
+ *
+ * @property int $elementid
+ * @property int $clientid
+ * @property string $type
+ * @property array $childs
+ */
+interface DocElementSaveVars {
+}
+
+/**
+ * Class DocElementSave
+ *
+ * @property DocElementSaveVars $vars
+ * @property int $elementid
+ * @property int $parentid
+ * @property int $clientid
+ * @property int $ord
+ */
+class DocElementSave extends AbricosResponse {
+    const CODE_OK = 1;
+
+    protected $_structModule = 'doc';
+    protected $_structName = 'ElementSave';
 }
 
 /**
