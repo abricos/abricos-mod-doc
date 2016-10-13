@@ -43,7 +43,7 @@ Component.entryPoint = function(NS){
     ], {}, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'section'},
+            templateBlockName: {value: 'page'},
         }
     });
     

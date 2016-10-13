@@ -11,12 +11,20 @@
     "type": {
       "type": "string"
     },
+    "title": {
+      "type": "string",
+      "parse": "full"
+    },
     "childs": {
       "type": "array"
+    },
+    "changed": {
+      "type": "bool"
     }
   },
   "codes": {
-    "OK": 1
+    "OK": 1,
+    "NOT_CHANGED": 2
   },
   "fields": {
     "elementid": {

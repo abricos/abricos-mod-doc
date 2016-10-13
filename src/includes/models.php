@@ -143,6 +143,8 @@ class DocElement extends AbricosModel {
  * @property int $elementid
  * @property int $clientid
  * @property string $type
+ * @property string $title
+ * @property bool $changed
  * @property array $childs
  */
 interface DocElementSaveVars {
@@ -159,6 +161,7 @@ interface DocElementSaveVars {
  */
 class DocElementSave extends AbricosResponse {
     const CODE_OK = 1;
+    const CODE_NOT_CHANGED = 2;
 
     protected $_structModule = 'doc';
     protected $_structName = 'ElementSave';

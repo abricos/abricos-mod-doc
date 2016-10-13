@@ -32,18 +32,18 @@ Component.entryPoint = function(NS){
             this.initElementEditor();
         },
         destructor: function(){
-            if (this._toolModeWidget){
-                this._toolModeWidget.destroy();
-                this._toolModeWidget = null;
+            if (this._toolbarWidget){
+                this._toolbarWidget.destroy();
+                this._toolbarWidget = null;
             }
         },
         initElementEditor: function(){
             var tp = this.template,
                 element = this.get('element');
 
-            if (tp.one('toolModeWidget')){
-                this._toolModeWidget = new NS.ElementToobarWidget({
-                    srcNode: tp.one('toolModeWidget'),
+            if (tp.one('toolbarWidget')){
+                this._toolbarWidget = new NS.ElementToobarWidget({
+                    srcNode: tp.one('toolbarWidget'),
                     element: element,
                     owner: this
                 });
@@ -64,11 +64,36 @@ Component.entryPoint = function(NS){
                 return;
             }
             var tp = this.template,
+                element = this.get('element'),
                 el = this.get('el');
 
-            this.syncElData(tp, el);
+            if (this.onSyncElData(tp, el)){
+                element.set('changed', true);
+            }
         },
-        syncElData: function(){
+        onSyncElData: function(tp, el){
+        },
+        syncTitle: function(text, isParse){
+            var element = this.get('element');
+
+            if (isParse){
+                var div = document.createElement('DIV');
+                div.innerHTML = text;
+                text = div.textContent || div.innerText || "";
+            }
+
+            text = text.replace(/(\r\n|\n|\r)/gm, " ")
+                .replace(/\s{2,}/g, ' ')
+                .replace(/^\s+|\s+$/g, '');
+
+            var len = 50;
+
+            if (text.length > len){
+                text = text.substring(0, len - 3) + '...';
+            }
+            console.log(text);
+
+            element.set('title', text);
         },
         _onModeChange: function(mode, prevMode){
             this._syncElData(prevMode);
@@ -76,8 +101,8 @@ Component.entryPoint = function(NS){
             var tp = this.template;
 
             tp.toggleView(mode === 'edit', 'editorPanel', 'previewPanel');
-            if (this._toolModeWidget){
-                this._toolModeWidget.updateMode(mode);
+            if (this._toolbarWidget){
+                this._toolbarWidget.updateMode(mode);
             }
 
             this.onModeChange(mode)
@@ -92,16 +117,22 @@ Component.entryPoint = function(NS){
 
             var element = this.get('element'),
                 el = this.get('el'),
-                ret = Y.merge({
+                ret = {
                     clientid: this.get('clientid'),
-                }, this.toJSON(el) || {});
+                };
 
             if (element){
                 ret = Y.merge({
                     elementid: element.get('id'),
                     parentid: element.get('parentid'),
+                    title: element.get('title'),
                     type: element.get('type'),
+                    changed: element.get('changed')
                 }, ret || {});
+
+                if (element.get('changed')){
+                    ret = Y.merge(el.toSave(), ret);
+                }
             }
 
             if (this.get('isElContainer')){
@@ -127,7 +158,7 @@ Component.entryPoint = function(NS){
 
             var element = this.get('element');
 
-            if (!element || element.get('id') > 0){
+            if (!element){
                 return;
             }
 
@@ -136,6 +167,7 @@ Component.entryPoint = function(NS){
 
             if (eSave){
                 element.set('id', eSave.get('elementid'));
+                element.set('changed', false);
             }
         }
     };
@@ -190,6 +222,7 @@ Component.entryPoint = function(NS){
                 Element = appInstance.get('Element'),
                 childElement = new Element({
                     appInstance: appInstance,
+                    changed: true,
                     type: type,
                     parentid: element ? element.get('parentid') : 0,
                     el: appInstance.instanceElItem(type)

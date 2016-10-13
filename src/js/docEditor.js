@@ -63,17 +63,16 @@ Component.entryPoint = function(NS){
                 }
             }, this);
         },
-        toJSON: function(){
-            var tp = this.template;
-            return {
-                docid: this.get('docid'),
-                title: tp.getValue('title'),
-            };
-        },
         save: function(){
             this.set('waiting', true);
 
-            var sd = this._toJSON();
+            var tp = this.template,
+                sd = this._toJSON();
+
+            sd = Y.merge(sd, {
+                docid: this.get('docid'),
+                title: tp.getValue('title'),
+            });
 
             this.get('appInstance').docSave(sd, function(err, result){
                 this.set('waiting', false);

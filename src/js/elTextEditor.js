@@ -24,8 +24,15 @@ Component.entryPoint = function(NS){
             this._editorWidget.destroy();
             this._editorWidget = null;
         },
-        syncElData: function(tp, el){
-            el.set('body', this._editorWidget.get('content'));
+        onSyncElData: function(tp, el){
+            var body = this._editorWidget.get('content');
+            if (el.get('body') === body){
+                return false;
+            }
+            el.set('body', body);
+
+            this.syncTitle(body, true);
+            return true;
         },
         onModeChange: function(mode){
             var tp = this.template,
@@ -47,11 +54,6 @@ Component.entryPoint = function(NS){
                     toolbar: SYS.Editor.TOOLBAR_MINIMAL
                 });
             }
-        },
-        toJSON: function(el){
-            return {
-                body: el.get('body')
-            };
         },
     }, {
         ATTRS: {

@@ -58,6 +58,7 @@ Component.entryPoint = function(NS){
         structureName: 'Element',
     }, {
         ATTRS: {
+            changed: {value: false},
             el: {}
         }
     });
@@ -76,6 +77,11 @@ Component.entryPoint = function(NS){
 
     NS.ElText = Y.Base.create('elText', SYS.AppModel, [], {
         structureName: 'ElText',
+        toSave: function(){
+            return {
+                body: this.get('body')
+            };
+        }
     });
 
     NS.ElTextList = Y.Base.create('elTextList', SYS.AppModelList, [], {

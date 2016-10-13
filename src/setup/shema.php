@@ -39,6 +39,8 @@ if ($updateManager->isInstall()){
             elementid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
             parentid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
+            title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+            
             docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             elementType VARCHAR(25) NOT NULL DEFAULT '' COMMENT '',

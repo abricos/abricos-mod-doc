@@ -164,17 +164,24 @@ class DocApp extends AbricosApplication {
             return $ret->SetError(AbricosResponse::ERR_BAD_REQUEST);
         }
 
+        $ret->elementid = $vars->elementid;
         $ret->clientid = $vars->clientid;
         $ret->parentid = $parentid;
         $ret->ord = $ord;
 
-        if ($vars->elementid === 0){
-            $ret->elementid = DocQuery::ElementAppend($this->db, $dSave, $parentid, $ord, $ret);
+        if ($vars->changed){
+            if ($vars->elementid === 0){
+                $ret->elementid = DocQuery::ElementAppend($this->db, $dSave, $parentid, $ord, $ret);
+            } else {
+                DocQuery::ElementUpdate($this->db, $dSave, $ord, $ret);
+            }
+
+            $this->$elSaveMethod($ret, $d);
         } else {
-            $ret->elementid = $vars->elementid;
+            $ret->AddCode(DocElementSave::CODE_NOT_CHANGED);
         }
 
-        $this->$elSaveMethod($ret, $d);
+        $ret->AddCode(DocElementSave::CODE_OK);
 
         if (isset($vars->childs) && is_array($vars->childs)){
             $this->ElementListSave($dSave, $ret->elementid, $vars->childs);

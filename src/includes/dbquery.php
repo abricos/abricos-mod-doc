@@ -93,6 +93,18 @@ class DocQuery {
         return $db->insert_id();
     }
 
+    public static function ElementUpdate(Ab_Database $db, DocSave $docSave, $ord, DocElementSave $r){
+        $sql = "
+            UPDATE ".$db->prefix."doc_element
+            SET 
+                title='".bkstr($r->vars->title)."',
+                ord=".intval($ord)."
+            WHERE docid=".intval($docSave->docid)."
+                AND elementid=".intval($r->vars->elementid)."
+        ";
+        $db->query_write($sql);
+    }
+
     public static function ElementRemove(Ab_Database $db, $docid, $elementid){
         $sql = "
             DELETE FROM ".$db->prefix."doc_element

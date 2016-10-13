@@ -10,13 +10,15 @@ Component.entryPoint = function(NS){
         COMPONENT = this,
         SYS = Brick.mod.sys;
 
-    NS.ButtonElementAppendWidget = Y.Base.create('ButtonElementAppendWidget', SYS.AppWidget, [], {
-        onInitAppWidget: function(err, appInstance){
+    var ButtonElementAppendExt = function(){
+    };
+    ButtonElementAppendExt.prototype = {
+        _renderTypeList: function(){
             var tp = this.template,
                 i18n = this.language,
                 lst = "";
 
-            appInstance.get('elementTypeList').each(function(type){
+            this.get('appInstance').get('elementTypeList').each(function(type){
                 lst += tp.replace('option', {
                     id: type.get('id'),
                     title: i18n.get('element.' + type.get('id'))
@@ -24,6 +26,14 @@ Component.entryPoint = function(NS){
             }, this);
 
             tp.setHTML('typeList', lst);
+        },
+    };
+
+    NS.ButtonElementAppendWidget = Y.Base.create('ButtonElementAppendWidget', SYS.AppWidget, [
+        ButtonElementAppendExt
+    ], {
+        onInitAppWidget: function(err, appInstance){
+            this._renderTypeList();
         },
         elementAppend: function(){
             var tp = this.template,
