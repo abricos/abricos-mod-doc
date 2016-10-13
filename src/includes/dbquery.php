@@ -82,10 +82,11 @@ class DocQuery {
     public static function ElementAppend(Ab_Database $db, DocSave $docSave, $parentid, $ord, DocElementSave $r){
         $sql = "
             INSERT INTO ".$db->prefix."doc_element
-            (docid, parentid, elementType, ord) VALUES (
+            (docid, parentid, elementType, title, ord) VALUES (
                 ".intval($docSave->docid).",
                 ".intval($parentid).",
                 '".bkstr($r->vars->type)."',
+                '".bkstr($r->vars->title)."',
                 ".intval($ord)."
             )
         ";

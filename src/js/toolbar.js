@@ -67,11 +67,37 @@ Component.entryPoint = function(NS){
                 typeTitle: i18n.get('element.' + type.get('id'))
             });
         },
+        updateAccordion: function(val){
+            this.triggerHide('accordion');
+            this.triggerShow('accordion', val);
+
+            var tp = this.template,
+                element = this.get('element');
+
+            tp.toggleView(val === 'collapse', 'elMiniTitle');
+            if (element && val === 'collapse'){
+                tp.setHTML('elMiniTitle', element.get('title'));
+            }
+        },
+        expand: function(){
+            this.get('owner').set('accordion', 'expand');
+        },
+        collapse: function(){
+            this.setPreviewMode();
+            this.get('owner').set('accordion', 'collapse');
+        },
+        moveUp: function(){
+            this.get('owner').moveUp();
+        },
+        moveDown: function(){
+            this.get('owner').moveDown();
+        },
         updateMode: function(mode){
             this.triggerHide('mode');
             this.triggerShow('mode', mode);
         },
         setEditMode: function(){
+            this.expand();
             this.get('owner').set('mode', 'edit');
         },
         setPreviewMode: function(){

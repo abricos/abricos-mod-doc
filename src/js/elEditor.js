@@ -25,6 +25,17 @@ Component.entryPoint = function(NS){
                 return false;
             }
         },
+        accordion: {
+            value: 'collapse',
+            validator: function(val){
+                switch (val) {
+                    case 'collapse':
+                    case 'expand':
+                        return true;
+                }
+                return false;
+            }
+        },
         owner: {}
     };
     ElEditorWidgetExt.prototype = {
@@ -58,6 +69,12 @@ Component.entryPoint = function(NS){
             }, this);
 
             this._onModeChange(this.get('mode'), this.get('mode'));
+
+            this.after('accordionChange', function(e){
+                this._onAccordionChange(e.newVal, e.prevVal);
+            }, this);
+
+            this._onAccordionChange(this.get('accordion'));
         },
         _syncElData: function(mode){
             if (mode !== 'edit'){
@@ -91,7 +108,6 @@ Component.entryPoint = function(NS){
             if (text.length > len){
                 text = text.substring(0, len - 3) + '...';
             }
-            console.log(text);
 
             element.set('title', text);
         },
@@ -108,6 +124,18 @@ Component.entryPoint = function(NS){
             this.onModeChange(mode)
         },
         onModeChange: function(mode){
+        },
+        _onAccordionChange: function(val){
+            var tp = this.template;
+            tp.toggleView(val === 'expand', 'panelBody,panelFooter', 'collapsePanel');
+
+            if (this._toolbarWidget){
+                this._toolbarWidget.updateAccordion(val);
+            }
+
+            this.onAccordionChange(val);
+        },
+        onAccordionChange: function(val){
         },
         remove: function(){
             this.get('owner').removeChild(this);
@@ -230,6 +258,7 @@ Component.entryPoint = function(NS){
 
             var w = this.elementAppend(childElement);
             w.set('mode', 'edit');
+            w.set('accordion', 'expand');
         },
         elementAppend: function(element){
             var tp = this.template,

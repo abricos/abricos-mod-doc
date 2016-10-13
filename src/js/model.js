@@ -90,6 +90,11 @@ Component.entryPoint = function(NS){
 
     NS.ElPage = Y.Base.create('elPage', SYS.AppModel, [], {
         structureName: 'ElPage',
+        toSave: function(){
+            return {
+                title: this.get('title')
+            };
+        }
     });
 
     NS.ElPageList = Y.Base.create('elPageList', SYS.AppModelList, [], {
@@ -98,6 +103,11 @@ Component.entryPoint = function(NS){
 
     NS.ElSection = Y.Base.create('elSection', SYS.AppModel, [], {
         structureName: 'ElSection',
+        toSave: function(){
+            return {
+                title: this.get('title')
+            };
+        }
     });
 
     NS.ElSectionList = Y.Base.create('elSectionList', SYS.AppModelList, [], {

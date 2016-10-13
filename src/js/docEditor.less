@@ -1,11 +1,5 @@
 .aw-doc .docEditor {
 
-  .previewPanel {
-    h2, h3 {
-      margin-top: 5px;
-    }
-  }
-
   .elEditor.panel {
     margin-bottom: 10px;
     border: 1px dashed #DDDDDD;
@@ -32,6 +26,7 @@
     .elToolbar {
       .typeTitle {
         color: #A3A3A3;
+        margin-right: 10px;
       }
       .form-group {
         margin-bottom: 10px;
@@ -66,9 +61,21 @@
   .elPageEditor {
     background-color: #EBEBEB;
   }
-
   .elSectionEditor {
     background-color: #F5F5F5;
+  }
+
+  .elPageEditor,
+  .elSectionEditor {
+    & > .panel-heading .elMiniTitle {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .previewPanel {
+      h3 {
+        margin: 0 0 5px 0;
+      }
+    }
   }
 
 }

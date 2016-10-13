@@ -13,10 +13,17 @@ Component.entryPoint = function(NS){
     var ElSectionEditorWidgetExt = function(){
     };
     ElSectionEditorWidgetExt.prototype = {
-        syncElData: function(tp, el){
-            el.set('title', tp.getValue('title'));
-        },
+        onSyncElData: function(tp, el){
+            var title = tp.getValue('title');
+            if (el.get('title') === title){
+                return false;
+            }
 
+            el.set('title', title);
+            this.syncTitle(title);
+
+            return true;
+        },
         onModeChange: function(mode){
             var tp = this.template,
                 el = this.get('el');
@@ -28,11 +35,6 @@ Component.entryPoint = function(NS){
             } else if (mode === 'edit'){
                 tp.setValue('title', el.get('title'))
             }
-        },
-        toJSON: function(el){
-            return {
-                title: el.get('title')
-            };
         },
     };
 
@@ -46,7 +48,7 @@ Component.entryPoint = function(NS){
             templateBlockName: {value: 'page'},
         }
     });
-    
+
     NS.ElSectionEditorWidget = Y.Base.create('ElSectionEditorWidget', SYS.AppWidget, [
         NS.ElEditorWidgetExt,
         NS.ElContainerEditorWidgetExt,

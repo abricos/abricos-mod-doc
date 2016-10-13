@@ -36,7 +36,7 @@ class DocApp extends AbricosApplication {
     protected function GetStructures(){
         $ret = 'Doc,Element,ElementType,ElText,ElPage,ElSection';
 
-        if ($this->IsWriteRole()){
+        if ($this->IsAdminRole()){
             $ret .= ',DocSave,ElementSave';
         }
 
@@ -104,7 +104,7 @@ class DocApp extends AbricosApplication {
         /** @var DocSave $ret */
         $ret = $this->InstanceClass('DocSave', $d);
 
-        if (!$this->IsWriteRole()){
+        if (!$this->IsAdminRole()){
             return $ret->SetError(AbricosResponse::ERR_FORBIDDEN);
         }
 
