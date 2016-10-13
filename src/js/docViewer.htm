@@ -2,24 +2,43 @@
 <div class="docEditor panel panel-default">
     <div class="panel-heading text-center">
         <h3 class="panel-title pull-left">
-            Документ: <b id="{i#title}"></b>
+            <b id="{i#title}"></b>
         </h3>
 
         <img data-wait="show" src="/images/loading.gif"/>
 
+        <div class="btn-toolbar pull-right">
+            <a data-url="doc.edit({v#docid})"
+               class="btn btn-default btn-xs">
+                Редактировать
+            </a>
+        </div>
+
+
         <div class="clearfix"></div>
     </div>
-    <div class="panel-body">
-
-    </div>
+    <div id="{i#body}" class="panel-body"></div>
     <div class="panel-footer text-center">
-
         <div class="btn-toolbar pull-right">
             <a data-url="doc.list" class="btn btn-default btn-sm">
                 Вернуться к списку
             </a>
         </div>
-
         <div class="clearfix"></div>
     </div>
 </div>
+
+<!--{page}-->
+<div class="elPageView">
+    <h3>{v#title}</h3>
+    {v#childs}
+</div>
+
+<!--{section}-->
+<div class="elSectionView">
+    <h4>{v#title}</h4>
+    {v#childs}
+</div>
+
+<!--{text}-->
+<div class="elTextView">{v#body}</div>
