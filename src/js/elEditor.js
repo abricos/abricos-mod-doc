@@ -138,7 +138,13 @@ Component.entryPoint = function(NS){
         onAccordionChange: function(val){
         },
         remove: function(){
-            this.get('owner').removeChild(this);
+            this.get('owner').childRemove(this);
+        },
+        moveUp: function(){
+            this.get('owner').childMoveUp(this);
+        },
+        moveDown: function(){
+            this.get('owner').childMoveDown(this);
         },
         _toJSON: function(){
             this._syncElData(this.get('mode'));
@@ -253,7 +259,8 @@ Component.entryPoint = function(NS){
                     changed: true,
                     type: type,
                     parentid: element ? element.get('parentid') : 0,
-                    el: appInstance.instanceElItem(type)
+                    el: appInstance.instanceElItem(type),
+                    ord: this._wChilds.length
                 });
 
             var w = this.elementAppend(childElement);
@@ -276,7 +283,7 @@ Component.entryPoint = function(NS){
             wList[wList.length] = widget;
             return widget;
         },
-        removeChild: function(w){
+        childRemove: function(w){
             var wList = this._wChilds,
                 nList = [];
 
@@ -289,6 +296,88 @@ Component.entryPoint = function(NS){
             }
             this._wChilds = nList;
         },
+        _childMove: function(w, method){
+            var wList = this._wChilds,
+                item, prevItem, nextItem,
+                ord, prevOrd, nextOrd,
+                el, prevEl, nextEl,
+                isChange = false;
+
+            for (var i = 0; i < wList.length; i++){
+                item = wList[i];
+                if (item === w){
+                    el = item.get('element');
+                    ord = el.get('ord');
+                    if (method === 'up' && i > 0){
+                        prevItem = wList[i - 1];
+                        prevEl = prevItem.get('element');
+                        prevOrd = prevEl.get('ord');
+                        prevEl.set('ord', ord);
+                        prevEl.set('changed', true);
+                        el.set('ord', prevOrd);
+                        el.set('changed', true);
+                    } else if (method === 'down' && i < wList.length - 1){
+                        nextItem = wList[i + 1];
+                        nextEl = nextItem.get('element');
+                        nextOrd = nextEl.get('ord');
+                        nextEl.set('ord', ord);
+                        nextEl.set('changed', true);
+                        el.set('ord', nextOrd);
+                        el.set('changed', true);
+                    } else {
+                        return;
+                    }
+                    isChange = true;
+                }
+            }
+            if (!isChange){
+                return;
+            }
+
+            var list = this._createTempElList();
+            list = list.sort(function(i1, i2){
+                if (i1.ord > i2.ord){
+                    return 1;
+                } else if (i1.ord < i2.ord){
+                    return -1;
+                }
+                return 0;
+            });
+            this.cleanChilds();
+            this._renderChildElements(list, this);
+        },
+        _createTempElList: function(){
+            var list = [], item, element;
+
+            this.childEach(function(w){
+                element = w.get('element');
+                item = {
+                    element: element,
+                    ord: element.get('ord')
+                };
+                if (w._createTempElList){
+                    item.childs = w._createTempElList();
+                }
+                list[list.length] = item;
+            }, this);
+
+            return list;
+        },
+        _renderChildElements: function(list, widget){
+            for (var i = 0, item, childWidget; i < list.length; i++){
+                item = list[i];
+                childWidget = widget.elementAppend(item.element);
+                if (item.childs && childWidget._renderChildElements){
+                    childWidget._renderChildElements(item.childs, childWidget);
+                }
+            }
+        },
+        childMoveUp: function(w){
+            this._childMove(w, 'up');
+        },
+        childMoveDown: function(w){
+            this._childMove(w, 'down');
+        }
     };
     NS.ElContainerEditorWidgetExt = ElContainerEditorWidgetExt;
 };

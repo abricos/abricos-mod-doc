@@ -12,6 +12,7 @@ Component.entryPoint = function(NS){
         structureName: 'Doc',
         elEach: function(parentid, fn, contenxt){
             parentid = parentid | 0;
+
             this.get('elementList').each(function(element){
                 if (parentid !== element.get('parentid')){
                     return;
