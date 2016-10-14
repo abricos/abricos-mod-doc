@@ -83,6 +83,26 @@ class Doc extends AbricosModel {
 
         return $ret;
     }
+
+    public function GetURL(){
+        $title = str_replace(' ', '_', $this->title);
+
+        $url = '/doc/doc'.$this->id."-";
+        $url .= urlencode($title)."/";
+        return $url;
+    }
+
+    public static function ParseURL(){
+        $adr = Abricos::$adress;
+        if ($adr->level <= 1){
+            return 0;
+        }
+        $a = explode('-', $adr->dir[1]);
+        if (count($a) < 2){
+            return 0;
+        }
+        return intval(str_replace('doc', '', $a[0]));
+    }
 }
 
 /**

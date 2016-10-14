@@ -19,6 +19,15 @@ class DocModule extends Ab_Module {
         $this->permission = new DocPermission($this);
     }
 
+    public function GetContentName(){
+        $adr = Abricos::$adress;
+        if ($adr->level >= 2){
+            return 'docViewer';
+        }
+
+        return 'index';
+    }
+
     public function Bos_IsMenu(){
         return true;
     }
