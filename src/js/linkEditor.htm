@@ -4,8 +4,8 @@
 
         <h3 class="panel-title pull-left">Ссылки на документ</h3>
 
-        <div class="btn-group pull-right">
-            <button data-click="this:addLink"
+        <div id="{i#buttons}" class="btn-group pull-right">
+            <button data-click="this:createLink"
                     data-wait="disable"
                     class="btn btn-default btn-xs" type="button">
                 Добавить ссылку
@@ -17,18 +17,36 @@
         </span>
 
         <div class="clearfix"></div>
-
     </div>
     <div class="panel-body">
         <div id="{i#list}"></div>
-        <div id="{i#action}"></div>
+        <div id="{i#action}" class="hide"></div>
     </div>
 </div>
 
-<!--{widget}-->
+<!--{editor}-->
 <div class="linkEditor panel panel-default">
+    <div class="panel-heading text-center">
+        <h3 class="panel-title pull-left">
+            Редактор ссылки на документ
+        </h3>
+
+        <div class="clearfix"></div>
+    </div>
     <div class="panel-body">
+    </div>
+    <div class="panel-footer text-center">
+        <img data-wait="show" src="/images/loading.gif"/>
 
+        <div class="btn-toolbar pull-right">
+            <button data-click="this:save" class="btn btn-default btn-xs">
+                ОК
+            </button>
+            <button data-click="this:cancel" class="btn btn-default btn-xs">
+                Отмена
+            </button>
+        </div>
 
+        <div class="clearfix"></div>
     </div>
 </div>

@@ -13,6 +13,9 @@ Component.entryPoint = function(NS){
 
     NS.LinkListEditorWidget = Y.Base.create('LinkListEditorWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance){
+
+            this._wList = [];
+
             this.set('waiting', true);
             appInstance.docList(function(err, result){
                 if (err){
@@ -32,11 +35,60 @@ Component.entryPoint = function(NS){
                 }, this);
             }, this);
         },
-        _onLoadLinkList: function(docList){
+        destructor: function(){
+            this._cleanWList();
+            this.closeAction();
+        },
+        _onLoadLinkList: function(){
 
         },
-        addLink: function(){
+        _cleanWList: function(){
+            var wList = this._wList;
+            for (var i = 0; i < wList.length; i++){
+                wList[i].destroy();
+            }
+            this._wList = [];
+        },
+        createLink: function(){
+            this.showEditor(0);
+        },
+        closeAction: function(){
+            if (!this._actionWidget){
+                return;
+            }
+            this._actionWidget.destroy();
+            this._actionWidget = null;
+            this.template.toggleView(true, 'list,buttons', 'action');
+        },
+        showEditor: function(linkid){
+            linkid = linkid | 0;
+            var tp = this.template,
+                appInstance = this.get('appInstance'),
+                link;
 
+            if (linkid === 0){
+                link = new (appInstance.get('Link'))({
+                    appInstance: appInstance
+                });
+            } else {
+                link = this.get('linkList').getById(linkid);
+            }
+
+            if (!link){
+                return;
+            }
+
+            this.closeAction();
+
+            tp.toggleView(false, 'list,buttons', 'action');
+
+            this._actionWidget = new NS.LinkEditorWidget({
+                srcNode: tp.one('action'),
+                link: link
+            });
+        },
+        _addLink: function(link){
+            var tp = this.template;
         }
     }, {
         ATTRS: {
@@ -51,13 +103,15 @@ Component.entryPoint = function(NS){
         onInitAppWidget: function(err, appInstance, options){
 
         },
+        save: function(){
+        },
+        cancel: function(){
+        }
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'widget'},
-            ownerModule: {value: '{C#MODNAME}'},
-            ownerType: {value: ''},
-            ownerid: {value: 0}
+            templateBlockName: {value: 'editor'},
+            link: {}
         },
     });
 };

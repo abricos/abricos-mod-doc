@@ -379,7 +379,6 @@ class DocApp extends AbricosApplication {
             return AbricosResponse::ERR_BAD_REQUEST;
         }
 
-
         /** @var DocLinkList $list */
         $list = $this->InstanceClass('LinkList');
 
