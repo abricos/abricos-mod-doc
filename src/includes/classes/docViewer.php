@@ -65,6 +65,7 @@ class DocViewer {
                     /** @var DocElPage $el */
 
                     $ret .= Brick::ReplaceVarByData($brick->content, array(
+                        "elementid" => $el->id,
                         "title" => $el->title,
                         "childs" => $this->BuildElements($element->id)
                     ));
@@ -74,6 +75,7 @@ class DocViewer {
                     /** @var DocElText $el */
 
                     $ret .= Brick::ReplaceVarByData($brick->content, array(
+                        "elementid" => $el->id,
                         "body" => $el->body
                     ));
                     break;

@@ -177,4 +177,21 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    public static function LinkList(Ab_Database $db, DocOwner $owner){
+        $sql = "
+            SELECT
+                d.docid,
+                d.title
+            FROM ".$db->prefix."doc_link l
+            INNER JOIN ".$db->prefix."doc_element e ON e.elementid=l.elementid
+            INNER JOIN ".$db->prefix."doc d ON d.docid=e.docid AND d.deldate=0 
+            WHERE l.ownerModule='".bkstr($owner->module)."'
+                AND l.ownerType='".bkstr($owner->type)."'
+                AND l.ownerid=".intval($owner->ownerid)."                
+            ORDER BY l.ord
+        ";
+        return $db->query_read($sql);
+    }
+
+
 }

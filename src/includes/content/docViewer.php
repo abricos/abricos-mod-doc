@@ -28,14 +28,13 @@ Abricos::GetModule('doc')->ScriptRequireOnce('/includes/classes/docViewer.php');
 $docViewer = new DocViewer($doc);
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
+    "docid" => $doc->id,
     "title" => $doc->title,
     "result" => $docViewer->Builld(),
     "brickid" => $brick->id
 ));
 
 if (!empty($doc->title)){
-
     $title = $doc->title." // ".SystemModule::$instance->GetPhrases()->Get('site_name');
-
     Brick::$builder->SetGlobalVar('meta_title', $title);
 }

@@ -115,4 +115,71 @@ Component.entryPoint = function(NS){
         appItem: NS.ElSection,
     });
 
+    NS.Link = Y.Base.create('link', SYS.AppModel, [], {
+        structureName: 'Link',
+    });
+
+    NS.LinkList = Y.Base.create('linkList', SYS.AppModelList, [], {
+        appItem: NS.Link,
+    });
+
+    NS.Owner = Y.Base.create('owner', SYS.AppModel, [], {
+        structureName: 'Owner',
+        compare: function(val){
+            if (!NS.isOwner(val)){
+                return false;
+            }
+            return val.get('module') === this.get('module')
+                && val.get('type') === this.get('type')
+                && val.get('ownerid') === this.get('ownerid');
+        }
+    }, {
+        ATTRS: {
+            id: {
+                readOnly: true,
+                getter: function(){
+                    return this.get('module') + '|'
+                        + this.get('type') + '|'
+                        + this.get('ownerid');
+                }
+            },
+        }
+    });
+
+    NS.OwnerList = Y.Base.create('ownerList', SYS.AppModelList, [], {
+        appItem: NS.Owner,
+        getOwner: function(module, type, ownerid){
+            var app = this.appInstance,
+                Owner = app.get('Owner'),
+                id;
+
+            if (Y.Lang.isObject(module)){
+                var tempOwner = new Owner(Y.merge(module, {appInstance: app}));
+                id = tempOwner.get('id');
+            } else {
+                id = module + '|' + type + '|' + ownerid;
+            }
+
+            var owner = this.getById(id);
+            if (owner){
+                return owner;
+            }
+
+            if (Y.Lang.isObject(module)){
+                owner = new Owner(Y.merge(module, {appInstance: app}));
+            } else {
+                owner = new Owner({
+                    module: module,
+                    type: type,
+                    ownerid: ownerid,
+                    appInstance: app
+                });
+            }
+
+            this.add(owner);
+
+            return owner;
+        },
+    });
+
 };

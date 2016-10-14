@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "int",
+      "dbField": "linkid"
+    },
+    "docid": {
+      "type": "int"
+    },
+    "elementid": {
+      "type": "int"
+    },
+    "ord": {
+      "type": "int"
+    }
+  }
+}

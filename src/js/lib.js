@@ -61,16 +61,29 @@ Component.entryPoint = function(NS){
             ElPageList: {value: NS.ElPageList},
             ElSection: {value: NS.ElSection},
             ElSectionList: {value: NS.ElSectionList},
+            Link: {value: NS.Link},
+            LinkList: {value: NS.LinkList},
+            Owner: {value: NS.Owner},
+            ownerList: {
+                readOnly: true,
+                getter: function(){
+                    if (!this._ownerListAttr){
+                        this._ownerListAttr = new NS.OwnerList({appInstance: this});
+                    }
+                    return this._ownerListAttr;
+                }
+            },
         },
         REQS: {
             docList: {
-                attribute: false,
+                attribute: true,
                 type: "modelList:DocList"
             },
             docSave: {
                 args: ['data'],
                 type: 'response:DocSave',
                 onResponse: function(r){
+                    this.set('docList', null);
                     var ElementSave = this.get('ElementSave'),
                         dEls = r.get('elements'),
                         els = [];
@@ -103,12 +116,19 @@ Component.entryPoint = function(NS){
                 }
             },
             docRemove: {
-                args: ['docid']
+                args: ['docid'],
+                onResponse: function(){
+                    this.set('docList', null);
+                }
             },
             elementTypeList: {
                 attribute: true,
                 type: "modelList:ElementTypeList"
             },
+            linkList: {
+                args: ['owner'],
+                type: "modelList:LinkList"
+            }
         },
         URLS: {
             ws: "#app={C#MODNAME}/wspace/ws/",

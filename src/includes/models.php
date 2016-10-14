@@ -272,3 +272,36 @@ class DocElSection extends DocEl {
  */
 class DocElSectionList extends DocElList {
 }
+
+/**
+ * Class DocLink
+ *
+ * @property int $docid
+ * @property int $elementid
+ * @property int $ord
+ */
+class DocLink extends AbricosModel {
+    protected $_structModule = 'doc';
+    protected $_structName = 'Link';
+}
+
+/**
+ * Class DocLinkList
+ *
+ * @method DocLink Get(string $id)
+ * @method DocLink GetByIndex(int $i)
+ */
+class DocLinkList extends AbricosModelList {
+}
+
+/**
+ * Class DocOwner
+ *
+ * @property string $module
+ * @property string $type
+ * @property int $ownerid
+ */
+class DocOwner extends AbricosModel {
+    protected $_structModule = 'doc';
+    protected $_structName = 'Owner';
+}

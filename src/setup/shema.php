@@ -82,4 +82,22 @@ if ($updateManager->isInstall()){
         )".$charset
     );
 
+
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_link (
+            linkid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
+            
+            ownerModule VARCHAR(32) NOT NULL DEFAULT '' COMMENT '',
+            ownerType VARCHAR(32) NOT NULL DEFAULT '' COMMENT '',
+            ownerid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            ord INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            PRIMARY KEY (linkid),
+            KEY link (ownerModule, ownerType, ownerid)
+        )".$charset
+    );
+
 }

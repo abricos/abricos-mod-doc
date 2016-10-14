@@ -16,6 +16,7 @@ class DocApp extends AbricosApplication {
 
     protected function GetClasses(){
         return array(
+            "Owner" => "DocOwner",
             "Doc" => "Doc",
             "DocList" => "DocList",
             "DocSave" => "DocSave",
@@ -30,11 +31,13 @@ class DocApp extends AbricosApplication {
             "ElPageList" => "DocElPageList",
             "ElSection" => "DocElSection",
             "ElSectionList" => "DocElSectionList",
+            "Link" => "DocLink",
+            "LinkList" => "DocLinkList",
         );
     }
 
     protected function GetStructures(){
-        $ret = 'Doc,Element,ElementType,ElText,ElPage,ElSection';
+        $ret = 'Owner,Doc,Element,ElementType,ElText,ElPage,ElSection,Link';
 
         if ($this->IsAdminRole()){
             $ret .= ',DocSave,ElementSave';
@@ -55,6 +58,8 @@ class DocApp extends AbricosApplication {
                 return $this->DocRemoveToJSON($d->docid);
             case 'elementTypeList':
                 return $this->ElementTypeListToJSON();
+            case 'linkList':
+                return $this->LinkListToJSON($d->owner);
         }
         return null;
     }
@@ -69,6 +74,17 @@ class DocApp extends AbricosApplication {
 
     public function IsViewRole(){
         return $this->manager->IsViewRole();
+    }
+
+    private function OwnerAppFunctionExist($module, $fn){
+        $ownerApp = Abricos::GetApp($module);
+        if (empty($ownerApp)){
+            return false;
+        }
+        if (!method_exists($ownerApp, $fn)){
+            return false;
+        }
+        return true;
     }
 
     public function DocListToJSON(){
@@ -339,6 +355,40 @@ class DocApp extends AbricosApplication {
         $d->title = $utmf->Parser($d->title);
 
         DocQuery::ElSectionUpdate($this->db, $es, $d);
+    }
+
+    public function LinkListToJSON($owner){
+        $ret = $this->LinkList($owner);
+        return $this->ResultToJSON('linkList', $ret);
+    }
+
+    public function LinkList($owner){
+        if (!$this->IsViewRole()){
+            return AbricosResponse::ERR_FORBIDDEN;
+        }
+
+        /** @var DocOwner $owner */
+        $owner = $this->InstanceClass('Owner', $owner);
+
+        if (!$this->OwnerAppFunctionExist($owner->module, 'Doc_IsLinkList')){
+            return AbricosResponse::ERR_BAD_REQUEST;
+        }
+
+        $ownerApp = Abricos::GetApp($owner->module);
+        if (!$ownerApp->Doc_IsLinkList($owner)){
+            return AbricosResponse::ERR_BAD_REQUEST;
+        }
+
+
+        /** @var DocLinkList $list */
+        $list = $this->InstanceClass('LinkList');
+
+        $rows = DocQuery::LinkList($this->db, $owner);
+        while (($d = $this->db->fetch_array($rows))){
+            $list->Add($this->InstanceClass('Link', $d));
+        }
+
+        return $list;
     }
 
 }

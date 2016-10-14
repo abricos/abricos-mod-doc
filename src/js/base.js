@@ -7,6 +7,8 @@ Component.requires = {
 };
 Component.entryPoint = function(NS){
 
+    var Y = Brick.YUI;
+
     NS.clientid = 1;
     NS.incClientId = function(){
         return NS.clientid++;
@@ -22,6 +24,20 @@ Component.entryPoint = function(NS){
             return val | 0;
         }
     };
+
+    NS.isOwner = function(val){
+        if (!val){
+            return false;
+        }
+        if (val.module && val.type && val.ownerid){
+            return true;
+        }
+        if (!Y.Lang.isFunction(val.get)){
+            return false;
+        }
+        return true;
+    };
+
 
     NS.ATTRIBUTE = {
         number: number,
@@ -43,6 +59,15 @@ Component.entryPoint = function(NS){
                 }
                 return this._elClientId;
             },
+        },
+        owner: {
+            validator: NS.isOwner,
+            setter: function(val){
+                if (val.module && val.type && val.ownerid){
+                    return this.get('appInstance').get('ownerList').getOwner(val.module, val.type, val.ownerid);
+                }
+                return val;
+            }
         },
     };
 
