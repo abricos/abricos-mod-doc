@@ -1,7 +1,7 @@
 var Component = new Brick.Component();
 Component.requires = {
     mod: [
-        {name: 'sys', files: ['appModel.js']}
+        {name: '{C#MODNAME}', files: ['base.js']}
     ]
 };
 Component.entryPoint = function(NS){
@@ -145,6 +145,10 @@ Component.entryPoint = function(NS){
 
     NS.Link = Y.Base.create('link', SYS.AppModel, [], {
         structureName: 'Link',
+    }, {
+        ATTRS: {
+            clientid: NS.ATTRIBUTE.clientid
+        }
     });
 
     NS.LinkList = Y.Base.create('linkList', SYS.AppModelList, [], {

@@ -93,6 +93,8 @@ if ($updateManager->isInstall()){
 
             elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
 
+            pathCache TEXT NOT NULL COMMENT '',
+
             ord INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             PRIMARY KEY (linkid),

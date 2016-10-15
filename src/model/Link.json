@@ -9,8 +9,14 @@
     "docid": {
       "type": "int"
     },
+    "docTitle": {
+      "type": "string"
+    },
     "elementid": {
       "type": "int"
+    },
+    "path": {
+      "type": "array"
     },
     "ord": {
       "type": "int"

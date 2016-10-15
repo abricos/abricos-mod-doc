@@ -1,8 +1,7 @@
 var Component = new Brick.Component();
 Component.requires = {
     mod: [
-        {name: 'sys', files: ['application.js']},
-        {name: '{C#MODNAME}', files: ['model.js']}
+        {name: 'sys', files: ['application.js', 'appModel.js']},
     ]
 };
 Component.entryPoint = function(NS){

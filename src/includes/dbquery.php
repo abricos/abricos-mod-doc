@@ -180,8 +180,9 @@ class DocQuery {
     public static function LinkList(Ab_Database $db, DocOwner $owner){
         $sql = "
             SELECT
+                e.*,
                 d.docid,
-                d.title
+                d.title as docTitle
             FROM ".$db->prefix."doc_link l
             INNER JOIN ".$db->prefix."doc_element e ON e.elementid=l.elementid
             INNER JOIN ".$db->prefix."doc d ON d.docid=e.docid AND d.deldate=0 

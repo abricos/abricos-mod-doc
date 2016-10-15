@@ -13,9 +13,8 @@ Component.entryPoint = function(NS){
 
     NS.LinkListEditorWidget = Y.Base.create('LinkListEditorWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance){
-
-            this._wList = [];
             this._cacheStructs = {};
+            this._links = [];
 
             this.set('waiting', true);
             appInstance.docList(function(err, result){
@@ -31,24 +30,41 @@ Component.entryPoint = function(NS){
                     if (err){
                         return;
                     }
-                    this.set('linkList', result.linkList);
-                    this._onLoadLinkList();
+                    this._onLoadLinkList(result.linkList);
                 }, this);
             }, this);
         },
         destructor: function(){
-            this._cleanWList();
             this.closeAction();
         },
-        _onLoadLinkList: function(){
-
+        _onLoadLinkList: function(linkList){
+            this.set('linkList', linkList);
+            var links = [];
+            linkList.each(function(link){
+                links[links.length] = link;
+            }, this);
+            this._links = links;
+            this.renderLinkList();
         },
-        _cleanWList: function(){
-            var wList = this._wList;
-            for (var i = 0; i < wList.length; i++){
-                wList[i].destroy();
+        addLink: function(link){
+            var links = this._links;
+            links[links.length] = link;
+            this.renderLinkList();
+        },
+        removeLinkByClientId: function(clientid){
+            clientid = clientid | 0;
+
+            var links = this._links,
+                nLinks = [];
+
+            for (var i = 0; i < links.length; i++){
+                if (links[i].get('clientid') === clientid){
+                    continue;
+                }
+                nLinks[nLinks.length] = links[i];
             }
-            this._wList = [];
+            this._links = nLinks;
+            this.renderLinkList();
         },
         createLink: function(){
             this.showEditor(0);
@@ -84,13 +100,10 @@ Component.entryPoint = function(NS){
             tp.toggleView(false, 'list,buttons', 'action');
 
             this._actionWidget = new NS.LinkEditorWidget({
-                srcNode: tp.one('action'),
+                srcNode: tp.append('action', '<div></div>'),
                 parent: this,
                 link: link
             });
-        },
-        addLink: function(link){
-            var tp = this.template;
         },
         docStructure: function(docid, callback, context){
             docid = docid | 0;
@@ -108,19 +121,70 @@ Component.entryPoint = function(NS){
                 callback.call(context, result.docStructure);
             }, this);
         },
+        renderLinkList: function(){
+            var tp = this.template,
+                links = this._links,
+                lst = "";
+
+            for (var i = 0; i < links.length; i++){
+                var link = links[i],
+                    path = link.get('path') || [],
+                    aPath = [];
+
+                for (var ii = 0; ii < path.length; ii++){
+                    aPath[aPath.length] = tp.replace('pathItem', {
+                        docid: link.get('docid'),
+                        elementid: path[ii].id,
+                        title: path[ii].title,
+                    });
+                }
+                lst += tp.replace('linkRow', {
+                    docid: link.get('docid'),
+                    docTitle: link.get('docTitle'),
+                    path: aPath.join(tp.replace('pathDelim')),
+                    clientid: link.get('clientid')
+                });
+            }
+
+            tp.setHTML({
+                list: lst
+            });
+            this.appURLUpdate();
+        },
+        toJSON: function(){
+            var links = this._links,
+                ret = [];
+
+            for (var i = 0; i < links.length; i++){
+                var link = links[i];
+                ret[ret.length] = {
+                    linkid: link.get('id'),
+                    clientid: link.get('clientid'),
+                    docid: link.get('docid'),
+                    elementid: link.get('elementid'),
+                };
+            }
+            return ret;
+        }
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'widget'},
+            templateBlockName: {value: 'widget,linkRow,pathItem,pathDelim'},
             owner: NS.ATTRIBUTE.owner,
             linkList: {}
         },
+        CLICKS: {
+            removeLink: {
+                event: function(e){
+                    var clientid = e.target.getData('id') | 0;
+                    this.removeLinkByClientId(clientid);
+                }
+            }
+        }
     });
 
     NS.LinkEditorWidget = Y.Base.create('LinkListEditorWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance, options){
-            this._wList = [];
-
             var tp = this.template,
                 lst = tp.replace('option', {
                     id: 0, title: ''
@@ -158,13 +222,6 @@ Component.entryPoint = function(NS){
                 node = tp.one('elSelect-' + i);
                 value = node.get('value');
                 callback.call(context || this, node, value);
-            }
-        },
-        cleanSelectors: function(){
-            var tp = this.template;
-            for (var i = 0; i < 6; i++){
-                tp.setHTML('elSelect-' + i, '');
-                tp.hide('elSelect-' + i);
             }
         },
         docStructure: function(docid, callback){
@@ -268,7 +325,38 @@ Component.entryPoint = function(NS){
             tp.setHTML('elSelect-' + level, lst);
         },
         save: function(){
-            this.get('parent').addLink(this.getValue());
+            var docid = this.get('docid') | 0,
+                elementid = this.get('elementid') | 0,
+                docStructure = this.get('docStructure');
+
+            if (docid === 0 || !docStructure){
+                return;
+            }
+            var doc = this.get('appInstance').get('docList').getById(docid),
+                link = this.get('link'),
+                path = docStructure.getPath(elementid),
+                pathCache = [],
+                parentWidget = this.get('parent');
+
+            for (var i = 0; i < path.length; i++){
+                var element = docStructure.getById(path[i]);
+                pathCache[i] = {
+                    id: element.get('id'),
+                    title: element.get('title')
+                };
+            }
+
+            link.set('docid', docid);
+            link.set('docTitle', doc.get('title'));
+            link.set('elementid', elementid);
+            link.set('path', pathCache);
+
+            if (link.get('id') === 0){
+                parentWidget.addLink(link);
+            } else {
+                parentWidget.renderLinkList()
+            }
+            parentWidget.closeAction();
         },
         cancel: function(){
             this.get('parent').closeAction();
