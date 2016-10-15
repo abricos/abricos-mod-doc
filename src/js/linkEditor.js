@@ -89,7 +89,7 @@ Component.entryPoint = function(NS){
                 link: link
             });
         },
-        _addLink: function(link){
+        addLink: function(link){
             var tp = this.template;
         },
         docStructure: function(docid, callback, context){
@@ -119,7 +119,6 @@ Component.entryPoint = function(NS){
 
     NS.LinkEditorWidget = Y.Base.create('LinkListEditorWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance, options){
-
             this._wList = [];
 
             var tp = this.template,
@@ -143,10 +142,13 @@ Component.entryPoint = function(NS){
             this.eachElSelector(function(node){
                 node.on('change', this._onElSelectorChange, this);
             }, this)
-
         },
         destructor: function(){
-            this.template.one('docSelect').detachAll();
+            var tp = this.template;
+            tp.one('docSelect').detachAll();
+            for (var i = 0; i < 6; i++){
+                tp.one('elSelect-' + i).detachAll();
+            }
         },
         eachElSelector: function(callback, context){
             var tp = this.template,
@@ -159,9 +161,11 @@ Component.entryPoint = function(NS){
             }
         },
         cleanSelectors: function(){
-            this.eachElSelector(function(node){
-                node.setHTML('');
-            }, this);
+            var tp = this.template;
+            for (var i = 0; i < 6; i++){
+                tp.setHTML('elSelect-' + i, '');
+                tp.hide('elSelect-' + i);
+            }
         },
         docStructure: function(docid, callback){
             this.get('parent').docStructure(docid, function(elementList){
@@ -176,24 +180,98 @@ Component.entryPoint = function(NS){
                 return;
             }
             this.set('docid', docid);
+
             if (docid === 0){
                 this.set('docStructure', null);
-                return this.cleanSelectors();
+                this.setValue(0);
+                return;
             }
+
             this.docStructure(docid, function(docStructure){
                 this.set('docStructure', docStructure);
-                this.renderSelectors();
+                this.setValue(0);
             }, this);
         },
         _onElSelectorChange: function(e){
-            console.log(e);
-        },
-        renderSelectors: function(){
+            if (this._lockElSelectorChange){
+                return;
+            }
 
+            var tp = this.template,
+                level = e.target.getData('level') | 0,
+                elementid = e.target.get('value') | 0;
+
+            if (elementid === -1){
+                level--;
+                for (; level >= 0; level--){
+                    elementid = tp.getValue('elSelect-' + level);
+                    if (elementid > 0){
+                        break;
+                    }
+                }
+            }
+            this.setValue(elementid);
+        },
+        getValue: function(){
+            return this.get('elementid');
+        },
+        setValue: function(elementid){
+            elementid = elementid | 0;
+            this.set('elementid', elementid);
+            this._renderSelectors(elementid)
+        },
+        _renderSelectors: function(elementid){
+            this._lockElSelectorChange = true;
+
+            var tp = this.template,
+                docStructure = this.get('docStructure'),
+                path = docStructure ? docStructure.getPath(elementid) : [];
+
+            for (var i = 0; i < 6; i++){
+                if (tp.getValue('elSelect-' + i) === path[i]){
+                    continue;
+                }
+
+                if (i <= path.length){
+                    this._renderSelector(i, path[i - 1] || 0);
+                    tp.setValue('elSelect-' + i, path[i] || 0);
+                } else {
+                    tp.hide('elSelect-' + i);
+                }
+            }
+            this._lockElSelectorChange = false;
+        },
+        _renderSelector: function(level, parentid){
+            var tp = this.template,
+                docStructure = this.get('docStructure');
+
+            var lst = "";
+            if (docStructure){
+                docStructure.each(function(element){
+                    if (element.get('parentid') !== parentid){
+                        return;
+                    }
+                    lst += tp.replace('option', {
+                        id: element.get('id'),
+                        title: element.get('title')
+                    });
+                }, this);
+            }
+
+            if (lst !== ""){
+                lst = tp.replace('option', {
+                        id: '-1',
+                        title: ''
+                    }) + lst;
+            }
+            tp.toggleView(lst !== '', 'elSelect-' + level);
+            tp.setHTML('elSelect-' + level, lst);
         },
         save: function(){
+            this.get('parent').addLink(this.getValue());
         },
         cancel: function(){
+            this.get('parent').closeAction();
         }
     }, {
         ATTRS: {

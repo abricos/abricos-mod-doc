@@ -66,6 +66,34 @@ Component.entryPoint = function(NS){
 
     NS.ElementList = Y.Base.create('elementList', SYS.AppModelList, [], {
         appItem: NS.Element,
+        getPath: function(elementid){
+            elementid = elementid | 0;
+
+            if (!this._cachePath){
+                this._cachePath = {};
+            }
+            if (this._cachePath[elementid]){
+                return this._cachePath[elementid];
+            }
+
+            var path = [],
+                element;
+
+            while (elementid > 0){
+                element = this.getById(elementid);
+                if (!element){
+                    path = [];
+                    break;
+                }
+                path[path.length] = elementid;
+                elementid = element.get('parentid');
+            }
+
+            path = path.reverse();
+
+            this._cachePath[elementid] = path;
+            return path;
+        }
     });
 
     NS.ElementType = Y.Base.create('elementType', SYS.AppModel, [], {
