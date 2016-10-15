@@ -125,6 +125,10 @@ Component.entryPoint = function(NS){
                 attribute: true,
                 type: "modelList:ElementTypeList"
             },
+            docStructure: {
+                args: ['docid'],
+                type: "modelList:ElementList"
+            },
             linkList: {
                 args: ['owner'],
                 type: "modelList:LinkList"

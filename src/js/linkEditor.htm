@@ -34,6 +34,30 @@
         <div class="clearfix"></div>
     </div>
     <div class="panel-body">
+        <div class="form-group">
+            <select id="{i#docSelect}" data-wait="disable" class="form-control input-sm"></select>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <select id="{i#elSelect}-0" data-wait="disable" class="form-control input-sm"></select>
+            </div>
+            <div class="col-sm-2">
+                <select id="{i#elSelect}-1" data-wait="disable" class="form-control input-sm"></select>
+            </div>
+            <div class="col-sm-2">
+                <select id="{i#elSelect}-2" data-wait="disable" class="form-control input-sm"></select>
+            </div>
+            <div class="col-sm-2">
+                <select id="{i#elSelect}-3" data-wait="disable" class="form-control input-sm"></select>
+            </div>
+            <div class="col-sm-2">
+                <select id="{i#elSelect}-4" data-wait="disable" class="form-control input-sm"></select>
+            </div>
+            <div class="col-sm-2">
+                <select id="{i#elSelect}-5" data-wait="disable" class="form-control input-sm"></select>
+            </div>
+        </div>
+        <div id="{i#selectors}"></div>
     </div>
     <div class="panel-footer text-center">
         <img data-wait="show" src="/images/loading.gif"/>
@@ -50,3 +74,9 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+<!--{select}-->
+<select id="{i#id}-{v#id}">{v#rows}</select>
+
+<!--{option}-->
+<option value="{v#id}">{v#title}</option>

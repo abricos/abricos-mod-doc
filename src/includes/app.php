@@ -58,6 +58,8 @@ class DocApp extends AbricosApplication {
                 return $this->DocRemoveToJSON($d->docid);
             case 'elementTypeList':
                 return $this->ElementTypeListToJSON();
+            case 'docStructure':
+                return $this->docStructureToJSON($d->docid);
             case 'linkList':
                 return $this->LinkListToJSON($d->owner);
         }
@@ -355,6 +357,29 @@ class DocApp extends AbricosApplication {
         $d->title = $utmf->Parser($d->title);
 
         DocQuery::ElSectionUpdate($this->db, $es, $d);
+    }
+
+    public function DocStructureToJSON($docid){
+        $ret = $this->DocStructure($docid);
+        return $this->ResultToJSON('docStructure', $ret);
+    }
+
+    public function DocStructure($docid){
+        if (!$this->IsViewRole()){
+            return AbricosResponse::ERR_FORBIDDEN;
+        }
+
+        /** @var DocElementList $list */
+        $list = $this->InstanceClass('ElementList');
+
+        $rows = DocQuery::ElementList($this->db, $docid);
+        while (($d = $this->db->fetch_array($rows))){
+            /** @var DocElement $element */
+            $element = $this->InstanceClass('Element', $d);
+            $list->Add($element);
+        }
+
+        return $list;
     }
 
     public function LinkListToJSON($owner){

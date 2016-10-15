@@ -15,6 +15,7 @@ Component.entryPoint = function(NS){
         onInitAppWidget: function(err, appInstance){
 
             this._wList = [];
+            this._cacheStructs = {};
 
             this.set('waiting', true);
             appInstance.docList(function(err, result){
@@ -84,12 +85,29 @@ Component.entryPoint = function(NS){
 
             this._actionWidget = new NS.LinkEditorWidget({
                 srcNode: tp.one('action'),
+                parent: this,
                 link: link
             });
         },
         _addLink: function(link){
             var tp = this.template;
-        }
+        },
+        docStructure: function(docid, callback, context){
+            docid = docid | 0;
+            var cache = this._cacheStructs;
+            if (cache[docid]){
+                return callback.call(context, cache[docid]);
+            }
+            this.set('waiting', true);
+            this.get('appInstance').docStructure(docid, function(err, result){
+                this.set('waiting', false);
+                if (err){
+                    return;
+                }
+                cache[docid] = result.docStructure;
+                callback.call(context, result.docStructure);
+            }, this);
+        },
     }, {
         ATTRS: {
             component: {value: COMPONENT},
@@ -102,6 +120,76 @@ Component.entryPoint = function(NS){
     NS.LinkEditorWidget = Y.Base.create('LinkListEditorWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance, options){
 
+            this._wList = [];
+
+            var tp = this.template,
+                lst = tp.replace('option', {
+                    id: 0, title: ''
+                });
+
+            appInstance.get('docList').each(function(doc){
+                lst += tp.replace('option', {
+                    id: doc.get('id'),
+                    title: doc.get('title')
+                });
+            }, this);
+
+            tp.setHTML({
+                docSelect: lst
+            });
+
+            tp.one('docSelect').on('change', this._onDocChange, this);
+
+            this.eachElSelector(function(node){
+                node.on('change', this._onElSelectorChange, this);
+            }, this)
+
+        },
+        destructor: function(){
+            this.template.one('docSelect').detachAll();
+        },
+        eachElSelector: function(callback, context){
+            var tp = this.template,
+                node, value;
+
+            for (var i = 0; i < 6; i++){
+                node = tp.one('elSelect-' + i);
+                value = node.get('value');
+                callback.call(context || this, node, value);
+            }
+        },
+        cleanSelectors: function(){
+            this.eachElSelector(function(node){
+                node.setHTML('');
+            }, this);
+        },
+        docStructure: function(docid, callback){
+            this.get('parent').docStructure(docid, function(elementList){
+                callback.call(this, elementList);
+            }, this);
+        },
+        _onDocChange: function(){
+            var tp = this.template,
+                docid = tp.getValue('docSelect') | 0;
+
+            if (docid === this.get('docid')){
+                return;
+            }
+            this.set('docid', docid);
+            if (docid === 0){
+                this.set('docStructure', null);
+                return this.cleanSelectors();
+            }
+            this.docStructure(docid, function(docStructure){
+                this.set('docStructure', docStructure);
+                this.renderSelectors();
+            }, this);
+        },
+        _onElSelectorChange: function(e){
+            console.log(e);
+        },
+        renderSelectors: function(){
+
         },
         save: function(){
         },
@@ -110,8 +198,11 @@ Component.entryPoint = function(NS){
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'editor'},
-            link: {}
+            templateBlockName: {value: 'editor,select,option'},
+            docid: {value: 0},
+            elementid: {value: 0},
+            parent: {},
+            link: {},
         },
     });
 };
