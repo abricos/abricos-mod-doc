@@ -141,6 +141,8 @@ class DocElementTypeList extends AbricosModelList {
  * @property int $id Element ID
  * @property int $parentid
  * @property int $docid
+ * @property string $title
+ * @property bool $isTitle If true, then title is custom setting
  * @property string $type
  * @property int $ord
  */
@@ -194,6 +196,26 @@ class DocElementSave extends AbricosResponse {
  * @method DocElement GetByIndex(int $i)
  */
 class DocElementList extends AbricosModelList {
+
+    public function GetPath($elementid){
+        $elementid = intval($elementid);
+
+        $path = array();
+
+        while ($elementid > 0){
+            $element = $this->Get($elementid);
+            if (empty($element)){
+                $path = array();
+                break;
+            }
+            $path[] = $elementid;
+            $elementid = $element->parentid;
+        }
+
+        $path = array_reverse($path);
+
+        return $path;
+    }
 }
 
 /**
@@ -283,6 +305,18 @@ class DocElSectionList extends DocElList {
 class DocLink extends AbricosModel {
     protected $_structModule = 'doc';
     protected $_structName = 'Link';
+
+    public function __construct($d){
+        $path = null;
+
+        if (isset($d['pathCache']) && !empty($d['pathCache'])){
+            $path = json_decode($d['pathCache']);
+        }
+
+        $d['path'] = $path;
+
+        parent::__construct($d);
+    }
 }
 
 /**
@@ -292,6 +326,36 @@ class DocLink extends AbricosModel {
  * @method DocLink GetByIndex(int $i)
  */
 class DocLinkList extends AbricosModelList {
+}
+
+/**
+ * Interface DocLinkSaveVars
+ *
+ * @property int $linkid
+ * @property int $clientid
+ * @property int $docid
+ * @property int $elementid
+ */
+interface DocLinkSaveVars {
+}
+
+/**
+ * Class DocLinkSave
+ *
+ * @property DocLinkSaveVars $vars
+ * @property int $linkid
+ * @property int $clientid
+ * @property int $docid
+ * @property string $docTitle
+ * @property int $elementid
+ * @property array $path
+ * @property int $ord
+ */
+class DocLinkSave extends AbricosResponse {
+    const CODE_OK = 1;
+
+    protected $_structModule = 'doc';
+    protected $_structName = 'LinkSave';
 }
 
 /**

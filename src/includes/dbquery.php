@@ -194,5 +194,36 @@ class DocQuery {
         return $db->query_read($sql);
     }
 
+    public static function LinkAppend(Ab_Database $db, DocOwner $owner, DocLinkSave $r){
+        $pathCache = json_encode($r->path);
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_link
+            (ownerModule, ownerType, ownerid, elementid, pathCache, ord) VALUES (
+                '".bkstr($owner->module)."',
+                '".bkstr($owner->type)."',
+                ".intval($owner->ownerid).",
+                ".intval($r->elementid).",
+                '".bkstr($pathCache)."',
+                ".intval($r->ord)."
+            ) 
+        ";
+        $db->query_write($sql);
+        return $db->insert_id();
+    }
+
+    public static function LinkUpdate(Ab_Database $db, DocOwner $owner, DocLinkSave $r){
+        $pathCache = json_encode($r->path);
+        $sql = "
+            UPDATE ".$db->prefix."doc_link
+            SET 
+                elementid=".intval($r->elementid).",
+                pathCache='".bkstr($pathCache)."'
+            WHERE ownerModule='".bkstr($owner->module)."'
+                AND ownerType='".bkstr($owner->type)."',
+                AND ownerid=".intval($owner->ownerid)."
+                AND linkid=".intval($r->vars->linkid)."
+        ";
+        $db->query_write($sql);
+    }
 
 }

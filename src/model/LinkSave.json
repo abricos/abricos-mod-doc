@@ -1,0 +1,44 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "linkid": {
+      "type": "int"
+    },
+    "clientid": {
+      "type": "int"
+    },
+    "docid": {
+      "type": "int"
+    },
+    "elementid": {
+      "type": "int"
+    }
+  },
+  "codes": {
+    "OK": 1
+  },
+  "fields": {
+    "linkid": {
+      "type": "int"
+    },
+    "clientid": {
+      "type": "int"
+    },
+    "docid": {
+      "type": "int"
+    },
+    "docTitle": {
+      "type": "string"
+    },
+    "elementid": {
+      "type": "int"
+    },
+    "path": {
+      "type": "array"
+    },
+    "ord": {
+      "type": "int"
+    }
+  }
+}

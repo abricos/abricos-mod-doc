@@ -33,6 +33,7 @@ class DocApp extends AbricosApplication {
             "ElSectionList" => "DocElSectionList",
             "Link" => "DocLink",
             "LinkList" => "DocLinkList",
+            "LinkSave" => "DocLinkSave",
         );
     }
 
@@ -413,6 +414,70 @@ class DocApp extends AbricosApplication {
         }
 
         return $list;
+    }
+
+    public function LinkSave(DocOwner $owner, $d, $ord){
+        /** @var DocLinkSave $ret */
+        $ret = $this->InstanceClass('LinkSave', $d);
+        $vars = $ret->vars;
+
+        $ret->docid = $vars->docid;
+        $ret->clientid = $vars->clientid;
+        $ret->elementid = $vars->elementid;
+
+        $doc = $this->Doc($vars->docid);
+
+        if (AbricosResponse::IsError($doc)){
+            return $ret->SetError(AbricosResponse::ERR_BAD_REQUEST);
+        }
+        $ret->docTitle = $doc->title;
+        $linkPath = array();
+
+        $elementList = $doc->elementList;
+        $path = $elementList->GetPath($vars->elementid);
+        for ($i = 0; $i < count($path); $i++){
+            $element = $elementList->Get($path[$i]);
+            $item = new stdClass();
+            $item->id = $element->id;
+            $item->title = $element->title;
+            $linkPath[] = $item;
+        }
+
+        $ret->path = $linkPath;
+
+        if ($vars->linkid === 0){
+            $ret->linkid = DocQuery::LinkAppend($this->db, $owner, $ret);
+        } else {
+            DocQuery::LinkUpdate($this->db, $owner, $ret);
+        }
+
+        return $ret;
+    }
+
+    public function LinkListSave(DocOwner $owner, $links){
+        if (!is_array($links)){
+            return AbricosResponse::ERR_BAD_REQUEST;
+        }
+
+        $currentList = $this->LinkList($owner);
+        $ret = array();
+
+        for ($i = 0; $i < count($links); $i++){
+            $linkSave = $this->LinkSave($owner, $links[$i], $i);
+            $ret[] = $linkSave;
+        }
+
+        return $ret;
+    }
+
+    public function Owner($module, $type, $ownerid){
+        /** @var DocOwner $owner */
+        $owner = $this->InstanceClass('Owner');
+        $owner->module = $module;
+        $owner->type = $type;
+        $owner->ownerid = $ownerid;
+
+        return $owner;
     }
 
 }
