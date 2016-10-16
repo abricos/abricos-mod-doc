@@ -9,6 +9,9 @@
     "title": {
       "type": "string"
     },
+    "miniTitle": {
+      "type": "string"
+    },
     "elementList": {
       "type": "modelList:ElementList",
       "notNULL": true

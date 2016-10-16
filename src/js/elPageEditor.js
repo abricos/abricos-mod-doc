@@ -13,9 +13,9 @@ Component.entryPoint = function(NS){
     var ElSectionEditorWidgetExt = function(){
     };
     ElSectionEditorWidgetExt.prototype = {
-        onSyncElData: function(tp, el){
+        onSyncElData: function(tp, el, forced){
             var title = tp.getValue('title');
-            if (el.get('title') === title){
+            if (!forced && el.get('title') === title){
                 return false;
             }
 

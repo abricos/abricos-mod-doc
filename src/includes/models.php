@@ -12,6 +12,7 @@
  *
  * @property int $docid
  * @property string $title
+ * @property string $miniTitle
  * @property array $childs
  */
 interface DocSaveVars {
@@ -142,8 +143,8 @@ class DocElementTypeList extends AbricosModelList {
  * @property int $parentid
  * @property int $docid
  * @property string $title
- * @property bool $isTitle If true, then title is custom setting
- * @property string $type
+ * @property bool $isAutoTitle Automatic generation of an abbreviated title
+ * @property string $type Element Type
  * @property int $ord
  */
 class DocElement extends AbricosModel {
@@ -166,6 +167,8 @@ class DocElement extends AbricosModel {
  * @property int $clientid
  * @property string $type
  * @property string $title
+ * @property bool $isAutoTitle
+ * @property object $el
  * @property bool $changed
  * @property array $childs
  */

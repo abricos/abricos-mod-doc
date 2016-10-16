@@ -37,9 +37,10 @@ class DocQuery {
     public static function DocAppend(Ab_Database $db, DocSave $r){
         $sql = "
             INSERT INTO ".$db->prefix."doc
-            (userid, title, dateline) VALUES (
+            (userid, title, miniTitle, dateline) VALUES (
                 ".intval(Abricos::$user->id).",
                 '".bkstr($r->vars->title)."',
+                '".bkstr($r->vars->miniTitle)."',
                 ".TIMENOW."
             )
         ";
@@ -52,6 +53,7 @@ class DocQuery {
             UPDATE ".$db->prefix."doc
             SET 
                 title='".bkstr($r->vars->title)."',
+                miniTitle='".bkstr($r->vars->miniTitle)."',
                 upddate=".TIMENOW."
             WHERE docid=".intval($r->vars->docid)."
             LIMIT 1
@@ -82,11 +84,12 @@ class DocQuery {
     public static function ElementAppend(Ab_Database $db, DocSave $docSave, $parentid, $ord, DocElementSave $r){
         $sql = "
             INSERT INTO ".$db->prefix."doc_element
-            (docid, parentid, elementType, title, ord) VALUES (
+            (docid, parentid, elementType, title, isAutoTitle, ord) VALUES (
                 ".intval($docSave->docid).",
                 ".intval($parentid).",
                 '".bkstr($r->vars->type)."',
                 '".bkstr($r->vars->title)."',
+                ".intval($r->vars->isAutoTitle).",
                 ".intval($ord)."
             )
         ";
@@ -99,7 +102,9 @@ class DocQuery {
             UPDATE ".$db->prefix."doc_element
             SET 
                 title='".bkstr($r->vars->title)."',
+                isAutoTitle=".intval($r->vars->isAutoTitle).",
                 ord=".intval($ord)."
+
             WHERE docid=".intval($docSave->docid)."
                 AND elementid=".intval($r->vars->elementid)."
         ";

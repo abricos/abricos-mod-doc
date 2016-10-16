@@ -24,14 +24,15 @@ Component.entryPoint = function(NS){
             this._editorWidget.destroy();
             this._editorWidget = null;
         },
-        onSyncElData: function(tp, el){
+        onSyncElData: function(tp, el, forced){
             var body = this._editorWidget.get('content');
-            if (el.get('body') === body){
+            if (!forced && el.get('body') === body){
                 return false;
             }
-            el.set('body', body);
 
+            el.set('body', body);
             this.syncTitle(body, true);
+
             return true;
         },
         onModeChange: function(mode){

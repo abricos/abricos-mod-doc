@@ -9,9 +9,18 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
-            <input id="{i#title}" type="text" class="form-control"
-                   placeholder="Введите название документа"
-                   data-wait="disable"/>
+            <div class="row">
+                <div class="col-sm-9">
+                    <input id="{i#title}" type="text" class="form-control"
+                           placeholder="Введите название документа"
+                           data-wait="disable"/>
+                </div>
+                <div class="col-sm-3">
+                    <input id="{i#miniTitle}" type="text" class="form-control"
+                           placeholder="Сокращенное название"
+                           data-wait="disable"/>
+                </div>
+            </div>
         </div>
         <div id="{i#container}"></div>
         <div id="{i#elementAppend}"></div>

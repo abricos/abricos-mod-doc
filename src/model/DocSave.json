@@ -9,6 +9,10 @@
       "type": "string",
       "parse": "full"
     },
+    "miniTitle": {
+      "type": "string",
+      "parse": "full"
+    },
     "childs": {
       "type": "array"
     }

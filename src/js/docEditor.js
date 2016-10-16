@@ -48,7 +48,8 @@ Component.entryPoint = function(NS){
 
             var tp = this.template;
             tp.setValue({
-                title: doc.get('title')
+                title: doc.get('title'),
+                miniTitle: doc.get('miniTitle')
             });
 
             this.initElementEditor();
@@ -72,6 +73,7 @@ Component.entryPoint = function(NS){
             sd = Y.merge(sd, {
                 docid: this.get('docid'),
                 title: tp.getValue('title'),
+                miniTitle: tp.getValue('miniTitle'),
             });
 
             this.get('appInstance').docSave(sd, function(err, result){

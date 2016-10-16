@@ -22,6 +22,7 @@ if ($updateManager->isInstall()){
             userid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+            miniTitle VARCHAR(50) NOT NULL DEFAULT '' COMMENT '',
             
             result TEXT NOT NULL COMMENT '',
             
@@ -39,8 +40,8 @@ if ($updateManager->isInstall()){
             elementid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
             parentid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
-            title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
-            isTitle TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Title is custom setting',
+            title VARCHAR(50) NOT NULL DEFAULT '' COMMENT '',
+            isAutoTitle TINYINT(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '',
             
             docid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             

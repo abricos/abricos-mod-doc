@@ -6,6 +6,55 @@ Component.requires = {
 };
 Component.entryPoint = function(NS){
 
+    var Y = Brick.YUI,
+        COMPONENT = this,
+        SYS = Brick.mod.sys;
+
+    NS.ElementTitleEditorWidget = Y.Base.create('ElementTitleEditorWidget', SYS.AppWidget, [], {
+        onInitAppWidget: function(err, appInstance){
+            var tp = this.template,
+                element = this.get('element'),
+                checked = element.get('isAutoTitle');
+
+            tp.setValue({
+                isAuto: checked,
+                title: element.get('title')
+            });
+            tp.one('title').set('disabled', checked);
+
+            tp.one('isAuto').on('change', this._onAutoChecked, this);
+        },
+        destructor: function(){
+            this.template.one('isAuto').detachAll();
+        },
+        isAutoTitle: function(){
+            return !!this.template.getValue('isAuto');
+        },
+        getTitle: function(){
+            return this.template.getValue('title');
+        },
+        setTitle: function(title){
+            return this.template.setValue('title', title);
+        },
+        _onAutoChecked: function(){
+            var tp = this.template,
+                element = this.get('element'),
+                checked = this.isAutoTitle();
+
+            tp.one('title').set('disabled', checked);
+            element.set('changed', true);
+            this.get('parent')._syncElData();
+        },
+    }, {
+        ATTRS: {
+            component: {value: COMPONENT},
+            templateBlockName: {value: 'miniTitle'},
+            element: NS.ATTRIBUTE.element,
+            parent: {}
+        },
+    });
+
+
     var ElEditorWidgetExt = function(){
     };
     ElEditorWidgetExt.ATTRS = {
@@ -47,6 +96,10 @@ Component.entryPoint = function(NS){
                 this._toolbarWidget.destroy();
                 this._toolbarWidget = null;
             }
+            if (this._titleEditorWidget){
+                this._titleEditorWidget.destroy();
+                this._titleEditorWidget = null;
+            }
         },
         initElementEditor: function(){
             var tp = this.template,
@@ -57,6 +110,14 @@ Component.entryPoint = function(NS){
                     srcNode: tp.one('toolbarWidget'),
                     element: element,
                     owner: this
+                });
+            }
+
+            if (tp.one('elementTitleWidget')){
+                this._titleEditorWidget = new NS.ElementTitleEditorWidget({
+                    srcNode: tp.one('elementTitleWidget'),
+                    element: element,
+                    parent: this
                 });
             }
 
@@ -77,6 +138,8 @@ Component.entryPoint = function(NS){
             this._onAccordionChange(this.get('accordion'));
         },
         _syncElData: function(mode){
+            mode = mode || this.get('mode');
+
             if (mode !== 'edit'){
                 return;
             }
@@ -84,15 +147,13 @@ Component.entryPoint = function(NS){
                 element = this.get('element'),
                 el = this.get('el');
 
-            if (this.onSyncElData(tp, el)){
+            if (this.onSyncElData(tp, el, element.get('changed'))){
                 element.set('changed', true);
             }
         },
         onSyncElData: function(tp, el){
         },
-        syncTitle: function(text, isParse){
-            var element = this.get('element');
-
+        _parseTitle: function(text, isParse){
             if (isParse){
                 var div = document.createElement('DIV');
                 div.innerHTML = text;
@@ -108,8 +169,33 @@ Component.entryPoint = function(NS){
             if (text.length > len){
                 text = text.substring(0, len - 3) + '...';
             }
+            return text;
+        },
+        syncTitle: function(text, isParse){
+            var titleWidget = this._titleEditorWidget,
+                element = this.get('element');
 
-            element.set('title', text);
+            text = this._parseTitle(text, isParse);
+
+            if (!titleWidget){
+                element.set('title', text);
+                element.set('isAutoTitle', true);
+                return;
+            }
+
+            var isAutoPrev = element.get('isAutoTitle'),
+                isAutoCurr = titleWidget.isAutoTitle();
+
+            element.set('isAutoTitle', isAutoCurr);
+
+            if (!isAutoCurr){
+                element.set('title', titleWidget.getTitle());
+            } else {
+                if (isAutoPrev !== isAutoCurr){
+                    titleWidget.setTitle(text);
+                }
+                element.set('title', text);
+            }
         },
         _onModeChange: function(mode, prevMode){
             this._syncElData(prevMode);
@@ -160,12 +246,14 @@ Component.entryPoint = function(NS){
                     elementid: element.get('id'),
                     parentid: element.get('parentid'),
                     title: element.get('title'),
+                    isAutoTitle: element.get('isAutoTitle'),
                     type: element.get('type'),
+                    el: {},
                     changed: element.get('changed')
                 }, ret || {});
 
                 if (element.get('changed')){
-                    ret = Y.merge(el.toSave(), ret);
+                    ret.el = el.toSave();
                 }
             }
 
@@ -256,6 +344,7 @@ Component.entryPoint = function(NS){
                 Element = appInstance.get('Element'),
                 childElement = new Element({
                     appInstance: appInstance,
+                    isAutoTitle: true,
                     changed: true,
                     type: type,
                     parentid: element ? element.get('parentid') : 0,

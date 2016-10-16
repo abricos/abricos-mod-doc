@@ -195,7 +195,7 @@ class DocApp extends AbricosApplication {
                 DocQuery::ElementUpdate($this->db, $dSave, $ord, $ret);
             }
 
-            $this->$elSaveMethod($ret, $d);
+            $this->$elSaveMethod($ret);
         } else {
             $ret->AddCode(DocElementSave::CODE_NOT_CHANGED);
         }
@@ -339,22 +339,25 @@ class DocApp extends AbricosApplication {
     }
 
 
-    private function ElTextSave(DocElementSave $es, $d){
+    private function ElTextSave(DocElementSave $es){
         $utm = Abricos::TextParser();
+        $d = $es->vars->el;
         $d->body = $utm->Parser($d->body);
 
         DocQuery::ElTextUpdate($this->db, $es, $d);
     }
 
-    private function ElPageSave(DocElementSave $es, $d){
+    private function ElPageSave(DocElementSave $es){
         $utmf = Abricos::TextParser(true);
+        $d = $es->vars->el;
         $d->title = $utmf->Parser($d->title);
 
         DocQuery::ElPageUpdate($this->db, $es, $d);
     }
 
-    private function ElSectionSave(DocElementSave $es, $d){
+    private function ElSectionSave(DocElementSave $es){
         $utmf = Abricos::TextParser(true);
+        $d = $es->vars->el;
         $d->title = $utmf->Parser($d->title);
 
         DocQuery::ElSectionUpdate($this->db, $es, $d);
