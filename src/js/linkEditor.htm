@@ -27,26 +27,32 @@
 <!--{linkRow}-->
 <div class="link panel panel-default">
     <div class="panel-body">
-        <div class="row">
-            <div class="col-sm-10">
-                <div class="form-group">
-                    <a data-url="doc.view({v#docid})" target="_blank">
-                        {v#docTitle}
-                    </a>
-                </div>
-                {v#path}
-            </div>
-            <div class="col-sm-2 text-right">
-                <button data-click="removeLink"
-                        data-id="{v#clientid}"
-                        data-wait="disable"
-                        class="btn btn-default btn-xs">
-                    Удалить
-                </button>
-            </div>
+        <div class="pull-left">
+            {v#path}
+        </div>
+        <div class="btn-toolbar pull-right">
+            <button data-click="editLink"
+                    data-id="{v#clientid}"
+                    data-wait="disable"
+                    class="btn btn-default btn-xs hide"
+                    title="Редактировать ссылку">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </button>
+            <button data-click="removeLink"
+                    data-id="{v#clientid}"
+                    data-wait="disable"
+                    class="btn btn-default btn-xs"
+                    title="Удалить ссылку">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 </div>
+
+<!--{docItem}-->
+<a data-url="doc.view({v#docid})" target="_blank">
+    {v#docTitle}
+</a>
 
 <!--{pathItem}-->
 <a data-url="element.view({v#docid},{v#elementid})" target="_blank">

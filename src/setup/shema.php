@@ -100,7 +100,7 @@ if ($updateManager->isInstall()){
             ord INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
             PRIMARY KEY (linkid),
-            KEY link (ownerModule, ownerType, ownerid)
+            KEY link (ownerModule, ownerType, ownerid, elementid)
         )".$charset
     );
 

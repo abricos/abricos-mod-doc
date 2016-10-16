@@ -396,8 +396,10 @@ class DocApp extends AbricosApplication {
             return AbricosResponse::ERR_FORBIDDEN;
         }
 
-        /** @var DocOwner $owner */
-        $owner = $this->InstanceClass('Owner', $owner);
+        if (!($owner instanceof DocOwner)){
+            /** @var DocOwner $owner */
+            $owner = $this->InstanceClass('Owner', $owner);
+        }
 
         if (!$this->OwnerAppFunctionExist($owner->module, 'Doc_IsLinkList')){
             return AbricosResponse::ERR_BAD_REQUEST;
@@ -419,7 +421,7 @@ class DocApp extends AbricosApplication {
         return $list;
     }
 
-    public function LinkSave(DocOwner $owner, $d, $ord){
+    public function LinkSave(DocOwner $owner, $d){
         /** @var DocLinkSave $ret */
         $ret = $this->InstanceClass('LinkSave', $d);
         $vars = $ret->vars;
@@ -447,6 +449,7 @@ class DocApp extends AbricosApplication {
         }
 
         $ret->path = $linkPath;
+        $ret->linkid = $vars->linkid;
 
         if ($vars->linkid === 0){
             $ret->linkid = DocQuery::LinkAppend($this->db, $owner, $ret);
@@ -463,11 +466,22 @@ class DocApp extends AbricosApplication {
         }
 
         $currentList = $this->LinkList($owner);
+
         $ret = array();
+        $map = array();
 
         for ($i = 0; $i < count($links); $i++){
             $linkSave = $this->LinkSave($owner, $links[$i], $i);
             $ret[] = $linkSave;
+            $map[$linkSave->linkid] = $linkSave;
+        }
+
+        for ($i = 0; $i < $currentList->Count(); $i++){
+            $link = $currentList->GetByIndex($i);
+
+            if (!isset($map[$link->id])){
+                DocQuery::LinkRemove($this->db, $owner, $link->id);
+            }
         }
 
         return $ret;

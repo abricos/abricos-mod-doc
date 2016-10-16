@@ -185,9 +185,9 @@ class DocQuery {
     public static function LinkList(Ab_Database $db, DocOwner $owner){
         $sql = "
             SELECT
-                e.*,
+                l.*,
                 d.docid,
-                d.title as docTitle
+                d.miniTitle as docTitle
             FROM ".$db->prefix."doc_link l
             INNER JOIN ".$db->prefix."doc_element e ON e.elementid=l.elementid
             INNER JOIN ".$db->prefix."doc d ON d.docid=e.docid AND d.deldate=0 
@@ -202,7 +202,7 @@ class DocQuery {
     public static function LinkAppend(Ab_Database $db, DocOwner $owner, DocLinkSave $r){
         $pathCache = json_encode($r->path);
         $sql = "
-            INSERT INTO ".$db->prefix."doc_link
+            INSERT IGNORE INTO ".$db->prefix."doc_link
             (ownerModule, ownerType, ownerid, elementid, pathCache, ord) VALUES (
                 '".bkstr($owner->module)."',
                 '".bkstr($owner->type)."',
@@ -224,9 +224,22 @@ class DocQuery {
                 elementid=".intval($r->elementid).",
                 pathCache='".bkstr($pathCache)."'
             WHERE ownerModule='".bkstr($owner->module)."'
-                AND ownerType='".bkstr($owner->type)."',
+                AND ownerType='".bkstr($owner->type)."'
                 AND ownerid=".intval($owner->ownerid)."
                 AND linkid=".intval($r->vars->linkid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
+    public static function LinkRemove(Ab_Database $db, DocOwner $owner, $linkid){
+        $sql = "
+            DELETE FROM ".$db->prefix."doc_link
+            WHERE ownerModule='".bkstr($owner->module)."'
+                AND ownerType='".bkstr($owner->type)."'
+                AND ownerid=".intval($owner->ownerid)."
+                AND linkid=".intval($linkid)."
+            LIMIT 1
         ";
         $db->query_write($sql);
     }

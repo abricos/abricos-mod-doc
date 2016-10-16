@@ -53,7 +53,6 @@ Component.entryPoint = function(NS){
         },
         removeLinkByClientId: function(clientid){
             clientid = clientid | 0;
-
             var links = this._links,
                 nLinks = [];
 
@@ -66,9 +65,6 @@ Component.entryPoint = function(NS){
             this._links = nLinks;
             this.renderLinkList();
         },
-        createLink: function(){
-            this.showEditor(0);
-        },
         closeAction: function(){
             if (!this._actionWidget){
                 return;
@@ -77,23 +73,26 @@ Component.entryPoint = function(NS){
             this._actionWidget = null;
             this.template.toggleView(true, 'list,buttons', 'action');
         },
-        showEditor: function(linkid){
-            linkid = linkid | 0;
-            var tp = this.template,
-                appInstance = this.get('appInstance'),
-                link;
+        showEditorByClientId: function(clientid){
+            clientid = clientid | 0;
 
-            if (linkid === 0){
+            var links = this._links;
+            for (var i = 0; i < links.length; i++){
+                if (links[i].get('clientid') === clientid){
+                    return this.showEditor(links[i])
+                }
+            }
+        },
+        createLink: function(){
+            var appInstance = this.get('appInstance'),
                 link = new (appInstance.get('Link'))({
                     appInstance: appInstance
                 });
-            } else {
-                link = this.get('linkList').getById(linkid);
-            }
 
-            if (!link){
-                return;
-            }
+            this.showEditor(link);
+        },
+        showEditor: function(link){
+            var tp = this.template;
 
             this.closeAction();
 
@@ -129,7 +128,10 @@ Component.entryPoint = function(NS){
             for (var i = 0; i < links.length; i++){
                 var link = links[i],
                     path = link.get('path') || [],
-                    aPath = [];
+                    aPath = [tp.replace('docItem', {
+                        docid: link.get('docid'),
+                        docTitle: link.get('docTitle'),
+                    })];
 
                 for (var ii = 0; ii < path.length; ii++){
                     aPath[aPath.length] = tp.replace('pathItem', {
@@ -140,7 +142,6 @@ Component.entryPoint = function(NS){
                 }
                 lst += tp.replace('linkRow', {
                     docid: link.get('docid'),
-                    docTitle: link.get('docTitle'),
                     path: aPath.join(tp.replace('pathDelim')),
                     clientid: link.get('clientid')
                 });
@@ -150,6 +151,20 @@ Component.entryPoint = function(NS){
                 list: lst
             });
             this.appURLUpdate();
+        },
+        updateBySaveResult: function(res){
+            if (!Y.Lang.isArray(res)){
+                return;
+            }
+            var links = this._links;
+            for (var i = 0; i < links.length; i++){
+                var link = links[i];
+                for (var ii = 0; ii < res.length; ii++){
+                    if (link.get('clientid') === (res[ii].clientid | 0)){
+                        link.set('id', res[ii].linkid);
+                    }
+                }
+            }
         },
         toJSON: function(){
             var links = this._links,
@@ -169,14 +184,20 @@ Component.entryPoint = function(NS){
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'widget,linkRow,pathItem,pathDelim'},
+            templateBlockName: {value: 'widget,linkRow,docItem,pathItem,pathDelim'},
             owner: NS.ATTRIBUTE.owner,
             linkList: {}
         },
         CLICKS: {
+            editLink: {
+                event: function(e){
+                    var clientid = e.defineTarget.getData('id') | 0;
+                    this.showEditorByClientId(clientid);
+                }
+            },
             removeLink: {
                 event: function(e){
-                    var clientid = e.target.getData('id') | 0;
+                    var clientid = e.defineTarget.getData('id') | 0;
                     this.removeLinkByClientId(clientid);
                 }
             }
