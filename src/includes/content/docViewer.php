@@ -26,15 +26,23 @@ if (AbricosResponse::IsError($doc)){
 Abricos::GetModule('doc')->ScriptRequireOnce('/includes/classes/docViewer.php');
 
 $docViewer = new DocViewer($doc);
+$parentid = Doc::ParseElementURL();
+
+$title = $doc->title;
+if ($parentid > 0){
+    /** @var DocElPage $el */
+    $el = $doc->GetEl($parentid);
+    $title = $el->title;
+}
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
     "docid" => $doc->id,
-    "title" => $doc->title,
-    "result" => $docViewer->Builld(),
+    "title" => $title,
+    "result" => $docViewer->Builld($parentid),
     "brickid" => $brick->id
 ));
 
-if (!empty($doc->title)){
-    $title = $doc->title." // ".SystemModule::$instance->GetPhrases()->Get('site_name');
+if (!empty($title)){
+    $title = $title." // ".SystemModule::$instance->GetPhrases()->Get('site_name');
     Brick::$builder->SetGlobalVar('meta_title', $title);
 }

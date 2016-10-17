@@ -21,12 +21,16 @@ class DocViewer {
 
     private $bricks = array();
 
-    public function __construct(Doc $doc){
+    private $parentid = 0;
+
+    public function __construct(Doc $doc, $parentid = 0){
         $this->doc = $doc;
+        $this->parentid = intval($parentid);
     }
 
-    public function Builld(){
-        return $this->BuildElements(0);
+    public function Builld($parentid = 0){
+        $parentid = intval($parentid);
+        return $this->BuildElements($parentid);
     }
 
     public function BuildElements($parentid){
@@ -41,7 +45,9 @@ class DocViewer {
 
             $type = $element->type;
 
-            if (isset($this->bricks[$type])){
+            if ($type === 'page' && $element->parentid === $this->parentid){
+                $brick = Brick::$builder->LoadBrickS('doc', 'elPageLink');
+            } else if (isset($this->bricks[$type])){
                 $brick = $this->bricks[$type];
             } else {
                 $brick = Brick::$builder->LoadBrickS('doc', 'el'.ucfirst($element->type));
@@ -60,6 +66,23 @@ class DocViewer {
 
             switch ($type){
                 case 'page':
+                    /** @var DocElPage $el */
+
+                    if ($element->parentid === $this->parentid){
+                        $ret .= Brick::ReplaceVarByData($brick->content, array(
+                            "elementid" => $el->id,
+                            "title" => $el->title,
+                            "url" => $this->doc->GetElementURL($el->id)
+                        ));
+                    } else {
+                        $ret .= Brick::ReplaceVarByData($brick->content, array(
+                            "elementid" => $el->id,
+                            "title" => $el->title,
+                            "childs" => $this->BuildElements($element->id)
+                        ));
+                    }
+
+                    break;
                 case 'section':
 
                     /** @var DocElPage $el */

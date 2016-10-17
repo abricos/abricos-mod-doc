@@ -93,6 +93,37 @@ class Doc extends AbricosModel {
         return $url;
     }
 
+    public function GetElementURL($elementid){
+        $url = $this->GetURL();
+
+        $elementList = $this->elementList;
+
+        $path = $elementList->GetPath($elementid);
+        $count = count($path);
+
+        for ($i = 0; $i < $count; $i++){
+            $element = $elementList->Get($path[$i]);
+
+            $title = str_replace(' ', '_', $element->title);
+
+            $url .= 'el'.$element->id."-";
+            $url .= urlencode($title)."/";
+        }
+
+        return $url;
+    }
+
+    public function GetEl($elementid){
+        $element = $this->elementList->Get($elementid);
+        if (empty($element)){
+            return null;
+        }
+        /** @var DocElList $elList */
+        $elList = $this->extends[$element->type];
+
+        return $elList->Get($elementid);
+    }
+
     public static function ParseURL(){
         $adr = Abricos::$adress;
         if ($adr->level <= 1){
@@ -104,6 +135,19 @@ class Doc extends AbricosModel {
         }
         return intval(str_replace('doc', '', $a[0]));
     }
+
+    public static function ParseElementURL(){
+        $adr = Abricos::$adress;
+        if ($adr->level <= 2){
+            return 0;
+        }
+        $a = explode('-', $adr->dir[count($adr->dir) - 1]);
+        if (count($a) < 2){
+            return 0;
+        }
+        return intval(str_replace('el', '', $a[0]));
+    }
+
 }
 
 /**
