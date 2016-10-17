@@ -28,6 +28,10 @@ class DocModule extends Ab_Module {
         return 'index';
     }
 
+    public function Sitemap_IsMenuBuild(){
+        return true;
+    }
+
     public function Bos_IsMenu(){
         return true;
     }

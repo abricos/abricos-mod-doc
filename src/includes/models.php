@@ -85,12 +85,15 @@ class Doc extends AbricosModel {
         return $ret;
     }
 
-    public function GetURL(){
+    public function GetName(){
         $title = str_replace(' ', '_', $this->title);
 
-        $url = '/doc/doc'.$this->id."-";
-        $url .= urlencode($title)."/";
-        return $url;
+        return 'doc'.$this->id."-".urlencode($title);
+    }
+
+    public function GetURL(){
+        $name = $this->GetName();
+        return '/doc/'.$name."/";
     }
 
     public function GetElementURL($elementid){

@@ -27,6 +27,24 @@ class DocManager extends Ab_ModuleManager {
         return $this->GetApp()->AJAX($d);
     }
 
+    public function Sitemap_MenuBuild(SMMenuItem $mItem){
+        if (!$this->IsViewRole()){
+            return;
+        }
+
+        require_once 'sitemap.php';
+
+        /** @var DocApp $app */
+        $app = $this->GetApp();
+        $docList = $app->DocList();
+        $count = $docList->Count();
+        for ($i = 0; $i < $count; $i++){
+            $doc = $docList->GetByIndex($i);
+            $docMenuItem = new DocMenuItem($mItem, $doc);
+            $mItem->childs->Add($docMenuItem);
+        }
+    }
+
     public function Bos_MenuData(){
         if (!$this->IsViewRole()){
             return null;
