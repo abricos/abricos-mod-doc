@@ -272,6 +272,7 @@ class DocElementList extends AbricosModelList {
  * Class DocEl
  *
  * @property int $id Element ID
+ * @property int $docid
  */
 abstract class DocEl extends AbricosModel {
     protected $_structModule = 'doc';
@@ -280,7 +281,7 @@ abstract class DocEl extends AbricosModel {
 /**
  * Class DocElList
  *
- * @method DocEl Get(string $elementid)
+ * @method DocEl Get(int $id)
  * @method DocEl GetByIndex(int $i)
  */
 abstract class DocElList extends AbricosModelList {
@@ -289,7 +290,6 @@ abstract class DocElList extends AbricosModelList {
 /**
  * Class DocElText
  *
- * @property int $docid
  * @property string $body
  */
 class DocElText extends DocEl {
@@ -299,7 +299,7 @@ class DocElText extends DocEl {
 /**
  * Class DocElTextList
  *
- * @method DocElText Get(string $name)
+ * @method DocElText Get(int $id)
  * @method DocElText GetByIndex(int $i)
  */
 class DocElTextList extends DocElList {
@@ -309,7 +309,6 @@ class DocElTextList extends DocElList {
  * Class DocElPage
  *
  * @property int $id Element ID
- * @property int $docid
  * @property string $title
  */
 class DocElPage extends DocEl {
@@ -319,7 +318,7 @@ class DocElPage extends DocEl {
 /**
  * Class DocElPageList
  *
- * @method DocElPage Get(string $name)
+ * @method DocElPage Get(int $id)
  * @method DocElPage GetByIndex(int $i)
  */
 class DocElPageList extends DocElList {
@@ -329,7 +328,6 @@ class DocElPageList extends DocElList {
  * Class DocElSection
  *
  * @property int $id Element ID
- * @property int $docid
  * @property string $title
  */
 class DocElSection extends DocEl {
@@ -339,11 +337,57 @@ class DocElSection extends DocEl {
 /**
  * Class DocElSectionList
  *
- * @method DocElSection Get(string $name)
+ * @method DocElSection Get(int $id)
  * @method DocElSection GetByIndex(int $i)
  */
 class DocElSectionList extends DocElList {
 }
+
+/**
+ * Class DocElTable
+ *
+ * @property bool $isCaption
+ * @property bool $isBorder
+ * @property bool $isHover
+ * @property bool $isCondense
+ * @property int $colCount
+ * @property int $rowCount
+ */
+class DocElTable extends DocEl {
+    protected $_structName = 'ElTable';
+}
+
+/**
+ * Class DocElTableList
+ *
+ * @method DocElTable Get(int $id)
+ * @method DocElTable GetByIndex(int $i)
+ */
+class DocElTableList extends DocElList {
+}
+
+/**
+ * Class DocElTableCell
+ *
+ * @property string $type simple|html|visual|container
+ * @property int $col
+ * @property int $row
+ * @property string $body
+ */
+class DocElTableCell extends AbricosModel {
+    protected $_structModule = 'doc';
+    protected $_structName = 'ElTableCell';
+}
+
+/**
+ * Class DocElTableCellList
+ *
+ * @method DocElTableCell Get(int $id)
+ * @method DocElTableCell GetByIndex(int $i)
+ */
+class DocElTableCellList extends AbricosModelList {
+}
+
 
 /**
  * Class DocLink

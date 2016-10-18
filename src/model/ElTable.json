@@ -1,0 +1,31 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "int",
+      "dbField": "elementid"
+    },
+    "docid": {
+      "type": "int"
+    },
+    "isCaption": {
+      "type": "bool"
+    },
+    "isBorder": {
+      "type": "bool"
+    },
+    "isHover": {
+      "type": "bool"
+    },
+    "isCondense": {
+      "type": "bool"
+    },
+    "colCount": {
+      "type": "int"
+    },
+    "rowCount": {
+      "type": "int"
+    }
+  }
+}

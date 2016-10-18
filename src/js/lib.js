@@ -61,6 +61,10 @@ Component.entryPoint = function(NS){
             ElPageList: {value: NS.ElPageList},
             ElSection: {value: NS.ElSection},
             ElSectionList: {value: NS.ElSectionList},
+            ElTable: {value: NS.ElTable},
+            ElTableList: {value: NS.ElTableList},
+            ElTableCell: {value: NS.ElTableCell},
+            ElTableCellList: {value: NS.ElTableCellList},
             Link: {value: NS.Link},
             LinkList: {value: NS.LinkList},
             Owner: {value: NS.Owner},
@@ -150,7 +154,6 @@ Component.entryPoint = function(NS){
                     return this.getURL('ws') + 'docEditor/DocEditorWidget/' + (docid | 0) + '/';
                 },
                 view: function(docid){
-                    console.log(this.get('isBosURL'));
                     if (this.get('isBosURL')){
                         return this.getURL('ws') + 'docViewer/DocViewerWidget/' + (docid | 0) + '/';
                     } else {

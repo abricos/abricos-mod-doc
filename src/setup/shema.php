@@ -84,7 +84,6 @@ if ($updateManager->isInstall()){
         )".$charset
     );
 
-
     $db->query_write("
         CREATE TABLE IF NOT EXISTS ".$pfx."doc_link (
             linkid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
@@ -101,6 +100,41 @@ if ($updateManager->isInstall()){
             
             PRIMARY KEY (linkid),
             KEY link (ownerModule, ownerType, ownerid, elementid)
+        )".$charset
+    );
+}
+
+if ($updateManager->isUpdate('0.1.1')){
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_table (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            isCaption TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            isBorder TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            isHover TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            isCondense TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            rowCount INT(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            colCount INT(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            UNIQUE KEY elementid (elementid)
+        )".$charset
+    );
+
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_tableCell (
+            cellid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            cellType ENUM('simple', 'html', 'visual', 'container') DEFAULT 'visual' COMMENT '',
+            
+            row INT(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            col INT(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
+            body TEXT NOT NULL COMMENT '',
+            
+            PRIMARY KEY (cellid),
+            KEY elementid (elementid)
         )".$charset
     );
 

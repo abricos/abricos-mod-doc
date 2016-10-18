@@ -7,6 +7,7 @@ Component.requires = {
             files: [
                 'elPageEditor.js',
                 'elTextEditor.js',
+                'elTableEditor.js',
                 'toolbar.js'
             ]
         }

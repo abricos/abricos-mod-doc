@@ -143,6 +143,25 @@ Component.entryPoint = function(NS){
         appItem: NS.ElSection,
     });
 
+    NS.ElTable = Y.Base.create('elTable', SYS.AppModel, [], {
+        structureName: 'ElTable',
+        toSave: function(){
+            return {};
+        }
+    });
+
+    NS.ElTableList = Y.Base.create('elTableList', SYS.AppModelList, [], {
+        appItem: NS.ElTable,
+    });
+
+    NS.ElTableCell = Y.Base.create('elTableCell', SYS.AppModel, [], {
+        structureName: 'ElTableCell'
+    });
+
+    NS.ElTableCellList = Y.Base.create('elTableCellList', SYS.AppModelList, [], {
+        appItem: NS.ElTableCell,
+    });
+
     NS.Link = Y.Base.create('link', SYS.AppModel, [], {
         structureName: 'Link',
     }, {

@@ -11,7 +11,6 @@ Component.entryPoint = function(NS){
 
     NS.UIDocListWidget = Y.Base.create('UIDocListWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance){
-            // console.log(arguments);
         },
     }, {
         ATTRS: {

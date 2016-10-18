@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "int",
+      "dbField": "elementid"
+    },
+    "type": {
+      "type": "string",
+      "default": "visual",
+      "valid": "simple,html,visual,container",
+      "dbField": "cellType",
+      "notNULL": true
+    },
+    "col": {
+      "type": "int"
+    },
+    "row": {
+      "type": "int"
+    },
+    "body": {
+      "type": "string"
+    }
+  }
+}

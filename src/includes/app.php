@@ -31,6 +31,10 @@ class DocApp extends AbricosApplication {
             "ElPageList" => "DocElPageList",
             "ElSection" => "DocElSection",
             "ElSectionList" => "DocElSectionList",
+            "ElTable" => "DocElTable",
+            "ElTableList" => "DocElTableList",
+            "ElTableCell" => "DocElTableCell",
+            "ElTableCellList" => "DocElTableCellList",
             "Link" => "DocLink",
             "LinkList" => "DocLinkList",
             "LinkSave" => "DocLinkSave",
@@ -38,7 +42,8 @@ class DocApp extends AbricosApplication {
     }
 
     protected function GetStructures(){
-        $ret = 'Owner,Doc,Element,ElementType,ElText,ElPage,ElSection,Link';
+        $ret = 'Owner,Doc,Element,ElementType,Link,' .
+            'ElText,ElPage,ElSection,ElTable,ElTableCell';
 
         if ($this->IsAdminRole()){
             $ret .= ',DocSave,ElementSave';
@@ -60,7 +65,7 @@ class DocApp extends AbricosApplication {
             case 'elementTypeList':
                 return $this->ElementTypeListToJSON();
             case 'docStructure':
-                return $this->docStructureToJSON($d->docid);
+                return $this->DocStructureToJSON($d->docid);
             case 'linkList':
                 return $this->LinkListToJSON($d->owner);
         }
@@ -301,13 +306,9 @@ class DocApp extends AbricosApplication {
         return $ret;
     }
 
-    private function ElementTypeInstance($name, $template, $model){
-        $brick = Brick::$builder->LoadBrickS('doc', $template);
-
+    private function ElementTypeInstance($name){
         return $this->InstanceClass('ElementType', array(
-            'id' => $name,
-            'template' => $brick->content,
-            'model' => $model
+            'id' => $name
         ));
     }
 
@@ -330,9 +331,10 @@ class DocApp extends AbricosApplication {
 
         /** @var DocElementTypeList $list */
         $list = $this->InstanceClass('ElementTypeList');
-        $list->Add($this->ElementTypeInstance('text', 'elText', 'ElText'));
-        $list->Add($this->ElementTypeInstance('page', 'elPage', 'ElPage'));
-        $list->Add($this->ElementTypeInstance('section', 'elSection', 'ElSection'));
+        $list->Add($this->ElementTypeInstance('text'));
+        $list->Add($this->ElementTypeInstance('page'));
+        $list->Add($this->ElementTypeInstance('section'));
+        $list->Add($this->ElementTypeInstance('table'));
 
         $this->SetCache('ElementTypeList', $list);
 
@@ -422,10 +424,10 @@ class DocApp extends AbricosApplication {
             $link = $this->InstanceClass('Link', $d);
             $list->Add($link);
 
-            if (isset($extends[$link->docid])){
+            if (!isset($extends[$link->docid])){
                 $extends[$link->docid] = array();
             }
-            if (isset($extends[$link->docid][$link->elType])){
+            if (!isset($extends[$link->docid][$link->elType])){
                 $extends[$link->docid][$link->elType] = array();
             }
             $extends[$link->docid][$link->elType][] = $link->elementid;

@@ -4,12 +4,6 @@
   "fields": {
     "id": {
       "type": "string"
-    },
-    "model": {
-      "type": "string"
-    },
-    "template": {
-      "type": "string"
     }
   }
 }
