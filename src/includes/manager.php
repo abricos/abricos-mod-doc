@@ -46,7 +46,7 @@ class DocManager extends Ab_ModuleManager {
     }
 
     public function Bos_MenuData(){
-        if (!$this->IsViewRole()){
+        if (!$this->IsAdminRole()){
             return null;
         }
         $i18n = $this->module->I18n();

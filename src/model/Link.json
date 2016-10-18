@@ -15,6 +15,13 @@
     "elementid": {
       "type": "int"
     },
+    "elType": {
+      "type": "string",
+      "dbField": "elementType"
+    },
+    "elData": {
+      "type": "array"
+    },
     "path": {
       "type": "array"
     },

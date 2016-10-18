@@ -73,6 +73,9 @@ Component.entryPoint = function(NS){
                     return this._ownerListAttr;
                 }
             },
+            isBosURL: {
+                value: true
+            }
         },
         REQS: {
             docList: {
@@ -147,7 +150,12 @@ Component.entryPoint = function(NS){
                     return this.getURL('ws') + 'docEditor/DocEditorWidget/' + (docid | 0) + '/';
                 },
                 view: function(docid){
-                    return this.getURL('ws') + 'docViewer/DocViewerWidget/' + (docid | 0) + '/';
+                    console.log(this.get('isBosURL'));
+                    if (this.get('isBosURL')){
+                        return this.getURL('ws') + 'docViewer/DocViewerWidget/' + (docid | 0) + '/';
+                    } else {
+                        return '/doc/doc' + (docid | 0) + '-doc/';
+                    }
                 },
                 remove: function(docid){
                     return this.getURL('ws') + 'docRemove/DocRemoveWidget/' + (docid | 0) + '/';

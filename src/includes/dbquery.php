@@ -129,7 +129,18 @@ class DocQuery {
         $db->query_write($sql);
     }
 
-    public static function ElList(Ab_Database $db, $docid, $type){
+    public static function ElList(Ab_Database $db, $docid, $type, $elids = null){
+
+        $wha = array();
+        if (is_array($elids)){
+            for ($i = 0; $i < count($elids); $i++){
+                $wha[] = "e.elementid=".intval($elids[$i]);
+            }
+            if (count($wha) === 0){
+                return null;
+            }
+        }
+
         $sql = "
             SELECT 
                 e.docid,
@@ -138,8 +149,16 @@ class DocQuery {
             INNER JOIN ".$db->prefix."doc_el_".bkstr($type)." ei
                 ON ei.elementid=e.elementid
             WHERE e.docid=".intval($docid)."
+        ";
+
+        if (count($wha) > 0){
+            $sql .= " AND (".implode(" OR ", $wha).")";
+        }
+
+        $sql .= "
             ORDER BY e.ord
         ";
+
         return $db->query_read($sql);
     }
 
@@ -168,7 +187,7 @@ class DocQuery {
         ";
         $db->query_write($sql);
     }
-    
+
     public static function ElSectionUpdate(Ab_Database $db, DocElementSave $r, $d){
         $sql = "
             INSERT INTO ".$db->prefix."doc_el_section
@@ -186,6 +205,7 @@ class DocQuery {
         $sql = "
             SELECT
                 l.*,
+                e.elementType,
                 d.docid,
                 d.miniTitle as docTitle
             FROM ".$db->prefix."doc_link l

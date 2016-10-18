@@ -349,7 +349,11 @@ class DocElSectionList extends DocElList {
  * Class DocLink
  *
  * @property int $docid
+ * @property string $docTitle
  * @property int $elementid
+ * @property string $elType Element Type
+ * @property array $elData
+ * @property array $path
  * @property int $ord
  */
 class DocLink extends AbricosModel {

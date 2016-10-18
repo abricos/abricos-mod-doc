@@ -265,16 +265,17 @@ class DocApp extends AbricosApplication {
     /**
      * @param $docid
      * @param $type
+     * @param null|array $elids
      * @return DocElList
      */
-    private function ElList($docid, $type){
+    private function ElList($docid, $type, $elids = null){
         $listClassName = DocElement::ListClassName($type);
         $itemClassName = DocElement::ItemClassName($type);
 
         /** @var DocElList $list */
         $list = $this->InstanceClass($listClassName);
 
-        $rows = DocQuery::ElList($this->db, $docid, $type);
+        $rows = DocQuery::ElList($this->db, $docid, $type, $elids);
         while (($d = $this->db->fetch_array($rows))){
             $list->Add($this->InstanceClass($itemClassName, $d));
         }
@@ -413,9 +414,33 @@ class DocApp extends AbricosApplication {
         /** @var DocLinkList $list */
         $list = $this->InstanceClass('LinkList');
 
+        $extends = array();
+
         $rows = DocQuery::LinkList($this->db, $owner);
         while (($d = $this->db->fetch_array($rows))){
-            $list->Add($this->InstanceClass('Link', $d));
+            /** @var DocLink $link */
+            $link = $this->InstanceClass('Link', $d);
+            $list->Add($link);
+
+            if (isset($extends[$link->docid])){
+                $extends[$link->docid] = array();
+            }
+            if (isset($extends[$link->docid][$link->elType])){
+                $extends[$link->docid][$link->elType] = array();
+            }
+            $extends[$link->docid][$link->elType][] = $link->elementid;
+        }
+
+        foreach ($extends as $docid => $types){
+            foreach ($types as $type => $elids){
+                $elList = $this->ElList($docid, $type, $elids);
+
+                for ($i = 0; $i < $elList->Count(); $i++){
+                    $el = $elList->GetByIndex($i);
+                    $link = $list->GetBy('elementid', $el->id);
+                    $link->elData = $el->ToArray();
+                }
+            }
         }
 
         return $list;
