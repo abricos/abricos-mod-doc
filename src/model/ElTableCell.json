@@ -4,7 +4,7 @@
   "fields": {
     "id": {
       "type": "int",
-      "dbField": "elementid"
+      "dbField": "cellid"
     },
     "type": {
       "type": "string",

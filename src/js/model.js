@@ -145,6 +145,12 @@ Component.entryPoint = function(NS){
 
     NS.ElTable = Y.Base.create('elTable', SYS.AppModel, [], {
         structureName: 'ElTable',
+        initializer: function(){
+            var cellList = this.get('cellList');
+            if (cellList){
+                cellList.set('el', this);
+            }
+        },
         toSave: function(){
             return {};
         }
@@ -156,10 +162,50 @@ Component.entryPoint = function(NS){
 
     NS.ElTableCell = Y.Base.create('elTableCell', SYS.AppModel, [], {
         structureName: 'ElTableCell'
+    }, {
+        ATTRS: {
+            clientid: NS.ATTRIBUTE.clientid
+        }
     });
 
     NS.ElTableCellList = Y.Base.create('elTableCellList', SYS.AppModelList, [], {
         appItem: NS.ElTableCell,
+        getCellMap: function(){
+            var map = {},
+                row, col;
+
+            this.each(function(cell){
+                row = 'r' + cell.get('row');
+                col = 'c' + cell.get('col');
+
+                map[row] || (map[row] = {});
+                map[row][col] = cell;
+
+            }, this);
+
+            return map;
+        },
+        eachCell: function(fn, context){
+            var el = this.get('el'),
+                rowCount = el.get('rowCount'),
+                colCount = el.get('colCount'),
+                map = this.getCellMap(),
+                r, c, rm, cm;
+
+            for (r = 0; r < rowCount; r++){
+                rm = 'r' + r;
+                for (c = 0; c < colCount; c++){
+                    cm = 'c' + c;
+                    map[rm] || (map[rm] = {});
+
+                    fn.call(context || this, r, c, map[rm][cm] || null);
+                }
+            }
+        }
+    }, {
+        ATTRS: {
+            el: {value: null}
+        }
     });
 
     NS.Link = Y.Base.create('link', SYS.AppModel, [], {

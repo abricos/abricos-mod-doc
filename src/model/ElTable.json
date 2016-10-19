@@ -22,10 +22,16 @@
       "type": "bool"
     },
     "colCount": {
-      "type": "int"
+      "type": "int",
+      "default": 2
     },
     "rowCount": {
-      "type": "int"
+      "type": "int",
+      "default": 2
+    },
+    "cellList": {
+      "type": "modelList:ElTableCellList",
+      "notNULL": true
     }
   }
 }

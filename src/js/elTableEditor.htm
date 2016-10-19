@@ -2,22 +2,39 @@
 <div class="elEditor elTableEditor panel panel-default">
     <div class="panel-heading">
         <div id="{i#toolbarWidget}"></div>
-        <div class="">
-            
-        </div>
     </div>
     <div id="{i#panelBody}" class="panel-body">
         <div id="{i#editorPanel}">
             <div class="form-group row">
-                <div class="col-sm-2">
-                    Название элемента
-                </div>
                 <div class="col-sm-3">
                     <div id="{i#elementTitleWidget}"></div>
                 </div>
+                <div class="col-sm-2 col-sm-offset-1">
+                    <div class="input-group">
+                        <span class="input-group-addon">Колонок</span>
+                        <input id="{i#colCount}" type="text"
+                               data-wait="disable"
+                               class="form-control input-sm" value="0"/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">Строк</span>
+                        <input id="{i#rowCount}" type="text"
+                               data-wait="disable"
+                               class="form-control input-sm" value="0"/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button data-click="this:applyOptions"
+                            data-wait="disable"
+                            class="btn btn-default btn-sm" type="button">
+                        Применить
+                    </button>
+                </div>
             </div>
 
-            <div id="{i#bodyEditor}" data-rows="7"></div>
+            <div id="{i#cellListEditor}"></div>
         </div>
 
         <div id="{i#previewPanel}">
@@ -25,3 +42,31 @@
         </div>
     </div>
 </div>
+
+<!--{editor}-->
+<div class="form-group">
+    <div id="{i#table}"></div>
+</div>
+
+<!--{table}-->
+<table class="table">
+    <thead>
+    <tr>{v#heads}</tr>
+    </thead>
+    <tbody>
+    {v#rows}
+    </tbody>
+</table>
+
+<!--{tr}-->
+<tr>{v#cols}</tr>
+
+<!--{th}-->
+<th>
+    <input id="{i#id}-{v#clientid}" type="text"
+           class="form-control input-sm"
+           placeholder="Введите заголовок"/>
+</th>
+
+<!--{td}-->
+<td id="{i#id}-{v#clientid}">фыва</td>

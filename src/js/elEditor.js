@@ -89,7 +89,13 @@ Component.entryPoint = function(NS){
     };
     ElEditorWidgetExt.prototype = {
         onInitAppWidget: function(err, appInstance){
+            if (Y.Lang.isFunction(this.onBeforeInitElEditor)){
+                this.onBeforeInitElEditor();
+            }
             this.initElementEditor();
+            if (Y.Lang.isFunction(this.onAfterInitElEditor)){
+                this.onAfterInitElEditor();
+            }
         },
         destructor: function(){
             if (this._toolbarWidget){
