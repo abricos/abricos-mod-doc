@@ -473,6 +473,34 @@ class DocElTableCell extends AbricosModel {
  * @method DocElTableCell GetByIndex(int $i)
  */
 class DocElTableCellList extends AbricosModelList {
+
+    private $_mapCell = array();
+
+    /**
+     * @param DocElTableCell $item
+     */
+    public function Add($item){
+        parent::Add($item);
+        $row = $item->row;
+        $col = $item->col;
+
+        if (!isset($this->_mapCell[$row])){
+            $this->_mapCell[$row] = array();
+        }
+        $this->_mapCell[$row][$col] = $item;
+    }
+
+    /**
+     * @param int $row
+     * @param int $col
+     * @return DocElTableCell|null
+     */
+    public function Cell($row, $col){
+        if (!isset($this->_mapCell[$row][$col])){
+            return null;
+        }
+        return $this->_mapCell[$row][$col];
+    }
 }
 
 

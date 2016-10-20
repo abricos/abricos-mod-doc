@@ -102,8 +102,56 @@ class DocViewer {
                         "body" => $el->body
                     ));
                     break;
+                case 'table':
+                    $ret .= $this->BuildElTable($brick, $el);
+                    break;
             }
         }
         return $ret;
+    }
+
+    public function BuildElTable(Ab_CoreBrick $brick, DocElTable $el){
+        $rowCount = $el->rowCount;
+        $colCount = $el->colCount;
+
+        $v = $brick->param->var;
+
+        $cellList = $el->cellList;
+        $lstHead = "";
+        $rows = [];
+
+        for ($r = 0; $r < $rowCount; $r++){
+            for ($c = 0; $c < $colCount; $c++){
+                $cell = $cellList->Cell($r, $c);
+                if (empty($cell)){
+                    continue;
+                }
+
+                if ($r === 0){
+                    $lstHead .= Brick::ReplaceVarByData($v['th'], array(
+                        "body" => $cell->body
+                    ));
+                } else {
+                    if ($c === 0){
+                        $rows[$r - 1] = "";
+                    }
+                    $rows[$r - 1] .= Brick::ReplaceVarByData($v['td'], array(
+                        "body" => $cell->body
+                    ));
+                }
+            }
+        }
+
+        $lst = "";
+        for ($i = 0; $i < count($rows); $i++){
+            $lst .= Brick::ReplaceVarByData($v['tr'], array(
+                "cols" => $rows[$i]
+            ));
+        }
+
+        return Brick::ReplaceVarByData($brick->content, array(
+            "heads" => $lstHead,
+            "rows" => $lst
+        ));
     }
 }
