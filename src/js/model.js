@@ -168,6 +168,9 @@ Component.entryPoint = function(NS){
         }
     });
 
+    NS.ElTableCell.SIMPLE = 'simple';
+    NS.ElTableCell.VISUAL = 'visual';
+
     NS.ElTableCellList = Y.Base.create('elTableCellList', SYS.AppModelList, [], {
         appItem: NS.ElTableCell,
         getCellMap: function(){

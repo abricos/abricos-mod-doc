@@ -49,7 +49,7 @@
 </div>
 
 <!--{table}-->
-<table class="table">
+<table class="table table-bordered">
     <thead>
     <tr>{v#heads}</tr>
     </thead>
@@ -61,12 +61,29 @@
 <!--{tr}-->
 <tr>{v#cols}</tr>
 
-<!--{th}-->
-<th>
-    <input id="{i#id}-{v#clientid}" type="text"
-           class="form-control input-sm"
-           placeholder="Введите заголовок"/>
-</th>
-
 <!--{td}-->
-<td id="{i#id}-{v#clientid}">фыва</td>
+<td id="{i#id}-{v#clientid}"></td>
+
+<!--{cell}-->
+<div class="cellEditor">
+    <div class="form-group">
+        <div class="pull-left typeTitle">
+            <span class="isCaption">Заголовок</span>
+            (<span data-src="this:cell.row"></span>, <span data-src="this:cell.col"></span>)
+        </div>
+        <div class="pull-right form-inline">
+            <select id="{i#typeSelect}"
+                    class="form-control input-sm">
+                <option value="simple">Простой</option>
+                <option value="visual">Визуальный</option>
+            </select>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <input id="{i#simple}" type="text"
+           data-wait="disable"
+           class="form-control input-sm hide"/>
+
+    <div id="{i#visual}" data-rows="4" class="hide"></div>
+</div>
