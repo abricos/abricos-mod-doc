@@ -70,13 +70,12 @@ Component.entryPoint = function(NS){
             this._cellListEditorWidget = null;
         },
         onSyncElData: function(tp, el, forced){
-            /*
-             var body = this._cellListEditorWidget.get('content');
-             if (!forced && el.get('body') === body){
-             return false;
-             }
-             this.syncTitle(body, true);
-             /**/
+            var isChanged = this._cellListEditorWidget.onSyncElData();
+            if (!forced && !isChanged){
+                return false;
+            }
+
+            this.syncTitle('Table');
 
             return true;
         },
@@ -168,6 +167,15 @@ Component.entryPoint = function(NS){
                 }
             }, this);
         },
+        onSyncElData: function(){
+            var isChanged = false;
+            this.get('el').get('cellList').each(function(cell){
+                if (cell.widget && cell.widget.onSyncElData()){
+                    isChanged = true;
+                }
+            }, this);
+            return isChanged;
+        },
         rebuild: function(){
             this._cleanWidgets();
 
@@ -221,6 +229,8 @@ Component.entryPoint = function(NS){
 
     NS.ElTableCellEditorWidget = Y.Base.create('ElTableCellEditorWidget', SYS.AppWidget, [], {
         onInitAppWidget: function(err, appInstance){
+            this._isChanged = false;
+
             var tp = this.template,
                 cell = this.get('cell');
 
@@ -261,7 +271,17 @@ Component.entryPoint = function(NS){
                     body = this._editorWidget.get('content');
                     break;
             }
-            this.get('cell').set('body', body);
+
+            var cell = this.get('cell');
+
+            if (cell.get('body') === body){
+                return this._isChanged;
+            }
+
+            this._isChanged = true;
+
+            cell.set('body', body);
+            return true;
         },
         _onTypeChange: function(){
             var tp = this.template,

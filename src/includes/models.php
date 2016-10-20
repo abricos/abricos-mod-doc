@@ -344,6 +344,50 @@ class DocElSectionList extends DocElList {
 }
 
 /**
+ * Interface DocElTableSaveVars
+ *
+ * @property int $rowCount
+ * @property int $colCount
+ * @property bool $isCaption
+ * @property bool $isBorder
+ * @property bool $isHover
+ * @property bool $isCondense
+ * @property array $cells
+ */
+interface DocElTableSaveVars {
+}
+
+/**
+ * Class DocElTableSave
+ *
+ * @property DocElTableSaveVars $vars
+ * @property int $elementid
+ */
+class DocElTableSave extends AbricosResponse {
+    const CODE_OK = 1;
+
+    protected $_structModule = 'doc';
+    protected $_structName = 'ElTableSave';
+
+    public $cellResults = array();
+
+    public function ToJSON(){
+        $ret = parent::ToJSON();
+        $ret->cells = array();
+
+        for ($i = 0; $i < count($this->cellResults); $i++){
+            /** @var DocElTableCellSave $cs */
+            $cs = $this->cellResults[$i];
+
+            $ret->cells[] = $cs->ToJSON();
+        }
+
+        return $ret;
+    }
+}
+
+
+/**
  * Class DocElTable
  *
  * @property bool $isCaption
@@ -364,6 +408,33 @@ class DocElTable extends DocEl {
  * @method DocElTable GetByIndex(int $i)
  */
 class DocElTableList extends DocElList {
+}
+
+/**
+ * Interface DocElTableCellSaveVars
+ *
+ * @property int $cellid
+ * @property int $clientid
+ * @property int $row
+ * @property int $col
+ * @property string $type
+ * @property string $body
+ */
+interface DocElTableCellSaveVars {
+}
+
+/**
+ * Class DocElTableCellSave
+ *
+ * @property DocElTableCellSaveVars $vars
+ * @property int $cellid
+ * @property int $clientid
+ */
+class DocElTableCellSave extends AbricosResponse {
+    const CODE_OK = 1;
+
+    protected $_structModule = 'doc';
+    protected $_structName = 'ElTableCellSave';
 }
 
 /**

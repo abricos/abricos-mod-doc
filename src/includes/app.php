@@ -33,8 +33,10 @@ class DocApp extends AbricosApplication {
             "ElSectionList" => "DocElSectionList",
             "ElTable" => "DocElTable",
             "ElTableList" => "DocElTableList",
+            "ElTableSave" => "DocElTableSave",
             "ElTableCell" => "DocElTableCell",
             "ElTableCellList" => "DocElTableCellList",
+            "ElTableCellSave" => "DocElTableCellSave",
             "Link" => "DocLink",
             "LinkList" => "DocLinkList",
             "LinkSave" => "DocLinkSave",
@@ -42,11 +44,11 @@ class DocApp extends AbricosApplication {
     }
 
     protected function GetStructures(){
-        $ret = 'Owner,Doc,Element,ElementType,Link,' .
+        $ret = 'Owner,Doc,Element,ElementType,Link,'.
             'ElText,ElPage,ElSection,ElTable,ElTableCell';
 
         if ($this->IsAdminRole()){
-            $ret .= ',DocSave,ElementSave';
+            $ret .= ',DocSave,ElementSave,ElTableSave,ElTableCellSave';
         }
 
         return $ret;
@@ -214,6 +216,102 @@ class DocApp extends AbricosApplication {
         return $ret;
     }
 
+    private function ElTextSave(DocElementSave $es){
+        $utm = Abricos::TextParser();
+        $d = $es->vars->el;
+        $d->body = $utm->Parser($d->body);
+
+        DocQuery::ElTextUpdate($this->db, $es, $d);
+    }
+
+    private function ElPageSave(DocElementSave $es){
+        $utmf = Abricos::TextParser(true);
+        $d = $es->vars->el;
+        $d->title = $utmf->Parser($d->title);
+
+        DocQuery::ElPageUpdate($this->db, $es, $d);
+    }
+
+    private function ElSectionSave(DocElementSave $es){
+        $utmf = Abricos::TextParser(true);
+        $d = $es->vars->el;
+        $d->title = $utmf->Parser($d->title);
+
+        DocQuery::ElSectionUpdate($this->db, $es, $d);
+    }
+
+    private function ElTableSave(DocElementSave $es){
+        /** @var DocElTableSave $ret */
+        $ret = $this->InstanceClass('ElTableSave', $es->vars->el);
+
+        $vars = $ret->vars;
+        $ret->elementid = $es->elementid;
+        $vars->rowCount = max($vars->rowCount, 1);
+        $vars->colCount = max($vars->colCount, 1);
+
+        DocQuery::ElTableUpdate($this->db, $es, $ret);
+
+        $utm = Abricos::TextParser();
+        $utmf = Abricos::TextParser(true);
+
+        $currCellList = $this->ElTableCellList($es->elementid);
+
+        $cells = $vars->cells;
+        $map = array();
+
+        for ($i = 0; $i < count($cells); $i++){
+            /** @var DocElTableCellSave $cs */
+            $cs = $this->InstanceClass('ElTableCellSave', $cells[$i]);
+            $cs->cellid = $cs->vars->cellid;
+            $cs->clientid = $cs->vars->clientid;
+
+            switch ($cs->vars->type){
+                case 'simple':
+                    $cs->vars->body = $utmf->Parser($cs->vars->body);
+                    break;
+                case 'visual':
+                    $cs->vars->body = $utm->Parser($cs->vars->body);
+                    break;
+                default:
+                    continue;
+                    break;
+            }
+
+            if ($cs->vars->cellid === 0){
+                $cs->cellid = DocQuery::ElTableCellAppend($this->db, $ret, $cs);
+            } else {
+                DocQuery::ElTableCellUpdate($this->db, $ret, $cs);
+            }
+
+            $ret->cellResults[] = $cs;
+            $map[$cs->cellid] = $cs;
+        }
+
+        for ($i = 0; $i < $currCellList->Count(); $i++){
+            $cell = $currCellList->GetByIndex($i);
+
+            if (!isset($map[$cell->id])){
+                DocQuery::ElTableCellRemove($this->db, $ret->elementid, $cell->id);
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @param $elementid
+     * @return DocElTableCellList
+     */
+    private function ElTableCellList($elementid){
+        /** @var DocElTableCellList $list */
+        $list = $this->InstanceClass('ElTableCellList');
+
+        $rows = DocQuery::ElTableList($this->db, $elementid);
+        while (($d = $this->db->fetch_array($rows))){
+            $list->Add($this->InstanceClass('ElTableCell', $d));
+        }
+        return $list;
+    }
+
     private function ElementRemove(Doc $doc, $elementid){
         $count = $doc->elementList->Count();
         for ($i = 0; $i < $count; $i++){
@@ -339,31 +437,6 @@ class DocApp extends AbricosApplication {
         $this->SetCache('ElementTypeList', $list);
 
         return $list;
-    }
-
-
-    private function ElTextSave(DocElementSave $es){
-        $utm = Abricos::TextParser();
-        $d = $es->vars->el;
-        $d->body = $utm->Parser($d->body);
-
-        DocQuery::ElTextUpdate($this->db, $es, $d);
-    }
-
-    private function ElPageSave(DocElementSave $es){
-        $utmf = Abricos::TextParser(true);
-        $d = $es->vars->el;
-        $d->title = $utmf->Parser($d->title);
-
-        DocQuery::ElPageUpdate($this->db, $es, $d);
-    }
-
-    private function ElSectionSave(DocElementSave $es){
-        $utmf = Abricos::TextParser(true);
-        $d = $es->vars->el;
-        $d->title = $utmf->Parser($d->title);
-
-        DocQuery::ElSectionUpdate($this->db, $es, $d);
     }
 
     public function DocStructureToJSON($docid){

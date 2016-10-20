@@ -1,0 +1,38 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "cellid": {
+      "type": "int"
+    },
+    "clientid": {
+      "type": "int"
+    },
+    "row": {
+      "type": "int"
+    },
+    "col": {
+      "type": "int"
+    },
+    "type": {
+      "type": "string",
+      "default": "simple",
+      "valid": "simple,html,visual,container",
+      "notNULL": true
+    },
+    "body": {
+      "type": "string"
+    }
+  },
+  "codes": {
+    "OK": 1
+  },
+  "fields": {
+    "cellid": {
+      "type": "int"
+    },
+    "clientid": {
+      "type": "int"
+    }
+  }
+}

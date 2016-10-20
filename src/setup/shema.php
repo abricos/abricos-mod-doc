@@ -126,7 +126,7 @@ if ($updateManager->isUpdate('0.1.1')){
             cellid INT(10) UNSIGNED NOT NULL auto_increment COMMENT '',
             elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             
-            cellType ENUM('simple', 'html', 'visual', 'container') DEFAULT 'visual' COMMENT '',
+            cellType ENUM('simple', 'html', 'visual', 'container') DEFAULT 'simple' COMMENT '',
             
             row INT(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
             col INT(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',

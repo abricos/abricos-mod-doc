@@ -201,6 +201,72 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    public static function ElTableUpdate(Ab_Database $db, DocElementSave $r, DocElTableSave $ts){
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_el_table
+            (elementid, rowCount, colCount) VALUES (
+                ".intval($r->elementid).",
+                ".intval($ts->vars->rowCount).",
+                ".intval($ts->vars->colCount)."
+            ) 
+            ON DUPLICATE KEY UPDATE
+                rowCount=".intval($ts->vars->rowCount).",
+                colCount=".intval($ts->vars->colCount)."
+        ";
+        $db->query_write($sql);
+    }
+
+    public static function ElTableCellAppend(Ab_Database $db, DocElTableSave $ts, DocElTableCellSave $cs){
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_el_tableCell
+            (elementid, cellType, row, col, body) VALUES (
+                ".intval($ts->elementid).",
+                '".bkstr($cs->vars->type)."',
+                ".intval($cs->vars->row).",
+                ".intval($cs->vars->col).",
+                '".bkstr($cs->vars->body)."'
+            ) 
+        ";
+        $db->query_write($sql);
+        return $db->insert_id();
+    }
+
+    public static function ElTableCellUpdate(Ab_Database $db, DocElTableSave $ts, DocElTableCellSave $cs){
+        $sql = "
+            UPDATE ".$db->prefix."doc_el_tableCell
+            SET 
+                cellType='".bkstr($cs->vars->type)."',
+                row=".intval($cs->vars->row).",
+                col=".intval($cs->vars->col).",
+                body='".bkstr($cs->vars->body)."'
+            WHERE elementid=".intval($ts->elementid)."
+                AND cellid=".intval($cs->vars->cellid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
+    public static function ElTableCellRemove(Ab_Database $db, $elementid, $cellid){
+        $sql = "
+            DELETE FROM ".$db->prefix."doc_el_tableCell
+            WHERE elementid=".intval($elementid)."
+                AND cellid=".intval($cellid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
+
+    public static function ElTableList(Ab_Database $db, $elementid){
+        $sql = "
+            SELECT *
+            FROM ".$db->prefix."doc_el_tableCell
+            WHERE elementid=".intval($elementid)."
+            ORDER BY row, col
+        ";
+        return $db->query_read($sql);
+    }
+
     public static function LinkList(Ab_Database $db, DocOwner $owner){
         $sql = "
             SELECT

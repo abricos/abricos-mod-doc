@@ -152,7 +152,27 @@ Component.entryPoint = function(NS){
             }
         },
         toSave: function(){
-            return {};
+            var cellList = this.get('cellList'),
+                cells = [];
+
+            cellList.eachCell(function(r, c, cell){
+                cells[cells.length] = {
+                    id: cell.get('id'),
+                    clientid: cell.get('clientid'),
+                    row: cell.get('row'),
+                    col: cell.get('col'),
+                    body: cell.get('body')
+                };
+            }, this);
+
+            return {
+                isCaption: this.get('isCaption'),
+                isBorder: this.get('isBorder'),
+                isHover: this.get('isBorder'),
+                rowCount: this.get('rowCount'),
+                colCount: this.get('rowCount'),
+                cells: cells
+            };
         }
     });
 

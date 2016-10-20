@@ -1,0 +1,35 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "rowCount": {
+      "type": "int"
+    },
+    "colCount": {
+      "type": "int"
+    },
+    "isCaption": {
+      "type": "bool"
+    },
+    "isBorder": {
+      "type": "bool"
+    },
+    "isHover": {
+      "type": "bool"
+    },
+    "isCondense": {
+      "type": "bool"
+    },
+    "cells": {
+      "type": "array"
+    }
+  },
+  "codes": {
+    "OK": 1
+  },
+  "fields": {
+    "elementid": {
+      "type": "int"
+    }
+  }
+}
