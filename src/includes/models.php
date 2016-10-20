@@ -491,6 +491,11 @@ class DocLink extends AbricosModel {
     protected $_structModule = 'doc';
     protected $_structName = 'Link';
 
+    /**
+     * @var DocEl
+     */
+    public $el;
+
     public function __construct($d){
         $path = null;
 
@@ -501,6 +506,14 @@ class DocLink extends AbricosModel {
         $d['path'] = $path;
 
         parent::__construct($d);
+    }
+
+    public function ToJSON(){
+        $ret = parent::ToJSON();
+
+        $ret->el = $this->el->ToJSON();
+
+        return $ret;
     }
 }
 

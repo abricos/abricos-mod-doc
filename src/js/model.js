@@ -240,7 +240,21 @@ Component.entryPoint = function(NS){
         structureName: 'Link',
     }, {
         ATTRS: {
-            clientid: NS.ATTRIBUTE.clientid
+            clientid: NS.ATTRIBUTE.clientid,
+            el: {
+                getter: function(val){
+                    if (this._elInstance){
+                        return this._elInstance;
+                    }
+                    val.appInstance = this.appInstance;
+
+                    var type = this.get('elType'),
+                        El = this.appInstance.get('El' + NS.upperFirstChar(type));
+
+                    return this._elInstance = new El(val);
+
+                }
+            }
         }
     });
 

@@ -384,16 +384,6 @@ class DocApp extends AbricosApplication {
             }
         }
 
-        if (isset($doc->extends['table'])){
-            /** @var DocElTableList $elTableList */
-            $elTableList = $doc->extends['table'];
-
-            for ($i = 0; $i < $elTableList->Count(); $i++){
-                $elTable = $elTableList->GetByIndex($i);
-                $elTable->cellList = $this->ElTableCellList($elTable->id);
-            }
-        }
-
         $this->SetCache('Doc', $docid, $doc);
 
         return $doc;
@@ -415,6 +405,15 @@ class DocApp extends AbricosApplication {
         $rows = DocQuery::ElList($this->db, $docid, $type, $elids);
         while (($d = $this->db->fetch_array($rows))){
             $list->Add($this->InstanceClass($itemClassName, $d));
+        }
+
+        if ($type === 'table'){
+            /** @var DocElTableList $list */
+
+            for ($i = 0; $i < $list->Count(); $i++){
+                $elTable = $list->GetByIndex($i);
+                $elTable->cellList = $this->ElTableCellList($elTable->id);
+            }
         }
         return $list;
     }
@@ -547,7 +546,7 @@ class DocApp extends AbricosApplication {
                 for ($i = 0; $i < $elList->Count(); $i++){
                     $el = $elList->GetByIndex($i);
                     $link = $list->GetBy('elementid', $el->id);
-                    $link->elData = $el->ToArray();
+                    $link->el = $el;
                 }
             }
         }

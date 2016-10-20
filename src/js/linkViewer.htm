@@ -6,9 +6,7 @@
 <!--{linkRow}-->
 <div class="link">
     <p>{v#path}</p>
-    <div class="alert alert-info">
-        {v#body}
-    </div>
+    {v#body}
 </div>
 
 <!--{docItem}-->
@@ -23,10 +21,35 @@
 &nbsp;→&nbsp;
 
 <!--{page}-->
-{v#title}
+<div class="alert alert-info">
+    {v#title}
+</div>
 
 <!--{section}-->
-{v#title}
+<div class="alert alert-info">
+    {v#title}
+</div>
 
 <!--{text}-->
-{v#body}
+<div class="alert alert-info">
+    {v#body}
+</div>
+
+<!--{table}-->
+<table class="elTableView table table-bordered table-hover">
+    <thead>
+    <tr>{v#heads}</tr>
+    </thead>
+    <tbody>
+    {v#rows}
+    </tbody>
+</table>
+
+<!--{tr}-->
+<tr>{v#cols}</tr>
+
+<!--{th}-->
+<th>{v#body}</th>
+
+<!--{td}-->
+<td>{v#body}</td>
