@@ -15,6 +15,9 @@
     "elementList": {
       "type": "modelList:ElementList",
       "notNULL": true
+    },
+    "ord": {
+      "type": "int"
     }
   }
 }

@@ -12,6 +12,16 @@
  */
 class DocQuery {
 
+    public static function DocListSort(Ab_Database $db, $docid, $ord){
+        $sql = "
+            UPDATE ".$db->prefix."doc
+            SET ord=".intval($ord)."
+            WHERE docid=".intval($docid)."
+            LIMIT 1
+        ";
+        $db->query_write($sql);
+    }
+
     public static function DocList(Ab_Database $db){
         $sql = "
             SELECT
@@ -19,7 +29,7 @@ class DocQuery {
                 d.title
             FROM ".$db->prefix."doc d
             WHERE d.deldate=0
-            ORDER BY d.title
+            ORDER BY d.ord, d.title
         ";
         return $db->query_read($sql);
     }

@@ -30,6 +30,8 @@ if ($updateManager->isInstall()){
             upddate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата обновления',
             deldate INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
             
+            ord INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            
             PRIMARY KEY (docid),
             KEY deldate (deldate)
         )".$charset
@@ -104,6 +106,13 @@ if ($updateManager->isInstall()){
     );
 }
 
+if ($updateManager->isUpdate('0.1.1') && !$updateManager->isInstall()){
+    $db->query_write("
+        ALTER TABLE  ".$pfx."doc
+        ADD ord INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT ''
+    ");
+}
+
 if ($updateManager->isUpdate('0.1.1')){
     $db->query_write("
         CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_table (
@@ -137,5 +146,4 @@ if ($updateManager->isUpdate('0.1.1')){
             KEY elementid (elementid)
         )".$charset
     );
-
 }

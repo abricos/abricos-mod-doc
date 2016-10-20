@@ -103,6 +103,9 @@ Component.entryPoint = function(NS){
                     r.set('elements', els)
                 }
             },
+            docListSort: {
+                args: ['orders']
+            },
             doc: {
                 args: ['docid'],
                 type: "model:Doc",

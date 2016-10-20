@@ -65,8 +65,9 @@ class DocSave extends AbricosResponse {
  * Class Doc
  *
  * @property string $title
+ * @property string $miniTitle
  * @property DocElementList $elementList
- * @property array $extends
+ * @property int $ord
  */
 class Doc extends AbricosModel {
     protected $_structModule = 'doc';

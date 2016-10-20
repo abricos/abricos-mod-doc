@@ -60,6 +60,8 @@ class DocApp extends AbricosApplication {
                 return $this->DocListToJSON();
             case "docSave":
                 return $this->DocSaveToJSON($d->data);
+            case "docListSort":
+                return $this->DocListSortToJSON($d->orders);
             case 'doc':
                 return $this->DocToJSON($d->docid);
             case 'docRemove':
@@ -119,6 +121,28 @@ class DocApp extends AbricosApplication {
         }
 
         return $list;
+    }
+
+    public function DocListSortToJSON($orders){
+        $ret = $this->DocListSort($orders);
+        return $this->ImplodeJSON(array(
+            $this->ResultToJSON('docListSort', $ret),
+            $this->DocListToJSON()
+        ));
+    }
+
+    public function DocListSort($orders){
+        if (!$this->IsAdminRole()){
+            return AbricosResponse::ERR_FORBIDDEN;
+        }
+
+        for ($i = 0; $i < count($orders); $i++){
+            DocQuery::DocListSort($this->db, $orders[$i]->docid, $orders[$i]->ord);
+        }
+
+        $ret = new stdClass();
+        $ret->orders = $orders;
+        return $ret;
     }
 
     public function DocSaveToJSON($d){

@@ -47,23 +47,39 @@
         </a>
     </td>
     <td>
-        <div class="text-right">
-            <a data-url="doc.view({v#id})"
-               class="btn btn-default btn-xs"
-               title="Открыть документ">
-                <i class="fa fa-eye" aria-hidden="true"></i>
-            </a>
-            <a data-url="doc.edit({v#id})"
-               class="btn btn-default btn-xs"
-               title="Редактировать документ">
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-            </a>
-            <a data-url="doc.remove({v#id})"
-               data-wait="disable"
-               class="btn btn-default btn-xs"
-               title="Удалить документ">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-            </a>
+        <div class="btn-toolbar pull-right">
+            <div class="btn-group">
+                <button data-click="moveUp" data-id="{v#id}"
+                        data-wait="disable"
+                        class="btn btn-default btn-xs" type="button"
+                        title="Переместить вверх">
+                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                </button>
+                <button data-click="moveDown" data-id="{v#id}"
+                        data-wait="disable"
+                        class="btn btn-default btn-xs" type="button"
+                        title="Переместить вниз">
+                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="btn-group">
+                <a data-url="doc.view({v#id})"
+                   class="btn btn-default btn-xs"
+                   title="Открыть документ">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
+                <a data-url="doc.edit({v#id})"
+                   class="btn btn-default btn-xs"
+                   title="Редактировать документ">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </a>
+                <a data-url="doc.remove({v#id})"
+                   data-wait="disable"
+                   class="btn btn-default btn-xs"
+                   title="Удалить документ">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </div>
         </div>
     </td>
 </tr>
