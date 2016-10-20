@@ -38,10 +38,29 @@
         </div>
 
         <div id="{i#previewPanel}">
-            <div id="{i#bodyPreview}" class="alert alert-info"></div>
+            <div id="{i#table}"></div>
         </div>
     </div>
 </div>
+
+<!--{tableView}-->
+<table class="table table-bordered">
+    <thead>
+    <tr>{v#heads}</tr>
+    </thead>
+    <tbody>
+    {v#rows}
+    </tbody>
+</table>
+
+<!--{trView}-->
+<tr>{v#cols}</tr>
+
+<!--{thView}-->
+<th>{v#body}</th>
+
+<!--{tdView}-->
+<td>{v#body}</td>
 
 <!--{editor}-->
 <div class="form-group">

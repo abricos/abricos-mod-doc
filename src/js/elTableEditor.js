@@ -70,13 +70,13 @@ Component.entryPoint = function(NS){
             this._cellListEditorWidget = null;
         },
         onSyncElData: function(tp, el, forced){
-            var body = this._cellListEditorWidget.get('content');
-            if (!forced && el.get('body') === body){
-                return false;
-            }
-
-            el.set('body', body);
-            this.syncTitle(body, true);
+            /*
+             var body = this._cellListEditorWidget.get('content');
+             if (!forced && el.get('body') === body){
+             return false;
+             }
+             this.syncTitle(body, true);
+             /**/
 
             return true;
         },
@@ -86,7 +86,7 @@ Component.entryPoint = function(NS){
 
             if (mode === 'preview'){
                 this._destroyEditorWidget();
-
+                this._renderPreview();
             } else if (mode === 'edit'){
                 if (this._cellListEditorWidget){
                     return;
@@ -98,11 +98,42 @@ Component.entryPoint = function(NS){
                 });
 
                 this._cellListEditorWidget = new NS.ElTableCellListEditorWidget({
-                    srcNode: tp.one('cellListEditor'),
+                    srcNode: tp.append('cellListEditor', '<div></div>'),
                     el: el
                 });
-
             }
+        },
+        _renderPreview: function(){
+            var tp = this.template,
+                el = this.get('el'),
+                cellList = el.get('cellList'),
+                lstHead = "",
+                rows = [];
+
+            if (cellList.size() === 0){
+                return;
+            }
+            cellList.eachCell(function(r, c, cell){
+                if (r === 0){
+                    lstHead += tp.replace('thView', {
+                        body: cell.get('body')
+                    });
+                } else {
+                    c === 0 ? rows[r - 1] = "" : null;
+                    rows[r - 1] += tp.replace('tdView', {
+                        body: cell.get('body')
+                    });
+                }
+            }, this);
+
+            var lst = "";
+            for (var i = 0; i < rows.length; i++){
+                lst += tp.replace('trView', {cols: rows[i]});
+            }
+            tp.setHTML('table', tp.replace('tableView', {
+                heads: lstHead,
+                rows: lst
+            }));
         },
         applyOptions: function(){
             var tp = this.template,
@@ -118,7 +149,7 @@ Component.entryPoint = function(NS){
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'widget'},
+            templateBlockName: {value: 'widget,tableView,trView,thView,tdView'},
         },
     });
 
@@ -138,39 +169,30 @@ Component.entryPoint = function(NS){
             }, this);
         },
         rebuild: function(){
-            var tp = this.template,
-                el = this.get('el'),
-                cellList = el.get('cellList');
-
             this._cleanWidgets();
 
-            cellList.rebuild();
-
-            var lstHead = "",
+            var tp = this.template,
+                el = this.get('el'),
+                cellList = el.get('cellList'),
+                lstHead = "",
                 rows = [],
                 clientid;
+
+            cellList.rebuild();
 
             cellList.eachCell(function(r, c, cell){
                 clientid = cell.get('clientid');
                 if (r === 0){
-                    lstHead += tp.replace('td', {
-                        clientid: clientid
-                    });
+                    lstHead += tp.replace('td', {clientid: clientid});
                 } else {
-                    if (c === 0){
-                        rows[r - 1] = "";
-                    }
-                    rows[r - 1] += tp.replace('td', {
-                        clientid: clientid
-                    });
+                    c === 0 ? rows[r - 1] = "" : null;
+                    rows[r - 1] += tp.replace('td', {clientid: clientid});
                 }
             }, this);
 
             var lst = "";
             for (var i = 0; i < rows.length; i++){
-                lst += tp.replace('tr', {
-                    cols: rows[i]
-                });
+                lst += tp.replace('tr', {cols: rows[i]});
             }
 
             tp.setHTML('table', tp.replace('table', {
@@ -186,9 +208,7 @@ Component.entryPoint = function(NS){
                     el: el,
                     cell: cell
                 });
-
             }, this);
-
         },
     }, {
         ATTRS: {
