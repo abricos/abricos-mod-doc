@@ -63,16 +63,51 @@ Component.entryPoint = function(NS){
                             body: el.get('body')
                         });
                         break;
+                    case 'table':
+                        lst += this._renderElTable(el);
+                        break;
                 }
             }, this);
 
             return lst;
         },
+        _renderElTable: function(el){
+            var tp = this.template,
+                cellList = el.get('cellList'),
+                lstHead = "",
+                rows = [];
+
+            cellList.eachCell(function(r, c, cell){
+                if (!cell){
+                    return;
+                }
+                if (r === 0){
+                    lstHead += tp.replace('th', {
+                        body: cell.get('body')
+                    });
+                } else {
+                    c === 0 ? rows[r - 1] = "" : null;
+                    rows[r - 1] += tp.replace('td', {
+                        body: cell.get('body')
+                    });
+                }
+            }, this);
+
+            var lst = "";
+            for (var i = 0; i < rows.length; i++){
+                lst += tp.replace('tr', {cols: rows[i]});
+            }
+
+            return tp.replace('table', {
+                heads: lstHead,
+                rows: lst
+            });
+        },
     }, {
         ATTRS: {
             component: {value: COMPONENT},
             templateBlockName: {
-                value: 'widget,page,section,text'
+                value: 'widget,page,section,text,table,tr,th,td'
             },
             docid: NS.ATTRIBUTE.docid,
             doc: NS.ATTRIBUTE.doc

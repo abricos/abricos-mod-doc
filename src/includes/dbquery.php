@@ -257,7 +257,7 @@ class DocQuery {
     }
 
 
-    public static function ElTableList(Ab_Database $db, $elementid){
+    public static function ElTableCellList(Ab_Database $db, $elementid){
         $sql = "
             SELECT *
             FROM ".$db->prefix."doc_el_tableCell

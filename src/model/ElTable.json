@@ -21,11 +21,11 @@
     "isCondense": {
       "type": "bool"
     },
-    "colCount": {
+    "rowCount": {
       "type": "int",
       "default": 2
     },
-    "rowCount": {
+    "colCount": {
       "type": "int",
       "default": 2
     },

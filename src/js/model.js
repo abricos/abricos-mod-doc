@@ -53,6 +53,10 @@ Component.entryPoint = function(NS){
 
     NS.ElementSave = Y.Base.create('elementSave', SYS.AppResponse, [], {
         structureName: 'ElementSave',
+    }, {
+        ATTRS: {
+            el: {}
+        }
     });
 
     NS.Element = Y.Base.create('element', SYS.AppModel, [], {
@@ -159,6 +163,7 @@ Component.entryPoint = function(NS){
                 cells[cells.length] = {
                     id: cell.get('id'),
                     clientid: cell.get('clientid'),
+                    type: cell.get('type'),
                     row: cell.get('row'),
                     col: cell.get('col'),
                     body: cell.get('body')
@@ -170,7 +175,7 @@ Component.entryPoint = function(NS){
                 isBorder: this.get('isBorder'),
                 isHover: this.get('isBorder'),
                 rowCount: this.get('rowCount'),
-                colCount: this.get('rowCount'),
+                colCount: this.get('colCount'),
                 cells: cells
             };
         }

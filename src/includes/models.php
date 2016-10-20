@@ -237,6 +237,20 @@ class DocElementSave extends AbricosResponse {
 
     protected $_structModule = 'doc';
     protected $_structName = 'ElementSave';
+
+    /**
+     * @var AbricosResponse
+     */
+    public $elResult;
+
+    public function ToJSON(){
+        $ret = parent::ToJSON();
+
+        if (!empty($this->elResult)){
+            $ret->el = $this->elResult->ToJSON();
+        }
+        return $ret;
+    }
 }
 
 /**
@@ -394,8 +408,9 @@ class DocElTableSave extends AbricosResponse {
  * @property bool $isBorder
  * @property bool $isHover
  * @property bool $isCondense
- * @property int $colCount
  * @property int $rowCount
+ * @property int $colCount
+ * @property DocElTableCellList $cellList
  */
 class DocElTable extends DocEl {
     protected $_structName = 'ElTable';

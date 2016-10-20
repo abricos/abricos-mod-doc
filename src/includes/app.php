@@ -202,7 +202,7 @@ class DocApp extends AbricosApplication {
                 DocQuery::ElementUpdate($this->db, $dSave, $ord, $ret);
             }
 
-            $this->$elSaveMethod($ret);
+            $ret->elResult = $this->$elSaveMethod($ret);
         } else {
             $ret->AddCode(DocElementSave::CODE_NOT_CHANGED);
         }
@@ -305,7 +305,7 @@ class DocApp extends AbricosApplication {
         /** @var DocElTableCellList $list */
         $list = $this->InstanceClass('ElTableCellList');
 
-        $rows = DocQuery::ElTableList($this->db, $elementid);
+        $rows = DocQuery::ElTableCellList($this->db, $elementid);
         while (($d = $this->db->fetch_array($rows))){
             $list->Add($this->InstanceClass('ElTableCell', $d));
         }
@@ -357,6 +357,16 @@ class DocApp extends AbricosApplication {
 
             if (!isset($doc->extends[$element->type])){
                 $doc->extends[$element->type] = $this->ElList($doc->id, $element->type);
+            }
+        }
+
+        if (isset($doc->extends['table'])){
+            /** @var DocElTableList $elTableList */
+            $elTableList = $doc->extends['table'];
+
+            for ($i = 0; $i < $elTableList->Count(); $i++){
+                $elTable = $elTableList->GetByIndex($i);
+                $elTable->cellList = $this->ElTableCellList($elTable->id);
             }
         }
 

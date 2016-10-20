@@ -297,6 +297,9 @@ Component.entryPoint = function(NS){
                 element.set('id', eSave.get('elementid'));
                 element.set('changed', false);
             }
+            if (Y.Lang.isFunction(this.onSave)){
+                this.onSave(eSave);
+            }
         }
     };
     NS.ElEditorWidgetExt = ElEditorWidgetExt;

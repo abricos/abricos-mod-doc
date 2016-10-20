@@ -11,16 +11,16 @@
                 </div>
                 <div class="col-sm-2 col-sm-offset-1">
                     <div class="input-group">
-                        <span class="input-group-addon">Колонок</span>
-                        <input id="{i#colCount}" type="text"
+                        <span class="input-group-addon">Строк</span>
+                        <input id="{i#rowCount}" type="text"
                                data-wait="disable"
                                class="form-control input-sm" value="0"/>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Строк</span>
-                        <input id="{i#rowCount}" type="text"
+                        <span class="input-group-addon">Колонок</span>
+                        <input id="{i#colCount}" type="text"
                                data-wait="disable"
                                class="form-control input-sm" value="0"/>
                     </div>
@@ -35,6 +35,15 @@
             </div>
 
             <div id="{i#cellListEditor}"></div>
+
+            <div class="pull-right">
+                <button data-click="this:createRow"
+                        data-wait="disable"
+                        class="btn btn-default btn-sm" type="button">
+                    Добавить строку
+                </button>
+            </div>
+            <div class="clearfix"></div>
         </div>
 
         <div id="{i#previewPanel}">
@@ -63,9 +72,7 @@
 <td>{v#body}</td>
 
 <!--{editor}-->
-<div class="form-group">
-    <div id="{i#table}"></div>
-</div>
+<div id="{i#table}"></div>
 
 <!--{table}-->
 <table class="table table-bordered">

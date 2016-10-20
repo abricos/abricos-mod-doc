@@ -109,10 +109,10 @@ Component.entryPoint = function(NS){
                 lstHead = "",
                 rows = [];
 
-            if (cellList.size() === 0){
-                return;
-            }
             cellList.eachCell(function(r, c, cell){
+                if (!cell){
+                    return;
+                }
                 if (r === 0){
                     lstHead += tp.replace('thView', {
                         body: cell.get('body')
@@ -134,6 +134,14 @@ Component.entryPoint = function(NS){
                 rows: lst
             }));
         },
+        createRow: function(){
+            var tp = this.template,
+                el = this.get('el'),
+                rowCount = Math.max(tp.getValue('rowCount') | 0, 1);
+
+            tp.setValue('rowCount', rowCount + 1);
+            this.applyOptions();
+        },
         applyOptions: function(){
             var tp = this.template,
                 el = this.get('el'),
@@ -143,7 +151,21 @@ Component.entryPoint = function(NS){
             el.set('rowCount', rowCount);
             el.set('colCount', colCount);
 
+            this.get('element').set('changed', true);
+
             this._cellListEditorWidget.rebuild();
+        },
+        onSave: function(es){
+            var cellList = this.get('el').get('cellList'),
+                cells = es.get('el').cells,
+                cell;
+
+            for (var i = 0; i < cells.length; i++){
+                cell = cellList.getById(cells[i].clientid);
+                if (cell && cell.get('id') === 0){
+                    cell.set('id', cells[i].cellid);
+                }
+            }
         }
     }, {
         ATTRS: {
