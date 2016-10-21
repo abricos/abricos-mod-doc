@@ -31,6 +31,10 @@ class DocApp extends AbricosApplication {
             "ElPageList" => "DocElPageList",
             "ElSection" => "DocElSection",
             "ElSectionList" => "DocElSectionList",
+            "ElRow" => "DocElRow",
+            "ElRowList" => "DocElRowList",
+            "ElCol" => "DocElCol",
+            "ElColList" => "DocElColList",
             "ElTable" => "DocElTable",
             "ElTableList" => "DocElTableList",
             "ElTableSave" => "DocElTableSave",
@@ -45,7 +49,7 @@ class DocApp extends AbricosApplication {
 
     protected function GetStructures(){
         $ret = 'Owner,Doc,Element,ElementType,Link,'.
-            'ElText,ElPage,ElSection,ElTable,ElTableCell';
+            'ElText,ElPage,ElSection,ElRow,ElCol,ElTable,ElTableCell';
 
         if ($this->IsAdminRole()){
             $ret .= ',DocSave,ElementSave,ElTableSave,ElTableCellSave';
@@ -182,6 +186,10 @@ class DocApp extends AbricosApplication {
 
         $doc = $this->Doc($ret->docid);
 
+        if ($this->db->error && Abricos::$config['Misc']['develop_mode']){
+            print_r($this->db->errorText);
+        }
+
         $count = $doc->elementList->Count();
         for ($i = 0; $i < $count; $i++){
             $element = $doc->elementList->GetByIndex($i);
@@ -262,6 +270,18 @@ class DocApp extends AbricosApplication {
         $d->title = $utmf->Parser($d->title);
 
         DocQuery::ElSectionUpdate($this->db, $es, $d);
+    }
+
+    private function ElRowSave(DocElementSave $es){
+        $d = $es->vars->el;
+
+        DocQuery::ElRowUpdate($this->db, $es, $d);
+    }
+    
+    private function ElColSave(DocElementSave $es){
+        $d = $es->vars->el;
+
+        DocQuery::ElColUpdate($this->db, $es, $d);
     }
 
     private function ElTableSave(DocElementSave $es){
@@ -465,6 +485,8 @@ class DocApp extends AbricosApplication {
         $list->Add($this->ElementTypeInstance('text'));
         $list->Add($this->ElementTypeInstance('page'));
         $list->Add($this->ElementTypeInstance('section'));
+        $list->Add($this->ElementTypeInstance('row'));
+        $list->Add($this->ElementTypeInstance('col'));
         $list->Add($this->ElementTypeInstance('table'));
 
         $this->SetCache('ElementTypeList', $list);

@@ -211,6 +211,26 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    public static function ElRowUpdate(Ab_Database $db, DocElementSave $r, $d){
+        $sql = "
+            INSERT IGNORE INTO ".$db->prefix."doc_el_row
+            (elementid) VALUES (
+                ".intval($r->elementid)."
+            ) 
+        ";
+        $db->query_write($sql);
+    }
+
+    public static function ElColUpdate(Ab_Database $db, DocElementSave $r, $d){
+        $sql = "
+            INSERT IGNORE INTO ".$db->prefix."doc_el_col
+            (elementid) VALUES (
+                ".intval($r->elementid)."
+            ) 
+        ";
+        $db->query_write($sql);
+    }
+
     public static function ElTableUpdate(Ab_Database $db, DocElementSave $r, DocElTableSave $ts){
         $sql = "
             INSERT INTO ".$db->prefix."doc_el_table

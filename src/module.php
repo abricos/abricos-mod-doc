@@ -13,7 +13,7 @@
 class DocModule extends Ab_Module {
 
     public function __construct(){
-        $this->version = "0.1.1";
+        $this->version = "0.1.2";
         $this->name = "doc";
         $this->takelink = "doc";
         $this->permission = new DocPermission($this);

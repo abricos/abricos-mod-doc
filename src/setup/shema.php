@@ -147,3 +147,34 @@ if ($updateManager->isUpdate('0.1.1')){
         )".$charset
     );
 }
+
+if ($updateManager->isUpdate('0.1.2')){
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_row (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            UNIQUE KEY elementid (elementid)
+        )".$charset
+    );
+
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_col (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            xs INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            xsOffset INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            sm INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            smOffset INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            md INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            mdOffset INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            lg INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            lgOffset INT(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            UNIQUE KEY elementid (elementid)
+        )".$charset
+    );
+
+}

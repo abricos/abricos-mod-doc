@@ -62,7 +62,6 @@ class DocSave extends AbricosResponse {
 
         return $ret;
     }
-
 }
 
 /**
@@ -505,6 +504,46 @@ class DocElTableCellList extends AbricosModelList {
         }
         return $this->_mapCell[$row][$col];
     }
+}
+
+/**
+ * Class DocElRow
+ */
+class DocElRow extends DocEl {
+    protected $_structName = 'ElRow';
+}
+
+/**
+ * Class DocElRowList
+ *
+ * @method DocElRow Get(int $id)
+ * @method DocElRow GetByIndex(int $i)
+ */
+class DocElRowList extends DocElList {
+}
+
+/**
+ * Class DocElCol
+ * @property int $xs
+ * @property int $xsOffset
+ * @property int $sm
+ * @property int $smOffset
+ * @property int $md
+ * @property int $mdOffset
+ * @property int $lg
+ * @property int $lgOffset
+ */
+class DocElCol extends DocEl {
+    protected $_structName = 'ElCol';
+}
+
+/**
+ * Class DocElColList
+ *
+ * @method DocElCol Get(int $id)
+ * @method DocElCol GetByIndex(int $i)
+ */
+class DocElColList extends DocElList {
 }
 
 
