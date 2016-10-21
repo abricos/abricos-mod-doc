@@ -53,6 +53,10 @@ class DocSave extends AbricosResponse {
             /** @var DocElementSave $es */
             $es = $this->elResults[$i];
 
+            if ($es->IsSetCode(DocElementSave::CODE_NOT_CHANGED)){
+                continue;
+            }
+
             $ret->elements[] = $es->ToJSON();
         }
 

@@ -118,7 +118,7 @@ class DocViewer {
 
         $cellList = $el->cellList;
         $lstHead = "";
-        $rows = [];
+        $rows = array();
 
         for ($r = 0; $r < $rowCount; $r++){
             for ($c = 0; $c < $colCount; $c++){
@@ -150,6 +150,7 @@ class DocViewer {
         }
 
         return Brick::ReplaceVarByData($brick->content, array(
+            "elementid" => $el->id,
             "heads" => $lstHead,
             "rows" => $lst
         ));

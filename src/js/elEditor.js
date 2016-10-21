@@ -293,10 +293,12 @@ Component.entryPoint = function(NS){
             var clientid = this.get('clientid'),
                 eSave = docSave.getByClientId(clientid);
 
-            if (eSave){
-                element.set('id', eSave.get('elementid'));
-                element.set('changed', false);
+            if (!eSave){
+                return;
             }
+            element.set('id', eSave.get('elementid'));
+            element.set('changed', false);
+
             if (Y.Lang.isFunction(this.onSave)){
                 this.onSave(eSave);
             }
