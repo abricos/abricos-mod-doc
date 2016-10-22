@@ -21,10 +21,11 @@ class DocModule extends Ab_Module {
 
     public function GetContentName(){
         $adr = Abricos::$adress;
+
+        if (isset($adr->dir[1]) && strtolower($adr->dir[1]) === 'imageupload'){
+            return 'imageUpload';
+        }
         if ($adr->level >= 2){
-            if ($adr->dir[1] === 'imageUpload'){
-                return 'imageUpload';
-            }
             return 'docViewer';
         }
 

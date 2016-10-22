@@ -184,6 +184,7 @@ Component.entryPoint = function(NS){
         toSave: function(){
             return {
                 title: this.get('title'),
+                filehash: this.get('filehash'),
                 isResponsive: this.get('isResponsive'),
                 shape: this.get('shape'),
                 width: this.get('width'),

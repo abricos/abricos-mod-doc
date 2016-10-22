@@ -1,35 +1,61 @@
-<!--{image}-->
+<!--{widget}-->
 <div class="elImageEditor elEditor panel panel-default">
     <div class="panel-heading">
         <div id="{i#toolbarWidget}"></div>
     </div>
     <div id="{i#panelBody}" class="panel-body">
-        <div id="{i#editorPanel}" class="form-group">
-            <div class="row">
-                <div class="col-sm-7">
-                    <input id="{i#title}" type="text"
-                           class="form-control input-sm"
-                           placeholder="Введите название картинки"
-                           data-wait="disable"/>
-                </div>
-                <div class="col-sm-3">
-                    <div id="{i#elementTitleWidget}"></div>
-                </div>
-                <div class="col-sm-2 text-right">
-                    <button data-click="this:upload"
-                            class="btn btn-default btn-sm"
-                            title="Загрузить картинку со своего компьютера"
-                            type="button">
-                        Загрузить
-                    </button>
+        <div id="{i#editorPanel}">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <input id="{i#title}" type="text"
+                               class="form-control input-sm"
+                               placeholder="Введите название картинки"
+                               data-wait="disable"/>
+
+                        <input id="{i#filehash}" type="hidden"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <div id="{i#elementTitleWidget}"></div>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <button data-click="this:upload"
+                                class="btn btn-default btn-sm"
+                                title="Загрузить картинку со своего компьютера"
+                                type="button">
+                            Загрузить
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <div id="{i#image}"></div>
         </div>
 
         <div id="{i#previewPanel}" class="previewPanel">
-            <h3 id="{i#titlePreview}"></h3>
-        </div>
+            <p id="{i#titlePreview}"></p>
 
-        <div id="{i#container}"></div>
+            <div id="{i#imagePreview}"></div>
+        </div>
     </div>
 </div>
+
+<!--{imagePreview}-->
+<img class="img-responsive img-thumbnail"
+     src="/filemanager/i/{v#filehash}/image"/>
+
+<!--{image}-->
+<img class="img-responsive img-thumbnail" src="/filemanager/i/{v#filehash}/image"/>
+
+<!--{empty}-->
+<div class="panel panel-default ">
+    <div class="panel-body text-center">
+        <button data-click="this:upload"
+                class="btn btn-info btn-sm"
+                title="Загрузить картинку со своего компьютера"
+                type="button">
+            Загрузить картинку
+        </button>
+    </div>
+</div>
+

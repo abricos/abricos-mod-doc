@@ -281,7 +281,7 @@ class DocApp extends AbricosApplication {
 
         DocQuery::ElRowUpdate($this->db, $es, $d);
     }
-    
+
     private function ElColSave(DocElementSave $es){
         /** @var DocElColSave $ret */
         $ret = $this->InstanceClass('ElColSave', $es->vars->el);
@@ -292,6 +292,16 @@ class DocApp extends AbricosApplication {
     private function ElImageSave(DocElementSave $es){
         /** @var DocElImageSave $ret */
         $ret = $this->InstanceClass('ElImageSave', $es->vars->el);
+
+        $elementid = $es->vars->elementid;
+        if ($elementid > 0){
+            $old = DocQuery::ElImage($this->db, $elementid);
+            if (!empty($old) && !empty($old['filehash'])
+                && $old['filehash'] !== $ret->vars->filehash
+            ){
+                $this->ImageAddToBuffer($old['filehash']);
+            }
+        }
 
         DocQuery::ElImageUpdate($this->db, $es, $ret);
 
@@ -382,6 +392,14 @@ class DocApp extends AbricosApplication {
         $element = $doc->elementList->Get($elementid);
         DocQuery::ElementRemove($this->db, $doc->id, $element->id);
         DocQuery::ElRemove($this->db, $element->id, $element->type);
+
+        if ($element->type === 'image' && isset($doc->extends['image'])){
+            /** @var DocElImage $el */
+            $el = $doc->extends['image']->Get($elementid);
+            if (!empty($el) && !empty($el->filehash)){
+                $this->ImageAddToBuffer($el->filehash);
+            }
+        }
     }
 
     public function DocToJSON($docid){

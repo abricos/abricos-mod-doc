@@ -2,7 +2,7 @@
 [tt=window]_sys[/tt]
 [script]content/imageUpload.php[/script]
 [bkvar=ok]
-	window.opener.Brick.mod.pictab.activeTabPageWidget.setImageByFID('{v#fhash}', '{v#fname}');
+	window.opener.Brick.mod.doc.activeElImageEditor.setImageByFID('{v#fhash}', '{v#fname}');
 	self.close();
 [/bkvar]
 
@@ -19,24 +19,20 @@
 
 [bkvar=command][/bkvar]
 
-[oomod=filemanager]enthumbs|list=1022x500[/oomod]
-
-[mod=filemanager]accinfo|onlyimage=true[/mod]
-
 [*]-->
 
 <style type="text/css">
-	.mod-pictab h2 {
+	.mod-doc h2 {
 		font-size: 1.2em;
 	}
-	.mod-pictab  .errortext {
+	.mod-doc  .errortext {
 		color: red;
 	}
 </style>
 
-<div class="mod-pictab">
+<div class="mod-doc">
 	<h2>Загрузка изображения</h2>
-	<form enctype="multipart/form-data" action="/pictab/uploadimg/go/" method="POST" onsubmit="return beginUpload();">
+	<form enctype="multipart/form-data" action="/doc/imageUpload/go/" method="POST" onsubmit="return beginUpload();">
 		<input type="hidden" name="MAX_FILE_SIZE" value="15728640" />
 		
 		<fieldset id="errorpanel" style="display: none">
@@ -68,8 +64,6 @@
 		</fieldset>
 		
 	</form>
-	
-	[mod]filemanager:accinfo[/mod]
 </div>
 
 <script type="text/javascript">

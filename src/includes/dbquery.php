@@ -271,6 +271,17 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    public static function ElImage(Ab_Database $db, $elementid){
+        $sql = "
+            SELECT ei.*
+            FROM ".$db->prefix."doc_el_image ei
+            WHERE ei.elementid=".intval($elementid)."
+            LIMIT 1
+        ";
+
+        return $db->query_first($sql);
+    }
+
     public static function ElTableUpdate(Ab_Database $db, DocElementSave $r, DocElTableSave $ts){
         $sql = "
             INSERT INTO ".$db->prefix."doc_el_table
@@ -408,7 +419,7 @@ class DocQuery {
 
     public static function ImageAddToBuffer(Ab_Database $db, $filehash){
         $sql = "
-			INSERT INTO ".$db->prefix."doc_imageBuffer (fileid, dateline) VALUES (
+			INSERT INTO ".$db->prefix."doc_imageBuffer (filehash, dateline) VALUES (
 				'".bkstr($filehash)."',
 				".TIMENOW."
 			)
@@ -420,9 +431,9 @@ class DocQuery {
         $sql = "
 			SELECT
 				imageid as id,
-				fileid as fh
+				filehash as fh
 			FROM ".$db->prefix."doc_imageBuffer
-			WHERE elementid=0 AND dateline<".(TIMENOW - TicketQuery::FILECLEARTIME)."
+			WHERE dateline<".(TIMENOW - DocQuery::FILECLEARTIME)."
 		";
         return $db->query_read($sql);
     }
@@ -430,18 +441,16 @@ class DocQuery {
     public static function ImageFreeListClear(Ab_Database $db){
         $sql = "
 			DELETE FROM ".$db->prefix."doc_imageBuffer
-			WHERE elementid=0 AND dateline<".(TIMENOW - TicketQuery::FILECLEARTIME)."
+			WHERE dateline<".(TIMENOW - DocQuery::FILECLEARTIME)."
 		";
         return $db->query_read($sql);
     }
 
-    public static function ImageRemoveFromBuffer(Ab_Database $db, $image){
+    public static function ImageRemoveFromBuffer(Ab_Database $db, $filehash){
         $sql = "
 			DELETE FROM ".$db->prefix."doc_imageBuffer 
-			WHERE fileid='".$image."'
+			WHERE filehash='".bkstr($filehash)."'
 		";
         $db->query_write($sql);
     }
-
-
 }

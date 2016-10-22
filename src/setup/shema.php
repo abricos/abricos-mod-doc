@@ -198,11 +198,9 @@ if ($updateManager->isUpdate('0.1.2')){
     $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."doc_imageBuffer (
 			imageid int(10) UNSIGNED NOT NULL auto_increment,
-			elementid int(10) UNSIGNED NOT NULL COMMENT '',
-			fileid VARCHAR(8) NOT NULL,
+			filehash VARCHAR(8) NOT NULL,
 			dateline int(10) UNSIGNED NOT NULL default '0' COMMENT '',
-			PRIMARY KEY (imageid),
-			KEY elementid (elementid)
+			PRIMARY KEY (imageid)
 		)".$charset
     );
 
