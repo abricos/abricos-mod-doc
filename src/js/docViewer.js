@@ -63,6 +63,18 @@ Component.entryPoint = function(NS){
                             body: el.get('body')
                         });
                         break;
+                    case 'row':
+                        lst += tp.replace(type, {
+                            id: id,
+                            childs: this._renderElements(id)
+                        });
+                        break;
+                    case 'col':
+                        lst += this._renderElCol(el);
+                        break;
+                    case 'image':
+                        lst += this._renderElImage(el);
+                        break;
                     case 'table':
                         lst += this._renderElTable(el);
                         break;
@@ -70,6 +82,28 @@ Component.entryPoint = function(NS){
             }, this);
 
             return lst;
+        },
+        _renderElCol: function(el){
+            var tp = this.template,
+                id = el.get('id'),
+                classes = [];
+
+            classes[classes.length] = 'col-sm-'+el.get('sm');
+
+            return tp.replace('col', {
+                id: id,
+                classes: classes.join(' '),
+                childs: this._renderElements(id)
+            });
+        },
+        _renderElImage: function(el){
+            var tp = this.template,
+                id = el.get('id');
+
+            return tp.replace('image', {
+                id: id,
+                filehash: el.get('filehash')
+            });
         },
         _renderElTable: function(el){
             var tp = this.template,
@@ -107,7 +141,9 @@ Component.entryPoint = function(NS){
         ATTRS: {
             component: {value: COMPONENT},
             templateBlockName: {
-                value: 'widget,page,section,text,table,tr,th,td'
+                value: 'widget,page,section' +
+                ',text,table,tr,th,td' +
+                ',row,col,image'
             },
             docid: NS.ATTRIBUTE.docid,
             doc: NS.ATTRIBUTE.doc

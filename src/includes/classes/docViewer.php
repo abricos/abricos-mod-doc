@@ -81,7 +81,6 @@ class DocViewer {
                             "childs" => $this->BuildElements($element->id)
                         ));
                     }
-
                     break;
                 case 'section':
 
@@ -92,7 +91,21 @@ class DocViewer {
                         "title" => $el->title,
                         "childs" => $this->BuildElements($element->id)
                     ));
+                    break;
+                case 'row':
 
+                    /** @var DocElPage $el */
+
+                    $ret .= Brick::ReplaceVarByData($brick->content, array(
+                        "elementid" => $el->id,
+                        "childs" => $this->BuildElements($element->id)
+                    ));
+                    break;
+                case 'col':
+                    $ret .= $this->BuildElCol($brick, $el);
+                    break;
+                case 'image':
+                    $ret .= $this->BuildElImage($brick, $el);
                     break;
                 case 'text':
                     /** @var DocElText $el */
@@ -108,6 +121,25 @@ class DocViewer {
             }
         }
         return $ret;
+    }
+
+    public function BuildElCol(Ab_CoreBrick $brick, DocElCol $el){
+        $classes = array();
+
+        $classes[] = 'col-sm-'.$el->sm;
+
+        return Brick::ReplaceVarByData($brick->content, array(
+            "elementid" => $el->id,
+            "classes" => implode(' ', $classes),
+            "childs" => $this->BuildElements($el->id)
+        ));
+    }
+
+    public function BuildElImage(Ab_CoreBrick $brick, DocElImage $el){
+        return Brick::ReplaceVarByData($brick->content, array(
+            "elementid" => $el->id,
+            "filehash" => $el->filehash
+        ));
     }
 
     public function BuildElTable(Ab_CoreBrick $brick, DocElTable $el){
