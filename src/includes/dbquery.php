@@ -248,6 +248,29 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    public static function ElImageUpdate(Ab_Database $db, DocElementSave $r, DocElImageSave $is){
+        $sql = "
+            INSERT INTO ".$db->prefix."doc_el_image
+            (elementid, filehash, title, isResponsive, shape, width, height) VALUES (
+                ".intval($r->elementid).",
+                '".bkstr($is->vars->filehash)."',
+                '".bkstr($is->vars->title)."',
+                ".intval($is->vars->isResponsive).",
+                '".bkstr($is->vars->shape)."',
+                ".intval($is->vars->width).",
+                ".intval($is->vars->height)."
+            ) 
+            ON DUPLICATE KEY UPDATE
+                filehash='".bkstr($is->vars->filehash)."',
+                title='".bkstr($is->vars->title)."',
+                isResponsive=".intval($is->vars->isResponsive).",
+                shape='".bkstr($is->vars->shape)."',
+                width=".intval($is->vars->width).",
+                height=".intval($is->vars->height)."
+        ";
+        $db->query_write($sql);
+    }
+
     public static function ElTableUpdate(Ab_Database $db, DocElementSave $r, DocElTableSave $ts){
         $sql = "
             INSERT INTO ".$db->prefix."doc_el_table

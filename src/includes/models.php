@@ -572,6 +572,56 @@ class DocElColSave extends AbricosResponse {
     protected $_structName = 'ElColSave';
 }
 
+/**
+ * Class DocElImage
+ * @property string $filehash
+ * @property string $title
+ * @property bool $isResponsive
+ * @property string $shape
+ * @property int $width
+ * @property int $height
+ */
+class DocElImage extends DocEl {
+    const SHAPE_NONE = 'none';
+    const SHAPE_ROUNDED = 'rounded';
+    const SHAPE_CIRCLE = 'circle';
+    const SHAPE_THUMB = 'thumb';
+
+    protected $_structName = 'ElImage';
+}
+
+/**
+ * Class DocElImageList
+ *
+ * @method DocElImage Get(int $id)
+ * @method DocElImage GetByIndex(int $i)
+ */
+class DocElImageList extends DocElList {
+}
+
+/**
+ * Interface DocElImageSaveVars
+ * @property string $filehash
+ * @property string $title
+ * @property bool $isResponsive
+ * @property string $shape
+ * @property int $width
+ * @property int $height
+ */
+interface DocElImageSaveVars {
+}
+
+/**
+ * Class DocElImageSave
+ *
+ * @property DocElImageSaveVars $vars
+ */
+class DocElImageSave extends AbricosResponse {
+    const CODE_OK = 1;
+
+    protected $_structModule = 'doc';
+    protected $_structName = 'ElImageSave';
+}
 
 /**
  * Class DocLink

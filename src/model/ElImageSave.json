@@ -1,0 +1,33 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "filehash": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "parse": "full"
+    },
+    "isResponsive": {
+      "type": "bool"
+    },
+    "shape": {
+      "type": "string",
+      "default": "none",
+      "valid": "none,rounded,circle,thumb",
+      "notNULL": true
+    },
+    "width": {
+      "type": "int"
+    },
+    "height": {
+      "type": "int"
+    }
+  },
+  "codes": {
+    "OK": 1
+  },
+  "fields": {
+  }
+}

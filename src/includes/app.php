@@ -36,6 +36,9 @@ class DocApp extends AbricosApplication {
             "ElCol" => "DocElCol",
             "ElColList" => "DocElColList",
             "ElColSave" => "DocElColSave",
+            "ElImage" => "DocElImage",
+            "ElImageList" => "DocElImageList",
+            "ElImageSave" => "DocElImageSave",
             "ElTable" => "DocElTable",
             "ElTableList" => "DocElTableList",
             "ElTableSave" => "DocElTableSave",
@@ -50,10 +53,10 @@ class DocApp extends AbricosApplication {
 
     protected function GetStructures(){
         $ret = 'Owner,Doc,Element,ElementType,Link,'.
-            'ElText,ElPage,ElSection,ElRow,ElCol,ElTable,ElTableCell';
+            'ElText,ElPage,ElSection,ElRow,ElCol,ElImage,ElTable,ElTableCell';
 
         if ($this->IsAdminRole()){
-            $ret .= ',DocSave,ElementSave,ElColSave,ElTableSave,ElTableCellSave';
+            $ret .= ',DocSave,ElementSave,ElColSave,ElImageSave,ElTableSave,ElTableCellSave';
         }
 
         return $ret;
@@ -286,6 +289,13 @@ class DocApp extends AbricosApplication {
         DocQuery::ElColUpdate($this->db, $es, $ret);
     }
 
+    private function ElImageSave(DocElementSave $es){
+        /** @var DocElImageSave $ret */
+        $ret = $this->InstanceClass('ElImageSave', $es->vars->el);
+
+        DocQuery::ElImageUpdate($this->db, $es, $ret);
+    }
+
     private function ElTableSave(DocElementSave $es){
         /** @var DocElTableSave $ret */
         $ret = $this->InstanceClass('ElTableSave', $es->vars->el);
@@ -489,6 +499,7 @@ class DocApp extends AbricosApplication {
         $list->Add($this->ElementTypeInstance('section'));
         $list->Add($this->ElementTypeInstance('row'));
         $list->Add($this->ElementTypeInstance('col'));
+        $list->Add($this->ElementTypeInstance('image'));
         $list->Add($this->ElementTypeInstance('table'));
 
         $this->SetCache('ElementTypeList', $list);

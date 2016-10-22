@@ -1,0 +1,34 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "int",
+      "dbField": "elementid"
+    },
+    "docid": {
+      "type": "int"
+    },
+    "filehash": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "isResponsive": {
+      "type": "bool"
+    },
+    "shape": {
+      "type": "string",
+      "default": "none",
+      "valid": "none,rounded,circle,thumb",
+      "notNULL": true
+    },
+    "width": {
+      "type": "int"
+    },
+    "height": {
+      "type": "int"
+    }
+  }
+}

@@ -8,6 +8,7 @@ Component.requires = {
                 'elPageEditor.js',
                 'elTextEditor.js',
                 'elGridEditor.js',
+                'elImageEditor.js',
                 'elTableEditor.js',
                 'toolbar.js'
             ]

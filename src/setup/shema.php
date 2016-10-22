@@ -177,4 +177,21 @@ if ($updateManager->isUpdate('0.1.2')){
         )".$charset
     );
 
+    $db->query_write("
+        CREATE TABLE IF NOT EXISTS ".$pfx."doc_el_image (
+            elementid INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            filehash VARCHAR(8) NOT NULL DEFAULT '' COMMENT '',
+
+            title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '',
+            isResponsive TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            shape ENUM('none', 'rounded', 'circle', 'thumb') DEFAULT 'none' COMMENT '',
+            
+            width INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+            height INT(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT '',
+
+            UNIQUE KEY elementid (elementid)
+        )".$charset
+    );
+
 }

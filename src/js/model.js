@@ -179,6 +179,23 @@ Component.entryPoint = function(NS){
         appItem: NS.ElCol,
     });
 
+    NS.ElImage = Y.Base.create('elImage', SYS.AppModel, [], {
+        structureName: 'ElImage',
+        toSave: function(){
+            return {
+                title: this.get('title'),
+                isResponsive: this.get('isResponsive'),
+                shape: this.get('shape'),
+                width: this.get('width'),
+                height: this.get('height'),
+            };
+        }
+    });
+
+    NS.ElImageList = Y.Base.create('elImageList', SYS.AppModelList, [], {
+        appItem: NS.ElImage,
+    });
+
     NS.ElTable = Y.Base.create('elTable', SYS.AppModel, [], {
         structureName: 'ElTable',
         initializer: function(){

@@ -65,6 +65,8 @@ Component.entryPoint = function(NS){
             ElRowList: {value: NS.ElRowList},
             ElCol: {value: NS.ElCol},
             ElColList: {value: NS.ElColList},
+            ElImage: {value: NS.ElImage},
+            ElImageList: {value: NS.ElImageList},
             ElTable: {value: NS.ElTable},
             ElTableList: {value: NS.ElTableList},
             ElTableCell: {value: NS.ElTableCell},
