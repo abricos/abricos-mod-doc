@@ -221,12 +221,29 @@ class DocQuery {
         $db->query_write($sql);
     }
 
-    public static function ElColUpdate(Ab_Database $db, DocElementSave $r, $d){
+    public static function ElColUpdate(Ab_Database $db, DocElementSave $r, DocElColSave $cs){
         $sql = "
-            INSERT IGNORE INTO ".$db->prefix."doc_el_col
-            (elementid) VALUES (
-                ".intval($r->elementid)."
+            INSERT INTO ".$db->prefix."doc_el_col
+            (elementid, xs, xsOffset, sm, smOffset, md, mdOffset, lg, lgOffset) VALUES (
+                ".intval($r->elementid).",
+                ".intval($cs->vars->xs).",
+                ".intval($cs->vars->xsOffset).",
+                ".intval($cs->vars->sm).",
+                ".intval($cs->vars->smOffset).",
+                ".intval($cs->vars->md).",
+                ".intval($cs->vars->mdOffset).",
+                ".intval($cs->vars->lg).",
+                ".intval($cs->vars->lgOffset)."
             ) 
+            ON DUPLICATE KEY UPDATE
+                xs=".intval($cs->vars->xs).",
+                xsOffset=".intval($cs->vars->xsOffset).",
+                sm=".intval($cs->vars->sm).",
+                smOffset=".intval($cs->vars->smOffset).",
+                md=".intval($cs->vars->md).",
+                mdOffset=".intval($cs->vars->mdOffset).",
+                lg=".intval($cs->vars->lg).",
+                lgOffset=".intval($cs->vars->lgOffset)."
         ";
         $db->query_write($sql);
     }

@@ -1,0 +1,35 @@
+{
+  "type": "response",
+  "version": "0.1.0",
+  "vars": {
+    "xs": {
+      "type": "int"
+    },
+    "xsOffset": {
+      "type": "int"
+    },
+    "sm": {
+      "type": "int"
+    },
+    "smOffset": {
+      "type": "int"
+    },
+    "md": {
+      "type": "int"
+    },
+    "mdOffset": {
+      "type": "int"
+    },
+    "lg": {
+      "type": "int"
+    },
+    "lgOffset": {
+      "type": "int"
+    }
+  },
+  "codes": {
+    "OK": 1
+  },
+  "fields": {
+  }
+}

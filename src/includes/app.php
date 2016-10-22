@@ -35,6 +35,7 @@ class DocApp extends AbricosApplication {
             "ElRowList" => "DocElRowList",
             "ElCol" => "DocElCol",
             "ElColList" => "DocElColList",
+            "ElColSave" => "DocElColSave",
             "ElTable" => "DocElTable",
             "ElTableList" => "DocElTableList",
             "ElTableSave" => "DocElTableSave",
@@ -52,7 +53,7 @@ class DocApp extends AbricosApplication {
             'ElText,ElPage,ElSection,ElRow,ElCol,ElTable,ElTableCell';
 
         if ($this->IsAdminRole()){
-            $ret .= ',DocSave,ElementSave,ElTableSave,ElTableCellSave';
+            $ret .= ',DocSave,ElementSave,ElColSave,ElTableSave,ElTableCellSave';
         }
 
         return $ret;
@@ -279,9 +280,10 @@ class DocApp extends AbricosApplication {
     }
     
     private function ElColSave(DocElementSave $es){
-        $d = $es->vars->el;
+        /** @var DocElColSave $ret */
+        $ret = $this->InstanceClass('ElColSave', $es->vars->el);
 
-        DocQuery::ElColUpdate($this->db, $es, $d);
+        DocQuery::ElColUpdate($this->db, $es, $ret);
     }
 
     private function ElTableSave(DocElementSave $es){

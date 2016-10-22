@@ -163,6 +163,14 @@ Component.entryPoint = function(NS){
         structureName: 'ElCol',
         toSave: function(){
             return {
+                xs: this.get('xs'),
+                xsOffset: this.get('xsOffset'),
+                sm: this.get('sm'),
+                smOffset: this.get('smOffset'),
+                md: this.get('md'),
+                mdOffset: this.get('mdOffset'),
+                lg: this.get('lg'),
+                lgOffset: this.get('lgOffset'),
             };
         }
     });

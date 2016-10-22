@@ -546,6 +546,32 @@ class DocElCol extends DocEl {
 class DocElColList extends DocElList {
 }
 
+/**
+ * Interface DocElColSaveVars
+ * @property int $xs
+ * @property int $xsOffset
+ * @property int $sm
+ * @property int $smOffset
+ * @property int $md
+ * @property int $mdOffset
+ * @property int $lg
+ * @property int $lgOffset
+ */
+interface DocElColSaveVars {
+}
+
+/**
+ * Class DocElColSave
+ *
+ * @property DocElColSaveVars $vars
+ */
+class DocElColSave extends AbricosResponse {
+    const CODE_OK = 1;
+
+    protected $_structModule = 'doc';
+    protected $_structName = 'ElColSave';
+}
+
 
 /**
  * Class DocLink

@@ -329,12 +329,14 @@ Component.entryPoint = function(NS){
             var tp = this.template,
                 element = this.get('element');
 
-            this._elAppendWidget = new NS.ButtonElementAppendWidget({
-                srcNode: tp.one('elementAppend'),
-                doc: this.get('doc'),
-                context: this,
-                callback: this.elementAppendByType
-            });
+            if (tp.one('elementAppend')){
+                this._elAppendWidget = new NS.ButtonElementAppendWidget({
+                    srcNode: tp.one('elementAppend'),
+                    doc: this.get('doc'),
+                    context: this,
+                    callback: this.elementAppendByType
+                });
+            }
         },
         cleanChilds: function(){
             var wList = this._wChilds;
@@ -349,7 +351,7 @@ Component.entryPoint = function(NS){
                 fn.call(context || this, wList[i]);
             }
         },
-        elementAppendByType: function(type){
+        elementAppendByType: function(type, elOptions){
             var appInstance = this.get('appInstance'),
                 element = this.get('element'),
                 Element = appInstance.get('Element'),
@@ -359,7 +361,7 @@ Component.entryPoint = function(NS){
                     changed: true,
                     type: type,
                     parentid: element ? element.get('parentid') : 0,
-                    el: appInstance.instanceElItem(type),
+                    el: appInstance.instanceElItem(type, elOptions),
                     ord: this._wChilds.length
                 });
 
@@ -372,10 +374,11 @@ Component.entryPoint = function(NS){
                 type = element.get('type'),
                 upName = NS.upperFirstChar(type),
                 widgetName = 'El' + upName + 'EditorWidget',
-                wList = this._wChilds;
+                wList = this._wChilds,
+                srcNode = tp.append('container', '<div></div>');
 
             var widget = new (NS[widgetName])({
-                srcNode: tp.append('container', '<div></div>'),
+                srcNode: srcNode,
                 doc: this.get('doc'),
                 owner: this,
                 element: element
