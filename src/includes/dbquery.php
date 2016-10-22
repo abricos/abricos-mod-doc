@@ -400,4 +400,48 @@ class DocQuery {
         $db->query_write($sql);
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /*                      Image Buffer                   */
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    const FILECLEARTIME = 86400;
+
+    public static function ImageAddToBuffer(Ab_Database $db, $filehash){
+        $sql = "
+			INSERT INTO ".$db->prefix."doc_imageBuffer (fileid, dateline) VALUES (
+				'".bkstr($filehash)."',
+				".TIMENOW."
+			)
+		";
+        $db->query_write($sql);
+    }
+
+    public static function ImageFreeFromBufferList(Ab_Database $db){
+        $sql = "
+			SELECT
+				imageid as id,
+				fileid as fh
+			FROM ".$db->prefix."doc_imageBuffer
+			WHERE elementid=0 AND dateline<".(TIMENOW - TicketQuery::FILECLEARTIME)."
+		";
+        return $db->query_read($sql);
+    }
+
+    public static function ImageFreeListClear(Ab_Database $db){
+        $sql = "
+			DELETE FROM ".$db->prefix."doc_imageBuffer
+			WHERE elementid=0 AND dateline<".(TIMENOW - TicketQuery::FILECLEARTIME)."
+		";
+        return $db->query_read($sql);
+    }
+
+    public static function ImageRemoveFromBuffer(Ab_Database $db, $image){
+        $sql = "
+			DELETE FROM ".$db->prefix."doc_imageBuffer 
+			WHERE fileid='".$image."'
+		";
+        $db->query_write($sql);
+    }
+
+
 }

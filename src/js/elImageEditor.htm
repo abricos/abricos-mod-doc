@@ -6,7 +6,7 @@
     <div id="{i#panelBody}" class="panel-body">
         <div id="{i#editorPanel}" class="form-group">
             <div class="row">
-                <div class="col-sm-9">
+                <div class="col-sm-7">
                     <input id="{i#title}" type="text"
                            class="form-control input-sm"
                            placeholder="Введите название картинки"
@@ -14,6 +14,14 @@
                 </div>
                 <div class="col-sm-3">
                     <div id="{i#elementTitleWidget}"></div>
+                </div>
+                <div class="col-sm-2 text-right">
+                    <button data-click="this:upload"
+                            class="btn btn-default btn-sm"
+                            title="Загрузить картинку со своего компьютера"
+                            type="button">
+                        Загрузить
+                    </button>
                 </div>
             </div>
         </div>

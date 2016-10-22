@@ -294,6 +294,8 @@ class DocApp extends AbricosApplication {
         $ret = $this->InstanceClass('ElImageSave', $es->vars->el);
 
         DocQuery::ElImageUpdate($this->db, $es, $ret);
+
+        DocQuery::ImageRemoveFromBuffer($this->db, $ret->vars->filehash);
     }
 
     private function ElTableSave(DocElementSave $es){
@@ -664,5 +666,37 @@ class DocApp extends AbricosApplication {
 
         return $owner;
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /*                      Image Buffer                   */
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public function ImageAddToBuffer($filehash){
+        if (!$this->IsAdminRole()){
+            return false;
+        }
+
+        DocQuery::ImageAddToBuffer($this->db, $filehash);
+
+        $this->ImageBufferClear();
+    }
+
+    public function ImageBufferClear(){
+        /** @var FileManager $fm */
+        $fm = Abricos::GetModuleManager('filemanager');
+        if (empty($fm)){
+            return;
+        }
+        $fm->RolesDisable();
+
+        $rows = DocQuery::ImageFreeFromBufferList($this->db);
+        while (($row = $this->db->fetch_array($rows))){
+            $fm->FileRemove($row['fh']);
+        }
+        $fm->RolesEnable();
+
+        DocQuery::ImageFreeListClear($this->db);
+    }
+
 
 }
