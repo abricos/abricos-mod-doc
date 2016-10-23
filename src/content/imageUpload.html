@@ -2,7 +2,8 @@
 [tt=window]_sys[/tt]
 [script]content/imageUpload.php[/script]
 [bkvar=ok]
-	window.opener.Brick.mod.doc.activeElImageEditor.setImageByFID('{v#fhash}', '{v#fname}');
+    var activeWidget = window.opener.Brick.mod.doc.activeElImageEditor;
+    activeWidget.setImageByFID('{v#filehash}', '{v#filename}', '{v#width}', '{v#height}');
 	self.close();
 [/bkvar]
 

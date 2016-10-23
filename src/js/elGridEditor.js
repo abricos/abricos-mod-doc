@@ -46,16 +46,7 @@ Component.entryPoint = function(NS){
             this.colSize = new ColSize(this.template, 'colSize', 3);
         },
         onSyncElData: function(tp, el, forced){
-            return false;
-        },
-        onModeChange: function(mode){
-            var tp = this.template,
-                el = this.get('el');
-
-            if (mode === 'preview'){
-            } else if (mode === 'edit'){
-
-            }
+            this.syncTitle('row');
         },
         colAppend: function(){
             var tp = this.template,
@@ -125,5 +116,4 @@ Component.entryPoint = function(NS){
             templateBlockName: {value: 'col,option'},
         }
     });
-
 };

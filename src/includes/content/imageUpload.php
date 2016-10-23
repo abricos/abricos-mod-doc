@@ -14,9 +14,9 @@ if (!$app->IsAdminRole()){
     return;
 }
 
-/** @var FileManagerModule $modFM */
-$modFM = Abricos::GetModule('filemanager');
-if (empty($modFM)){
+/** @var FileManager $fileManager */
+$fileManager = Abricos::GetModuleManager('filemanager');
+if (empty($fileManager)){
     return;
 }
 
@@ -29,7 +29,7 @@ if (!isset($adress->dir[2]) || $adress->dir[2] !== "go"){
     return;
 }
 
-$uploadFile = FileManagerModule::$instance->GetManager()->CreateUploadByVar('image');
+$uploadFile = $fileManager->CreateUploadByVar('image');
 $uploadFile->maxImageWidth = 1600;
 $uploadFile->maxImageHeight = 1600;
 $uploadFile->ignoreFileSize = true;
@@ -48,9 +48,14 @@ if (!empty($error)){
     return;
 }
 
+$filehash = $uploadFile->uploadFileHash;
+$fInfo = $fileManager->GetFileInfo($filehash);
+
 $var['command'] = Brick::ReplaceVarByData($var['ok'], array(
-    "fhash" => $uploadFile->uploadFileHash,
-    "fname" => $uploadFile->fileName
+    "filehash" => $filehash,
+    "filename" => $uploadFile->fileName,
+    "width" => $fInfo['w'],
+    'height' => $fInfo['h']
 ));
 
-$app->ImageAddToBuffer($uploadFile->uploadFileHash);
+$app->ImageAddToBuffer($filehash);

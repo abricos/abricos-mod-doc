@@ -15,16 +15,24 @@ Component.entryPoint = function(NS){
     ], {
         onSyncElData: function(tp, el, forced){
             var title = tp.getValue('title'),
-                filehash = tp.getValue('filehash');
+                filehash = tp.getValue('filehash'),
+                width = tp.getValue('width') | 0,
+                height = tp.getValue('height') | 0;
 
             if (!forced
                 && el.get('title') === title
-                && el.get('filehash') === filehash){
+                && el.get('filehash') === filehash
+                && el.get('width') === width
+                && el.get('height') === height
+            ){
                 return false;
             }
 
             el.set('title', title);
             el.set('filehash', filehash);
+            el.set('width', width);
+            el.set('height', height);
+
             this.syncTitle(title);
 
             return true;
@@ -73,13 +81,17 @@ Component.entryPoint = function(NS){
             );
             NS.activeElImageEditor = this;
         },
-        setImageByFID: function(filehash, fname){
+        setImageByFID: function(filehash, filename, width, height){
             var tp = this.template,
                 el = this.get('el');
 
-            tp.setValue('filehash', filehash);
+            tp.setValue({
+                filehash: filehash,
+                width: width,
+                height: height
+            });
             if (tp.getValue('title') === ''){
-                tp.setValue('title', fname);
+                tp.setValue('title', filename);
             }
             this._renderEditImage();
         },
