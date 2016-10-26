@@ -1,0 +1,39 @@
+<!--[*]
+
+[script]brick/linkList.php[/script]
+
+[v=linkRow]
+<div class="link">
+    <p>{v#path}</p>
+    {v#body}
+</div>
+[/v]
+
+[v=docItem]{v#docTitle}[/v]
+
+[v=pathItem]{v#title}[/v]
+
+[v=pathDelim]&nbsp;→&nbsp;[/v]
+
+[v=page]
+<div class="alert alert-info">
+    {v#title}
+</div>
+[/v]
+
+[v=section]
+<div class="alert alert-info">
+    {v#title}
+</div>
+[/v]
+
+[v=text]
+<div class="alert alert-info">
+    {v#body}
+</div>
+[/v]
+
+[*]-->
+<div class="linkListViewer">
+    {v#list}
+</div>
