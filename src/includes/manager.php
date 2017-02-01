@@ -54,7 +54,7 @@ class DocManager extends Ab_ModuleManager {
             array(
                 "name" => "doc",
                 "title" => $i18n->Translate('title'),
-                "icon" => "/modules/doc/img/logo-48x48.png",
+                "icon" => "/modules/doc/img/logo-24x24.png",
                 "url" => "doc/wspace/ws",
             )
         );
